@@ -293,23 +293,24 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const STAT_CFG = {
-  strength: { label: "Strength", icon: "⚔️", color: "var(--str)", lv_titles: ["Rookie", "Trainee", "Athlete", "Warrior", "Champion", "Beast"] },
-  creativity: { label: "Creativity", icon: "🎨", color: "var(--cre)", lv_titles: ["Sketcher", "Maker", "Craftsman", "Artist", "Visionary", "Auteur"] },
-  intelligence: { label: "Intelligence", icon: "🧠", color: "var(--int)", lv_titles: ["Curious", "Student", "Scholar", "Thinker", "Sage", "Oracle"] },
-  persona: { label: "Persona", icon: "🪞", color: "var(--per)", lv_titles: ["Shy", "Aware", "Confident", "Magnetic", "Commanding", "Legend"] },
+  strength:     { label:"Strength",     icon:"⚔️", color:"var(--str)", lv_titles:["Rookie","Trainee","Athlete","Warrior","Champion","Beast"] },
+  creativity:   { label:"Creativity",   icon:"🎨", color:"var(--cre)", lv_titles:["Sketcher","Maker","Craftsman","Artist","Visionary","Auteur"] },
+  intelligence: { label:"Intelligence", icon:"🧠", color:"var(--int)", lv_titles:["Curious","Student","Scholar","Thinker","Sage","Oracle"] },
+  persona:      { label:"Persona",      icon:"🪞", color:"var(--per)", lv_titles:["Shy","Aware","Confident","Magnetic","Commanding","Legend"] },
 };
-const STATS = ["strength", "creativity", "intelligence", "persona"];
+const STATS = ["strength","creativity","intelligence","persona"];
 const XP_PER_LEVEL = 300;
 const TOTAL_LV1_XP = XP_PER_LEVEL * 4;
 const DAY_MS = 1000 * 60 * 60 * 24;
 const APP_TODAY = "2026-04-24";
 const LEVEL_1_DEFAULT_DEADLINE = "2026-04-29T23:59:59";
-const PRIO_ORDER = { urgent: 0, high: 1, normal: 2, low: 3 };
-const PRIO_COLOR = { urgent: "var(--urgent)", high: "var(--high)", normal: "var(--normal)", low: "var(--low)" };
+const AI_ROUTE = "/api/anthropic";
+const PRIO_ORDER = { urgent:0, high:1, normal:2, low:3 };
+const PRIO_COLOR = { urgent:"var(--urgent)", high:"var(--high)", normal:"var(--normal)", low:"var(--low)" };
 const REWARDS = [
-  { e: "🔥", m: "On fire." }, { e: "⚡", m: "Crushed." }, { e: "💎", m: "Rare discipline." },
-  { e: "🏆", m: "Victory." }, { e: "👑", m: "King behavior." }, { e: "🎯", m: "Locked in." },
-  { e: "🚀", m: "Momentum." }, { e: "⚡", m: "Level up energy." },
+  {e:"🔥",m:"On fire."},{e:"⚡",m:"Crushed."},{e:"💎",m:"Rare discipline."},
+  {e:"🏆",m:"Victory."},{e:"👑",m:"King behavior."},{e:"🎯",m:"Locked in."},
+  {e:"🚀",m:"Momentum."},{e:"⚡",m:"Level up energy."},
 ];
 const ORACLES = [
   "Every frame of Sukoon is built today, not on shoot day.",
@@ -321,45 +322,45 @@ const ORACLES = [
   "One quest at a time. Highest priority first. Always.",
 ];
 const LEVEL_PUNISHMENTS = {
-  strength: { title: "Punishment Trial — 100 Push-ups", desc: "Break it into sets if needed, but finish all 100 with strict form before the day ends." },
-  creativity: { title: "Punishment Trial — 12 Shot Frames", desc: "Storyboard 12 clean frames for Sukoon or Rosaye. No vague ideas, only executable shots." },
-  intelligence: { title: "Punishment Trial — 90 Minute Deep Work Lock", desc: "Phone away. Finish one hard academic block in a single uninterrupted sitting and write the result." },
-  persona: { title: "Punishment Trial — 25 Minutes Voice Practice", desc: "Do one English voice session plus 10 minutes of shadowing. Record it and listen back once." },
+  strength: { title:"Punishment Trial — 100 Push-ups", desc:"Break it into sets if needed, but finish all 100 with strict form before the day ends." },
+  creativity: { title:"Punishment Trial — 12 Shot Frames", desc:"Storyboard 12 clean frames for Sukoon or Rosaye. No vague ideas, only executable shots." },
+  intelligence: { title:"Punishment Trial — 90 Minute Deep Work Lock", desc:"Phone away. Finish one hard academic block in a single uninterrupted sitting and write the result." },
+  persona: { title:"Punishment Trial — 25 Minutes Voice Practice", desc:"Do one English voice session plus 10 minutes of shadowing. Record it and listen back once." },
 };
 
-const DAY_WORKOUTS = { 0: "Rest Day", 1: "Chest & Bicep (Push)", 2: "Legs & Shoulders", 3: "Back & Tricep (Pull)", 4: "Chest & Bicep (Push)", 5: "Legs & Shoulders", 6: "Back & Tricep (Pull)" };
+const DAY_WORKOUTS = {0:"Rest Day",1:"Chest & Bicep (Push)",2:"Legs & Shoulders",3:"Back & Tricep (Pull)",4:"Chest & Bicep (Push)",5:"Legs & Shoulders",6:"Back & Tricep (Pull)"};
 const todayWorkout = DAY_WORKOUTS[new Date().getDay()];
 
 // ── ALL LEVEL 1 QUESTS POOL ──────────────────────────────────────────────────
 const QUEST_POOL = [
   // STRENGTH
-  { id: "s1", stat: "strength", type: "boss", priority: "urgent", title: `Complete ${todayWorkout} session`, desc: "Full session. Track every set and rep. No skipping, no shortcuts.", xp: 80, deadline: "" },
-  { id: "s2", stat: "strength", type: "main", priority: "high", title: "Progressive overload — Bench Press", desc: "Last session: 67.5kg × 8. Target today: 70kg × 6 reps.", xp: 50, deadline: "" },
-  { id: "s3", stat: "strength", type: "main", priority: "normal", title: "Track full workout in detail", desc: "Log every exercise: sets, reps, weight. Build the data for next session.", xp: 35, deadline: "" },
-  { id: "s4", stat: "strength", type: "side", priority: "normal", title: "Morning mobility — 10 minutes", desc: "Hip flexors, thoracic spine, shoulders. Before the session, not after.", xp: 15, deadline: "" },
-  { id: "s5", stat: "strength", type: "side", priority: "low", title: "Plan next week's split", desc: "Write out Monday–Saturday workout plan so there's no guessing.", xp: 15, deadline: "" },
+  { id:"s1", stat:"strength", type:"boss", priority:"urgent",  title:`Complete ${todayWorkout} session`, desc:"Full session. Track every set and rep. No skipping, no shortcuts.", xp:80,  deadline:"" },
+  { id:"s2", stat:"strength", type:"main", priority:"high",    title:"Progressive overload — Bench Press", desc:"Last session: 67.5kg × 8. Target today: 70kg × 6 reps.", xp:50,  deadline:"" },
+  { id:"s3", stat:"strength", type:"main", priority:"normal",  title:"Track full workout in detail", desc:"Log every exercise: sets, reps, weight. Build the data for next session.", xp:35,  deadline:"" },
+  { id:"s4", stat:"strength", type:"side", priority:"normal",  title:"Morning mobility — 10 minutes", desc:"Hip flexors, thoracic spine, shoulders. Before the session, not after.", xp:15,  deadline:"" },
+  { id:"s5", stat:"strength", type:"side", priority:"low",     title:"Plan next week's split", desc:"Write out Monday–Saturday workout plan so there's no guessing.", xp:15,  deadline:"" },
   // CREATIVITY
-  { id: "c1", stat: "creativity", type: "boss", priority: "urgent", title: "Complete the Sukoon shoot", desc: "April 25. Every shot on the list. Don't leave the location without all footage.", xp: 120, deadline: "2026-04-25" },
-  { id: "c2", stat: "creativity", type: "main", priority: "urgent", title: "Finalize Sukoon shot list", desc: "Every scene, lens choice, camera movement. Done before the shoot day.", xp: 60, deadline: "2026-04-24" },
-  { id: "c3", stat: "creativity", type: "main", priority: "high", title: "Gear check for Sukoon shoot", desc: "Camera, lenses, audio, batteries, cards. All ready the night before.", xp: 40, deadline: "2026-04-24" },
-  { id: "c4", stat: "creativity", type: "main", priority: "high", title: "Post-production plan for Sukoon", desc: "Map the edit timeline: rough cut, color, sound, delivery date.", xp: 45, deadline: "2026-04-30" },
-  { id: "c5", stat: "creativity", type: "main", priority: "normal", title: "Begin Sukoon rough cut", desc: "Import footage, organize bins, lay the first assembly edit.", xp: 55, deadline: "2026-05-02" },
-  { id: "c6", stat: "creativity", type: "side", priority: "normal", title: "Rosaye — one content idea", desc: "One reel concept or visual direction for the agency's Instagram.", xp: 20, deadline: "" },
+  { id:"c1", stat:"creativity", type:"boss", priority:"urgent", title:"Complete the Sukoon shoot", desc:"April 25. Every shot on the list. Don't leave the location without all footage.", xp:120, deadline:"2026-04-25" },
+  { id:"c2", stat:"creativity", type:"main", priority:"urgent", title:"Finalize Sukoon shot list", desc:"Every scene, lens choice, camera movement. Done before the shoot day.", xp:60,  deadline:"2026-04-24" },
+  { id:"c3", stat:"creativity", type:"main", priority:"high",   title:"Gear check for Sukoon shoot", desc:"Camera, lenses, audio, batteries, cards. All ready the night before.", xp:40,  deadline:"2026-04-24" },
+  { id:"c4", stat:"creativity", type:"main", priority:"high",   title:"Post-production plan for Sukoon", desc:"Map the edit timeline: rough cut, color, sound, delivery date.", xp:45,  deadline:"2026-04-30" },
+  { id:"c5", stat:"creativity", type:"main", priority:"normal", title:"Begin Sukoon rough cut", desc:"Import footage, organize bins, lay the first assembly edit.", xp:55,  deadline:"2026-05-02" },
+  { id:"c6", stat:"creativity", type:"side", priority:"normal", title:"Rosaye — one content idea", desc:"One reel concept or visual direction for the agency's Instagram.", xp:20,  deadline:"" },
   // INTELLIGENCE
-  { id: "i1", stat: "intelligence", type: "boss", priority: "urgent", title: "Submit all 5 assignments by April 27", desc: "OOP, OS, ADA, COA and the 5th subject. All submitted before deadline.", xp: 120, deadline: "2026-04-27" },
-  { id: "i2", stat: "intelligence", type: "main", priority: "urgent", title: "Complete OOP assignment", desc: "Start and finish in one session. Submit today.", xp: 55, deadline: "2026-04-26" },
-  { id: "i3", stat: "intelligence", type: "main", priority: "urgent", title: "Complete OS assignment", desc: "One session. No multitasking. Submit.", xp: 50, deadline: "2026-04-26" },
-  { id: "i4", stat: "intelligence", type: "main", priority: "urgent", title: "Complete ADA assignment", desc: "Algorithm Design & Analysis. Focus, finish, submit.", xp: 50, deadline: "2026-04-27" },
-  { id: "i5", stat: "intelligence", type: "main", priority: "urgent", title: "Complete COA assignment", desc: "Computer Organization & Architecture. Done before the exam.", xp: 50, deadline: "2026-04-27" },
-  { id: "i6", stat: "intelligence", type: "boss", priority: "urgent", title: "COA exam preparation", desc: "Revise all units. Focus on weak areas. Exam April 29.", xp: 90, deadline: "2026-04-28" },
-  { id: "i7", stat: "intelligence", type: "side", priority: "normal", title: "OS chapter summary", desc: "Summarize one chapter in 5 bullet points. 30 minutes, no phone.", xp: 20, deadline: "2026-04-27" },
+  { id:"i1", stat:"intelligence", type:"boss", priority:"urgent", title:"Submit all 5 assignments by April 27", desc:"OOP, OS, ADA, COA and the 5th subject. All submitted before deadline.", xp:120, deadline:"2026-04-27" },
+  { id:"i2", stat:"intelligence", type:"main", priority:"urgent", title:"Complete OOP assignment", desc:"Start and finish in one session. Submit today.", xp:55,  deadline:"2026-04-26" },
+  { id:"i3", stat:"intelligence", type:"main", priority:"urgent", title:"Complete OS assignment", desc:"One session. No multitasking. Submit.", xp:50,  deadline:"2026-04-26" },
+  { id:"i4", stat:"intelligence", type:"main", priority:"urgent", title:"Complete ADA assignment", desc:"Algorithm Design & Analysis. Focus, finish, submit.", xp:50,  deadline:"2026-04-27" },
+  { id:"i5", stat:"intelligence", type:"main", priority:"urgent", title:"Complete COA assignment", desc:"Computer Organization & Architecture. Done before the exam.", xp:50,  deadline:"2026-04-27" },
+  { id:"i6", stat:"intelligence", type:"boss", priority:"urgent", title:"COA exam preparation", desc:"Revise all units. Focus on weak areas. Exam April 29.", xp:90,  deadline:"2026-04-28" },
+  { id:"i7", stat:"intelligence", type:"side", priority:"normal", title:"OS chapter summary", desc:"Summarize one chapter in 5 bullet points. 30 minutes, no phone.", xp:20,  deadline:"2026-04-27" },
   // PERSONA
-  { id: "p1", stat: "persona", type: "boss", priority: "high", title: "7-day English Discord streak", desc: "Talk to real people in English every single day for 7 days. Initiate at least one conversation each day.", xp: 100, deadline: "" },
-  { id: "p2", stat: "persona", type: "main", priority: "high", title: "Discord English session — today", desc: "20 minutes minimum. Join a voice channel or send 10+ messages. You initiate.", xp: 40, deadline: "" },
-  { id: "p3", stat: "persona", type: "main", priority: "normal", title: "Practice 70/30 listening rule", desc: "In any real conversation today — listen more than you speak. Notice the difference.", xp: 35, deadline: "" },
-  { id: "p4", stat: "persona", type: "main", priority: "normal", title: "Initiate a conversation with a stranger", desc: "Could be anyone. You start it. Make it natural, not forced.", xp: 40, deadline: "" },
-  { id: "p5", stat: "persona", type: "side", priority: "normal", title: "Steve Jobs speech shadowing — 10 min", desc: "Focus on pace, deliberate pausing, and presence. Record yourself and listen back.", xp: 20, deadline: "" },
-  { id: "p6", stat: "persona", type: "side", priority: "low", title: "Morning mirror drill — 5 minutes", desc: "Speak confidently to yourself. Posture, eye contact, tone. Uncomfortable on purpose.", xp: 15, deadline: "" },
+  { id:"p1", stat:"persona", type:"boss", priority:"high",    title:"7-day English Discord streak", desc:"Talk to real people in English every single day for 7 days. Initiate at least one conversation each day.", xp:100, deadline:"" },
+  { id:"p2", stat:"persona", type:"main", priority:"high",    title:"Discord English session — today", desc:"20 minutes minimum. Join a voice channel or send 10+ messages. You initiate.", xp:40,  deadline:"" },
+  { id:"p3", stat:"persona", type:"main", priority:"normal",  title:"Practice 70/30 listening rule", desc:"In any real conversation today — listen more than you speak. Notice the difference.", xp:35,  deadline:"" },
+  { id:"p4", stat:"persona", type:"main", priority:"normal",  title:"Initiate a conversation with a stranger", desc:"Could be anyone. You start it. Make it natural, not forced.", xp:40,  deadline:"" },
+  { id:"p5", stat:"persona", type:"side", priority:"normal",  title:"Steve Jobs speech shadowing — 10 min", desc:"Focus on pace, deliberate pausing, and presence. Record yourself and listen back.", xp:20,  deadline:"" },
+  { id:"p6", stat:"persona", type:"side", priority:"low",     title:"Morning mirror drill — 5 minutes", desc:"Speak confidently to yourself. Posture, eye contact, tone. Uncomfortable on purpose.", xp:15,  deadline:"" },
 ];
 
 function getLvInfo(xp) {
@@ -372,7 +373,7 @@ function getLvTitle(stat, level) {
   return t[Math.min(level - 1, t.length - 1)];
 }
 function sortQ(quests) {
-  const to = { boss: 0, main: 1, side: 2 };
+  const to = { boss:0, main:1, side:2 };
   return [...quests].sort((a, b) => {
     if (a.done !== b.done) return a.done ? 1 : -1;
     const tp = to[a.type] - to[b.type];
@@ -386,11 +387,11 @@ function normalizeDateInput(dateStr) {
 }
 function dateOnly(dateLike) {
   const d = new Date(dateLike);
-  d.setHours(0, 0, 0, 0);
+  d.setHours(0,0,0,0);
   return d;
 }
 function formatDate(dateLike) {
-  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(new Date(dateLike));
+  return new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"short", year:"numeric" }).format(new Date(dateLike));
 }
 function toDateInput(dateLike) {
   return new Date(dateLike).toISOString().slice(0, 10);
@@ -408,7 +409,7 @@ function daysUntil(dateStr, base = new Date()) {
 }
 function formatCountdown(deadline, nowMs) {
   const diff = new Date(deadline).getTime() - nowMs;
-  if (diff <= 0) return { expired: true, clock: "00:00:00", status: "Time expired" };
+  if (diff <= 0) return { expired:true, clock:"00:00:00", status:"Time expired" };
   const days = Math.floor(diff / DAY_MS);
   const hours = Math.floor((diff % DAY_MS) / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -417,8 +418,8 @@ function formatCountdown(deadline, nowMs) {
   const mm = String(minutes).padStart(2, "0");
   const ss = String(seconds).padStart(2, "0");
   return {
-    expired: false,
-    clock: `${days > 0 ? `${days}d ` : ""}${hh}:${mm}:${ss}`,
+    expired:false,
+    clock:`${days > 0 ? `${days}d ` : ""}${hh}:${mm}:${ss}`,
     status: days > 0 ? `${days} day${days !== 1 ? "s" : ""} left` : "Final day",
   };
 }
@@ -426,16 +427,16 @@ function getLevelPunishment(statXP, deadline) {
   const weakest = STATS.reduce((lowest, stat) => statXP[stat] < statXP[lowest] ? stat : lowest, STATS[0]);
   const cfg = LEVEL_PUNISHMENTS[weakest];
   return {
-    id: `punishment_${Date.now()}`,
+    id:`punishment_${Date.now()}`,
     stat: weakest,
-    type: "boss",
-    priority: "urgent",
-    xp: 0,
-    done: false,
+    type:"boss",
+    priority:"urgent",
+    xp:0,
+    done:false,
     deadline: toDateInput(addDays(deadline, 1)),
     title: cfg.title,
     desc: cfg.desc,
-    isPenalty: true,
+    isPenalty:true,
   };
 }
 function sanitizeState(raw) {
@@ -463,11 +464,11 @@ function sanitizeState(raw) {
 function dlLabel(q) {
   const d = daysUntil(q.deadline);
   if (d === null) return null;
-  if (d < 0) return { text: `${Math.abs(d)}d overdue`, cls: "dl-over" };
-  if (d === 0) return { text: "Due today", cls: "dl-urgent" };
-  if (d === 1) return { text: "Due tomorrow", cls: "dl-urgent" };
-  if (d <= 3) return { text: `${d}d left`, cls: "dl-warn" };
-  return { text: `${d}d left`, cls: "dl-ok" };
+  if (d < 0)  return { text:`${Math.abs(d)}d overdue`, cls:"dl-over" };
+  if (d === 0) return { text:"Due today", cls:"dl-urgent" };
+  if (d === 1) return { text:"Due tomorrow", cls:"dl-urgent" };
+  if (d <= 3)  return { text:`${d}d left`, cls:"dl-warn" };
+  return { text:`${d}d left`, cls:"dl-ok" };
 }
 
 // ── STORAGE HELPERS ──────────────────────────────────────────────────────────
@@ -476,11 +477,21 @@ function loadState() {
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (raw) return sanitizeState(JSON.parse(raw));
-  } catch (e) { }
+  } catch(e) {}
   return null;
 }
 function saveState(state) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) { }
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {}
+}
+async function requestOracle(payload) {
+  const res = await fetch(AI_ROUTE, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data?.error || "Oracle request failed");
+  return data;
 }
 
 // ── APP ──────────────────────────────────────────────────────────────────────
@@ -496,28 +507,28 @@ export default function LifeRPG() {
   );
 
   // MAIN APP STATE — restored from localStorage or zero
-  const [quests, setQuests] = useState(() => saved.current?.quests || []);
-  const [statXP, setStatXP] = useState(() => saved.current?.statXP || { strength: 0, creativity: 0, intelligence: 0, persona: 0 });
-  const [streak, setStreak] = useState(() => saved.current?.streak || 0);
+  const [quests, setQuests]     = useState(() => saved.current?.quests || []);
+  const [statXP, setStatXP]     = useState(() => saved.current?.statXP || { strength:0, creativity:0, intelligence:0, persona:0 });
+  const [streak, setStreak]     = useState(() => saved.current?.streak || 0);
   const [levelDeadline, setLevelDeadline] = useState(() => saved.current?.levelDeadline || LEVEL_1_DEFAULT_DEADLINE);
-  const [page, setPage] = useState("home");
+  const [page, setPage]         = useState("home");
   const [activeStat, setActiveStat] = useState(null);
-  const [toast, setToast] = useState(null);
-  const [levelUp, setLevelUp] = useState(null);
-  const [penalty, setPenalty] = useState(null);
+  const [toast, setToast]       = useState(null);
+  const [levelUp, setLevelUp]   = useState(null);
+  const [penalty, setPenalty]   = useState(null);
   const [penaltyWhy, setPenaltyWhy] = useState("");
   const [levelPenalty, setLevelPenalty] = useState(null);
   const [levelPenaltyWhy, setLevelPenaltyWhy] = useState("");
   const [pendingComplete, setPendingComplete] = useState(null);
-  const [editingId, setEditingId] = useState(null);
-  const [editForm, setEditForm] = useState({});
+  const [editingId, setEditingId]   = useState(null);
+  const [editForm, setEditForm]     = useState({});
   const [aiSuggestion, setAiSuggestion] = useState(null);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [showAdd, setShowAdd] = useState(false);
-  const [newQ, setNewQ] = useState({ title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
+  const [aiLoading, setAiLoading]   = useState(false);
+  const [showAdd, setShowAdd]       = useState(false);
+  const [newQ, setNewQ]             = useState({ title:"", desc:"", type:"main", priority:"normal", xp:30, deadline:"" });
   const [showBoardAdd, setShowBoardAdd] = useState(false);
-  const [boardQ, setBoardQ] = useState({ stat: "strength", title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
-  const [nowMs, setNowMs] = useState(seededNow);
+  const [boardQ, setBoardQ] = useState({ stat:"strength", title:"", desc:"", type:"main", priority:"normal", xp:30, deadline:"" });
+  const [nowMs, setNowMs]           = useState(seededNow);
   const oracle = useRef(ORACLES[Math.floor(Math.random() * ORACLES.length)]).current;
 
   // PERSIST on every change
@@ -549,7 +560,7 @@ export default function LifeRPG() {
   function confirmQuests() {
     const chosen = QUEST_POOL.filter(q => selectedIds.has(q.id));
     setQuests(chosen);
-    setStatXP({ strength: 0, creativity: 0, intelligence: 0, persona: 0 });
+    setStatXP({ strength:0, creativity:0, intelligence:0, persona:0 });
     setStreak(0);
     setLevelDeadline(LEVEL_1_DEFAULT_DEADLINE);
     setOnboarding(false);
@@ -563,13 +574,13 @@ export default function LifeRPG() {
 
   function completeQuest(q) {
     if (q.done) return;
-    const prevXP = statXP[q.stat];
-    const prevLv = getLvInfo(prevXP).level;
-    const newXP = prevXP + q.xp;
-    const newLv = getLvInfo(newXP).level;
+    const prevXP  = statXP[q.stat];
+    const prevLv  = getLvInfo(prevXP).level;
+    const newXP   = prevXP + q.xp;
+    const newLv   = getLvInfo(newXP).level;
     const newStreak = streak + 1;
 
-    setQuests(qs => qs.map(x => x.id === q.id ? { ...x, done: true } : x));
+    setQuests(qs => qs.map(x => x.id === q.id ? { ...x, done:true } : x));
     setStatXP(p => ({ ...p, [q.stat]: p[q.stat] + q.xp }));
     setStreak(newStreak);
 
@@ -577,7 +588,7 @@ export default function LifeRPG() {
     setToast({ ...r, xp: q.xp });
     setTimeout(() => setToast(null), 2800);
 
-    if (newLv > prevLv) setTimeout(() => setLevelUp({ stat: q.stat, level: newLv }), 900);
+    if (newLv > prevLv) setTimeout(() => setLevelUp({ stat:q.stat, level:newLv }), 900);
   }
 
   function confirmCompleteQuest() {
@@ -588,18 +599,18 @@ export default function LifeRPG() {
 
   function undoQuest(q) {
     if (!q.done) return;
-    setQuests(qs => qs.map(x => x.id === q.id ? { ...x, done: false } : x));
+    setQuests(qs => qs.map(x => x.id === q.id ? { ...x, done:false } : x));
     setStatXP(p => ({ ...p, [q.stat]: Math.max(0, p[q.stat] - q.xp) }));
     setStreak(s => Math.max(0, s - 1));
     setLevelUp(null);
-    setToast({ e: "↩", m: "Quest reopened.", xp: q.xp });
+    setToast({ e:"↩", m:"Quest reopened.", xp:q.xp });
     setTimeout(() => setToast(null), 2200);
   }
 
   function openEdit(q) {
     if (editingId === q.id) { setEditingId(null); setAiSuggestion(null); return; }
     setEditingId(q.id);
-    setEditForm({ title: q.title, desc: q.desc || "", type: q.type, priority: q.priority, xp: q.xp, deadline: q.deadline || "" });
+    setEditForm({ title:q.title, desc:q.desc||"", type:q.type, priority:q.priority, xp:q.xp, deadline:q.deadline||"" });
     setAiSuggestion(null);
   }
 
@@ -610,25 +621,26 @@ export default function LifeRPG() {
     setAiLoading(true);
     setAiSuggestion(null);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 600,
-          system: "You are a Life RPG quest advisor. When a user edits a quest it signals progression. Generate the ONE most logical next quest. Be specific. Return ONLY valid JSON, no markdown.",
-          messages: [{ role: "user", content: `Stat: ${STAT_CFG[q.stat].label}\nOriginal: "${q.title}"\nUpdated to: "${updated.title}" — ${updated.desc}\nGenerate next logical quest.\nReturn: {"title":"...","desc":"...","type":"side|main|boss","priority":"urgent|high|normal|low","xp":30}` }]
-        })
+      const data = await requestOracle({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:600,
+        system:"You are a Life RPG quest advisor. When a user edits a quest it signals progression. Generate the ONE most logical next quest. Be specific. Return ONLY valid JSON, no markdown.",
+        messages:[{ role:"user", content:`Stat: ${STAT_CFG[q.stat].label}\nOriginal: "${q.title}"\nUpdated to: "${updated.title}" — ${updated.desc}\nGenerate next logical quest.\nReturn: {"title":"...","desc":"...","type":"side|main|boss","priority":"urgent|high|normal|low","xp":30}` }],
       });
-      const data = await res.json();
       const raw = data.content?.[0]?.text || "{}";
-      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setAiSuggestion({ ...parsed, stat: q.stat });
-    } catch (e) { console.error(e); }
+      const parsed = JSON.parse(raw.replace(/```json|```/g,"").trim());
+      setAiSuggestion({ ...parsed, stat:q.stat });
+    } catch(e) {
+      console.error(e);
+      setToast({ e:"⚠", m:"Oracle unavailable right now.", xp:0 });
+      setTimeout(() => setToast(null), 2400);
+    }
     setAiLoading(false);
   }
 
   function addSuggestion() {
     if (!aiSuggestion) return;
-    setQuests(qs => [...qs, { ...aiSuggestion, id: `ai_${Date.now()}`, done: false, xp: parseInt(aiSuggestion.xp) || 30, deadline: null }]);
+    setQuests(qs => [...qs, { ...aiSuggestion, id:`ai_${Date.now()}`, done:false, xp:parseInt(aiSuggestion.xp)||30, deadline:null }]);
     setAiSuggestion(null);
   }
 
@@ -642,33 +654,34 @@ export default function LifeRPG() {
       persona: "Confidence, communication, English fluency. Discord practice, 70/30 listening, Steve Jobs shadowing.",
     };
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 800,
-          system: "You are a Life RPG quest advisor. Generate 3 specific actionable quests. Direct, no fluff. Return ONLY valid JSON array.",
-          messages: [{ role: "user", content: `Stat: ${STAT_CFG[stat].label}\nContext: ${ctx[stat]}\nDon't duplicate: ${existing}\nGenerate 3 quests. Each: title (action verb start), desc (1 specific sentence), type, priority, xp (15-120).\nReturn: [{"title":"...","desc":"...","type":"main","priority":"normal","xp":40}]` }]
-        })
+      const data = await requestOracle({
+        model:"claude-sonnet-4-20250514",
+        max_tokens:800,
+        system:"You are a Life RPG quest advisor. Generate 3 specific actionable quests. Direct, no fluff. Return ONLY valid JSON array.",
+        messages:[{ role:"user", content:`Stat: ${STAT_CFG[stat].label}\nContext: ${ctx[stat]}\nDon't duplicate: ${existing}\nGenerate 3 quests. Each: title (action verb start), desc (1 specific sentence), type, priority, xp (15-120).\nReturn: [{"title":"...","desc":"...","type":"main","priority":"normal","xp":40}]` }],
       });
-      const data = await res.json();
       const raw = data.content?.[0]?.text || "[]";
-      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setQuests(qs => [...qs, ...parsed.map(q => ({ ...q, id: `ai_${Date.now()}_${Math.random()}`, stat, done: false, xp: parseInt(q.xp) || 30, deadline: null }))]);
-    } catch (e) { console.error(e); }
+      const parsed = JSON.parse(raw.replace(/```json|```/g,"").trim());
+      setQuests(qs => [...qs, ...parsed.map(q => ({ ...q, id:`ai_${Date.now()}_${Math.random()}`, stat, done:false, xp:parseInt(q.xp)||30, deadline:null }))]);
+    } catch(e) {
+      console.error(e);
+      setToast({ e:"⚠", m:"Could not generate quests.", xp:0 });
+      setTimeout(() => setToast(null), 2400);
+    }
     setAiLoading(false);
   }
 
   function addManualQuest(stat) {
     if (!newQ.title.trim()) return;
-    setQuests(qs => [...qs, { ...newQ, id: `m_${Date.now()}`, stat, done: false, xp: parseInt(newQ.xp) || 30, deadline: newQ.deadline || null }]);
-    setNewQ({ title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
+    setQuests(qs => [...qs, { ...newQ, id:`m_${Date.now()}`, stat, done:false, xp:parseInt(newQ.xp)||30, deadline:newQ.deadline||null }]);
+    setNewQ({ title:"", desc:"", type:"main", priority:"normal", xp:30, deadline:"" });
     setShowAdd(false);
   }
 
   function addBoardQuest() {
     if (!boardQ.title.trim()) return;
-    setQuests(qs => [...qs, { ...boardQ, id: `b_${Date.now()}`, done: false, xp: parseInt(boardQ.xp) || 30, deadline: boardQ.deadline || null }]);
-    setBoardQ({ stat: "strength", title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
+    setQuests(qs => [...qs, { ...boardQ, id:`b_${Date.now()}`, done:false, xp:parseInt(boardQ.xp)||30, deadline:boardQ.deadline||null }]);
+    setBoardQ({ stat:"strength", title:"", desc:"", type:"main", priority:"normal", xp:30, deadline:"" });
     setShowBoardAdd(false);
   }
 
@@ -678,14 +691,14 @@ export default function LifeRPG() {
       setEditingId(null);
       setAiSuggestion(null);
     }
-    setToast({ e: "✕", m: "Quest removed.", xp: 0 });
+    setToast({ e:"✕", m:"Quest removed.", xp:0 });
     setTimeout(() => setToast(null), 2200);
   }
 
   function acceptPenalty() {
     if (!penalty || !penaltyWhy.trim()) return;
     setStatXP(p => ({ ...p, [penalty.stat]: Math.max(0, p[penalty.stat] - 30) }));
-    setQuests(qs => qs.map(q => q.id === penalty.id ? { ...q, deadline: null } : q));
+    setQuests(qs => qs.map(q => q.id === penalty.id ? { ...q, deadline:null } : q));
     setPenalty(null); setPenaltyWhy("");
   }
 
@@ -696,7 +709,7 @@ export default function LifeRPG() {
     setLevelDeadline(extendedDeadline);
     setLevelPenalty(null);
     setLevelPenaltyWhy("");
-    setToast({ e: "⏳", m: "Level 1 extended. Punishment quest added.", xp: 0 });
+    setToast({ e:"⏳", m:"Level 1 extended. Punishment quest added.", xp:0 });
     setTimeout(() => setToast(null), 2800);
   }
 
@@ -716,7 +729,7 @@ export default function LifeRPG() {
   }
 
   // ── DERIVED ──────────────────────────────────────────────────────────────
-  const totalXP = Object.values(statXP).reduce((a, b) => a + b, 0);
+  const totalXP = Object.values(statXP).reduce((a,b) => a+b, 0);
   const totalProgress = Math.min((totalXP / TOTAL_LV1_XP) * 100, 100);
   const totalDone = quests.filter(q => q.done).length;
   const todayQ = sortQ(quests.filter(q => !q.done)).slice(0, 5);
@@ -749,11 +762,11 @@ export default function LifeRPG() {
                 <div className="ob-progress-count">{selectedCount} / {QUEST_POOL.length}</div>
               </div>
               <div className="ob-track">
-                <div className="ob-fill" style={{ width: `${(selectedCount / QUEST_POOL.length) * 100}%` }} />
+                <div className="ob-fill" style={{ width:`${(selectedCount/QUEST_POOL.length)*100}%` }}/>
               </div>
             </div>
 
-            <div style={{ flex: 1, overflowY: "auto", paddingBottom: 100 }}>
+            <div style={{flex:1,overflowY:"auto",paddingBottom:100}}>
               {STATS.map(stat => {
                 const cfg = STAT_CFG[stat];
                 const pool = QUEST_POOL.filter(q => q.stat === stat);
@@ -762,7 +775,7 @@ export default function LifeRPG() {
                   <div className="ob-stat-section" key={stat}>
                     <div className="ob-stat-header">
                       <div className="ob-stat-icon">{cfg.icon}</div>
-                      <div className="ob-stat-name" style={{ color: cfg.color }}>{cfg.label}</div>
+                      <div className="ob-stat-name" style={{color:cfg.color}}>{cfg.label}</div>
                       <div className="ob-stat-count">{selCount}/{pool.length} selected</div>
                     </div>
                     <div className="ob-quest-list">
@@ -770,13 +783,13 @@ export default function LifeRPG() {
                         const sel = selectedIds.has(q.id);
                         const dl = dlLabel(q);
                         return (
-                          <div key={q.id} className={`ob-qcard ${q.priority} ${sel ? "selected" : ""}`} onClick={() => toggleSelect(q.id)}>
-                            <div className={`ob-check`}>{sel ? "✓" : ""}</div>
+                          <div key={q.id} className={`ob-qcard ${q.priority} ${sel?"selected":""}`} onClick={()=>toggleSelect(q.id)}>
+                            <div className={`ob-check`}>{sel?"✓":""}</div>
                             <div className="ob-qinfo">
                               <div className="ob-qtags">
-                                <span className={`ob-qtag ${q.type === "boss" ? "ob-qtype-boss" : q.type === "main" ? "ob-qtype-main" : "ob-qtype-side"}`}
-                                  style={q.type === "main" ? { color: cfg.color, borderColor: cfg.color } : {}}>
-                                  {q.type === "boss" ? "⚡ Boss" : q.type === "main" ? "Main" : "Side"}
+                                <span className={`ob-qtag ${q.type==="boss"?"ob-qtype-boss":q.type==="main"?"ob-qtype-main":"ob-qtype-side"}`}
+                                  style={q.type==="main"?{color:cfg.color,borderColor:cfg.color}:{}}>
+                                  {q.type==="boss"?"⚡ Boss":q.type==="main"?"Main":"Side"}
                                 </span>
                                 <span className={`ob-qprio ${q.priority}`}>{q.priority}</span>
                                 {dl && <span className={`ob-qprio ${q.priority}`}>📅 {dl.text}</span>}
@@ -795,8 +808,8 @@ export default function LifeRPG() {
             </div>
 
             <div className="ob-footer">
-              <button className="ob-confirm-btn" onClick={confirmQuests} disabled={selectedCount === 0}>
-                Start with {selectedCount} Quest{selectedCount !== 1 ? "s" : ""}  →
+              <button className="ob-confirm-btn" onClick={confirmQuests} disabled={selectedCount===0}>
+                Start with {selectedCount} Quest{selectedCount!==1?"s":""}  →
               </button>
               <div className="ob-confirm-hint">You can add, edit, or remove quests anytime</div>
             </div>
@@ -813,7 +826,7 @@ export default function LifeRPG() {
       <div className="app">
 
         {/* TOAST */}
-        <div className={`toast ${toast ? "show" : ""}`}>
+        <div className={`toast ${toast?"show":""}`}>
           {toast && <><div className="toast-e">{toast.e}</div><div className="toast-m">{toast.m}</div><div className="toast-xp">+{toast.xp} XP</div></>}
         </div>
 
@@ -823,7 +836,7 @@ export default function LifeRPG() {
             <div className="lu-icon">{STAT_CFG[levelUp.stat].icon}</div>
             <div className="lu-title">LEVEL {levelUp.level}</div>
             <div className="lu-sub">{STAT_CFG[levelUp.stat].label} — {getLvTitle(levelUp.stat, levelUp.level)}</div>
-            <button className="lu-btn" onClick={() => setLevelUp(null)}>Continue</button>
+            <button className="lu-btn" onClick={()=>setLevelUp(null)}>Continue</button>
           </div>
         )}
 
@@ -836,7 +849,7 @@ export default function LifeRPG() {
               <div className="confirm-desc">This will add XP and move the quest into completed.</div>
               <div className="confirm-quest">"{pendingComplete.title}"</div>
               <div className="confirm-actions">
-                <button className="confirm-cancel" onClick={() => setPendingComplete(null)}>Cancel</button>
+                <button className="confirm-cancel" onClick={()=>setPendingComplete(null)}>Cancel</button>
                 <button className="confirm-accept" onClick={confirmCompleteQuest}>Yes, Completed</button>
               </div>
             </div>
@@ -854,7 +867,7 @@ export default function LifeRPG() {
               <div className="penalty-desc">Accept this hard task to continue Level 1 from where you left off.</div>
               <div className="penalty-sub">New level deadline after accepting: {formatDate(addDays(levelDeadline, 1))}</div>
               <div className="penalty-why-label">Why did Level 1 slip?</div>
-              <textarea className="penalty-textarea" placeholder="Name the real reason so the next push is tighter..." value={levelPenaltyWhy} onChange={e => setLevelPenaltyWhy(e.target.value)} />
+              <textarea className="penalty-textarea" placeholder="Name the real reason so the next push is tighter..." value={levelPenaltyWhy} onChange={e=>setLevelPenaltyWhy(e.target.value)}/>
               <button className="penalty-btn" onClick={acceptLevelPenalty} disabled={!levelPenaltyWhy.trim()}>Accept Punishment & Continue</button>
             </div>
           </div>
@@ -870,17 +883,17 @@ export default function LifeRPG() {
               <div className="penalty-quest">"{penalty.title}"</div>
               <div className="penalty-xp">−30 XP</div>
               <div className="penalty-why-label">Why did you miss it?</div>
-              <input className="penalty-input" placeholder="Be honest with yourself..." value={penaltyWhy} onChange={e => setPenaltyWhy(e.target.value)} />
+              <input className="penalty-input" placeholder="Be honest with yourself..." value={penaltyWhy} onChange={e=>setPenaltyWhy(e.target.value)}/>
               <button className="penalty-btn" onClick={acceptPenalty} disabled={!penaltyWhy.trim()}>Accept & Continue</button>
             </div>
           </div>
         )}
 
         {/* ── HOME ── */}
-        {page === "home" && (
+        {page==="home" && (
           <div className="page">
             <div className="profile-header">
-              <div className="avatar">N<div className="avatar-ring" /></div>
+              <div className="avatar">N<div className="avatar-ring"/></div>
               <div className="profile-info">
                 <div className="profile-name">Nikul</div>
                 <div className="profile-role">Creative Director</div>
@@ -893,7 +906,7 @@ export default function LifeRPG() {
                 <div className="cxp-label">Level 1 Progress</div>
                 <div className="cxp-pct">{Math.round(totalProgress)}%</div>
               </div>
-              <div className="cxp-track"><div className="cxp-fill" style={{ width: `${totalProgress}%` }} /></div>
+              <div className="cxp-track"><div className="cxp-fill" style={{width:`${totalProgress}%`}}/></div>
               <div className="cxp-bottom">
                 <div className="cxp-nums">{totalXP} / {TOTAL_LV1_XP} XP</div>
                 <div className="cxp-quests">{totalDone} / {quests.length} quests done</div>
@@ -915,12 +928,12 @@ export default function LifeRPG() {
             </div>
 
             <div className="quick-actions">
-              <button className="quick-action-btn" onClick={() => openQuestBoardAdd("strength")}>+ Add Quest</button>
-              <button className="quick-action-btn" onClick={() => navTo("quests")}>Manage Quest List</button>
+              <button className="quick-action-btn" onClick={()=>openQuestBoardAdd("strength")}>+ Add Quest</button>
+              <button className="quick-action-btn" onClick={()=>navTo("quests")}>Manage Quest List</button>
             </div>
 
             <div className="oracle-card">
-              <div className="oracle-dot"><div className="oracle-pip" /><div className="oracle-lbl">Oracle</div></div>
+              <div className="oracle-dot"><div className="oracle-pip"/><div className="oracle-lbl">Oracle</div></div>
               <div className="oracle-text">"{oracle}"</div>
             </div>
 
@@ -930,10 +943,10 @@ export default function LifeRPG() {
                 const cfg = STAT_CFG[key];
                 const info = getLvInfo(statXP[key]);
                 return (
-                  <div className="stat-mini" key={key} onClick={() => navTo("stat", key)}>
+                  <div className="stat-mini" key={key} onClick={()=>navTo("stat",key)}>
                     <div className="stat-mini-icon">{cfg.icon}</div>
-                    <div className="stat-mini-lv" style={{ color: cfg.color }}>Lv {info.level}</div>
-                    <div className="stat-mini-bar"><div className="stat-mini-fill" style={{ width: `${info.progress}%`, background: cfg.color }} /></div>
+                    <div className="stat-mini-lv" style={{color:cfg.color}}>Lv {info.level}</div>
+                    <div className="stat-mini-bar"><div className="stat-mini-fill" style={{width:`${info.progress}%`,background:cfg.color}}/></div>
                   </div>
                 );
               })}
@@ -941,16 +954,16 @@ export default function LifeRPG() {
 
             <div className="sh">
               <div className="sh-title">Today's Priority</div>
-              <button className="sh-action" onClick={() => navTo("quests")}>All →</button>
+              <button className="sh-action" onClick={()=>navTo("quests")}>All →</button>
             </div>
             <div className="ql">
-              {todayQ.length === 0 && <div className="empty">All quests complete. Absolute monster. 🏆</div>}
+              {todayQ.length===0 && <div className="empty">All quests complete. Absolute monster. 🏆</div>}
               {todayQ.map(q => (
                 <QCard key={q.id} q={q} onComplete={requestCompleteQuest} onEdit={openEdit} onDelete={removeQuest}
                   editingId={editingId} editForm={editForm} setEditForm={setEditForm}
-                  onSaveEdit={saveEdit} aiSuggestion={editingId === q.id ? aiSuggestion : null}
-                  aiLoading={editingId === q.id ? aiLoading : false} onAddSuggestion={addSuggestion}
-                  onCancelEdit={() => { setEditingId(null); setAiSuggestion(null); }}
+                  onSaveEdit={saveEdit} aiSuggestion={editingId===q.id?aiSuggestion:null}
+                  aiLoading={editingId===q.id?aiLoading:false} onAddSuggestion={addSuggestion}
+                  onCancelEdit={()=>{setEditingId(null);setAiSuggestion(null);}}
                 />
               ))}
             </div>
@@ -958,43 +971,43 @@ export default function LifeRPG() {
         )}
 
         {/* ── QUEST BOARD ── */}
-        {page === "quests" && (
+        {page==="quests" && (
           <div className="page">
-            <div style={{ padding: "40px 20px 16px" }}>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "var(--text3)", marginBottom: 6 }}>Level 1</div>
-              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, marginBottom: 4 }}>Quest Board</div>
-              <div style={{ fontSize: 12, color: "var(--text2)" }}>{totalDone}/{quests.length} complete · {Math.round(totalProgress)}% to Level 2</div>
+            <div style={{padding:"40px 20px 16px"}}>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:9,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"var(--text3)",marginBottom:6}}>Level 1</div>
+              <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,fontWeight:800,marginBottom:4}}>Quest Board</div>
+              <div style={{fontSize:12,color:"var(--text2)"}}>{totalDone}/{quests.length} complete · {Math.round(totalProgress)}% to Level 2</div>
             </div>
 
             <div className="sh">
               <div className="sh-title">Manage Quests</div>
-              <button className="sh-action" onClick={() => setShowBoardAdd(v => !v)}>{showBoardAdd ? "Cancel" : "+ Add Quest"}</button>
+              <button className="sh-action" onClick={()=>setShowBoardAdd(v=>!v)}>{showBoardAdd ? "Cancel" : "+ Add Quest"}</button>
             </div>
 
             {showBoardAdd && (
               <div className="add-form">
                 <div className="add-form-title">Add Quest To Board</div>
                 <div className="ep-2">
-                  <div className="ep-row" style={{ marginBottom: 0 }}>
+                  <div className="ep-row" style={{marginBottom:0}}>
                     <label className="ep-label">Stat</label>
-                    <select className="ep-select" value={boardQ.stat} onChange={e => setBoardQ(p => ({ ...p, stat: e.target.value }))}>
+                    <select className="ep-select" value={boardQ.stat} onChange={e=>setBoardQ(p=>({...p,stat:e.target.value}))}>
                       {STATS.map(stat => <option key={stat} value={stat}>{STAT_CFG[stat].label}</option>)}
                     </select>
                   </div>
-                  <div className="ep-row" style={{ marginBottom: 0 }}>
+                  <div className="ep-row" style={{marginBottom:0}}>
                     <label className="ep-label">Type</label>
-                    <select className="ep-select" value={boardQ.type} onChange={e => setBoardQ(p => ({ ...p, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select>
+                    <select className="ep-select" value={boardQ.type} onChange={e=>setBoardQ(p=>({...p,type:e.target.value}))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select>
                   </div>
                 </div>
-                <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={boardQ.title} onChange={e => setBoardQ(p => ({ ...p, title: e.target.value }))} placeholder="What needs to be done?" /></div>
-                <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={boardQ.desc} onChange={e => setBoardQ(p => ({ ...p, desc: e.target.value }))} placeholder="Details..." /></div>
+                <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={boardQ.title} onChange={e=>setBoardQ(p=>({...p,title:e.target.value}))} placeholder="What needs to be done?"/></div>
+                <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={boardQ.desc} onChange={e=>setBoardQ(p=>({...p,desc:e.target.value}))} placeholder="Details..."/></div>
                 <div className="ep-2">
-                  <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Priority</label><select className="ep-select" value={boardQ.priority} onChange={e => setBoardQ(p => ({ ...p, priority: e.target.value }))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
-                  <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">XP</label><input className="ep-input" type="number" value={boardQ.xp} onChange={e => setBoardQ(p => ({ ...p, xp: e.target.value }))} /></div>
+                  <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">Priority</label><select className="ep-select" value={boardQ.priority} onChange={e=>setBoardQ(p=>({...p,priority:e.target.value}))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
+                  <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">XP</label><input className="ep-input" type="number" value={boardQ.xp} onChange={e=>setBoardQ(p=>({...p,xp:e.target.value}))}/></div>
                 </div>
-                <div className="ep-row" style={{ marginTop: 8, marginBottom: 0 }}><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={boardQ.deadline} onChange={e => setBoardQ(p => ({ ...p, deadline: e.target.value }))} /></div>
+                <div className="ep-row" style={{marginTop:8,marginBottom:0}}><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={boardQ.deadline} onChange={e=>setBoardQ(p=>({...p,deadline:e.target.value}))}/></div>
                 <div className="ep-actions">
-                  <button className="ep-cancel" onClick={() => setShowBoardAdd(false)}>Cancel</button>
+                  <button className="ep-cancel" onClick={()=>setShowBoardAdd(false)}>Cancel</button>
                   <button className="ep-save" onClick={addBoardQuest} disabled={!boardQ.title.trim()}>Add To Quest Board</button>
                 </div>
               </div>
@@ -1002,33 +1015,33 @@ export default function LifeRPG() {
 
             {STATS.map(stat => {
               const cfg = STAT_CFG[stat];
-              const statQ = sortQ(quests.filter(q => q.stat === stat));
+              const statQ = sortQ(quests.filter(q => q.stat===stat));
               const active = statQ.filter(q => !q.done);
-              const done = statQ.filter(q => q.done);
-              const pct = statQ.length ? (done.length / statQ.length) * 100 : 0;
+              const done   = statQ.filter(q => q.done);
+              const pct = statQ.length ? (done.length/statQ.length)*100 : 0;
               return (
                 <div className="stat-group" key={stat}>
                   <div className="stat-group-header">
                     <div className="stat-group-icon">{cfg.icon}</div>
-                    <div className="stat-group-name" style={{ color: cfg.color }}>{cfg.label}</div>
+                    <div className="stat-group-name" style={{color:cfg.color}}>{cfg.label}</div>
                     <div className="stat-group-count">{done.length}/{statQ.length} done</div>
                   </div>
                   <div className="stat-group-bar">
-                    <div className="stat-group-bar-fill" style={{ width: `${pct}%`, background: cfg.color }} />
+                    <div className="stat-group-bar-fill" style={{width:`${pct}%`,background:cfg.color}}/>
                   </div>
-                  <div className="ql" style={{ marginBottom: 0 }}>
-                    {active.length === 0 && <div className="empty" style={{ padding: "10px 0" }}>All {cfg.label} quests complete ✓</div>}
+                  <div className="ql" style={{marginBottom:0}}>
+                    {active.length===0 && <div className="empty" style={{padding:"10px 0"}}>All {cfg.label} quests complete ✓</div>}
                     {active.map(q => (
                       <QCard key={q.id} q={q} onComplete={requestCompleteQuest} onEdit={openEdit} onDelete={removeQuest}
                         editingId={editingId} editForm={editForm} setEditForm={setEditForm}
-                        onSaveEdit={saveEdit} aiSuggestion={editingId === q.id ? aiSuggestion : null}
-                        aiLoading={editingId === q.id ? aiLoading : false} onAddSuggestion={addSuggestion}
-                        onCancelEdit={() => { setEditingId(null); setAiSuggestion(null); }}
+                        onSaveEdit={saveEdit} aiSuggestion={editingId===q.id?aiSuggestion:null}
+                        aiLoading={editingId===q.id?aiLoading:false} onAddSuggestion={addSuggestion}
+                        onCancelEdit={()=>{setEditingId(null);setAiSuggestion(null);}}
                       />
                     ))}
-                    {done.map(q => <QCard key={q.id} q={q} onComplete={() => { }} onEdit={() => { }} onUndo={undoQuest} editingId={null} onCancelEdit={() => { }} />)}
+                    {done.map(q => <QCard key={q.id} q={q} onComplete={()=>{}} onEdit={()=>{}} onUndo={undoQuest} editingId={null} onCancelEdit={()=>{}}/>)}
                   </div>
-                  <div className="divider" />
+                  <div className="divider"/>
                 </div>
               );
             })}
@@ -1036,74 +1049,74 @@ export default function LifeRPG() {
         )}
 
         {/* ── STAT PAGE ── */}
-        {page === "stat" && activeStat && (() => {
-          const cfg = STAT_CFG[activeStat];
+        {page==="stat" && activeStat && (() => {
+          const cfg  = STAT_CFG[activeStat];
           const info = getLvInfo(statXP[activeStat]);
-          const sq = sortQ(quests.filter(q => q.stat === activeStat));
+          const sq   = sortQ(quests.filter(q => q.stat===activeStat));
           const active = sq.filter(q => !q.done);
-          const done = sq.filter(q => q.done);
+          const done   = sq.filter(q => q.done);
           return (
             <div className="page">
               <div className="sph">
                 <div className="sph-top">
                   <div className="sph-icon-big">{cfg.icon}</div>
-                  <div><div className="sph-name" style={{ color: cfg.color }}>{cfg.label}</div><div className="sph-lv">Level {info.level} — {getLvTitle(activeStat, info.level)}</div></div>
+                  <div><div className="sph-name" style={{color:cfg.color}}>{cfg.label}</div><div className="sph-lv">Level {info.level} — {getLvTitle(activeStat,info.level)}</div></div>
                 </div>
                 <div className="sph-xp-card">
                   <div className="sph-xp-top">
                     <div className="sph-xp-label">XP Progress</div>
-                    <div className="sph-xp-val" style={{ color: cfg.color }}>{info.current} / {XP_PER_LEVEL}</div>
+                    <div className="sph-xp-val" style={{color:cfg.color}}>{info.current} / {XP_PER_LEVEL}</div>
                   </div>
-                  <div className="sph-track"><div className="sph-fill" style={{ width: `${info.progress}%`, background: cfg.color }} /></div>
+                  <div className="sph-track"><div className="sph-fill" style={{width:`${info.progress}%`,background:cfg.color}}/></div>
                 </div>
                 <div className="sph-quest-stats">
-                  <div className="sph-qs-card"><div className="sph-qs-num" style={{ color: cfg.color }}>{sq.length}</div><div className="sph-qs-label">Total</div></div>
-                  <div className="sph-qs-card"><div className="sph-qs-num" style={{ color: "var(--urgent)" }}>{active.filter(q => q.type === "boss").length}</div><div className="sph-qs-label">Boss</div></div>
-                  <div className="sph-qs-card"><div className="sph-qs-num" style={{ color: "var(--green)" }}>{done.length}</div><div className="sph-qs-label">Done</div></div>
+                  <div className="sph-qs-card"><div className="sph-qs-num" style={{color:cfg.color}}>{sq.length}</div><div className="sph-qs-label">Total</div></div>
+                  <div className="sph-qs-card"><div className="sph-qs-num" style={{color:"var(--urgent)"}}>{active.filter(q=>q.type==="boss").length}</div><div className="sph-qs-label">Boss</div></div>
+                  <div className="sph-qs-card"><div className="sph-qs-num" style={{color:"var(--green)"}}>{done.length}</div><div className="sph-qs-label">Done</div></div>
                 </div>
               </div>
 
-              <button className="ai-gen-btn" onClick={() => genAIQuests(activeStat)} disabled={aiLoading}>
-                {aiLoading ? <span className="dots"><span className="dot" /><span className="dot" /><span className="dot" /></span> : `✦ Generate ${cfg.label} Quests`}
+              <button className="ai-gen-btn" onClick={()=>genAIQuests(activeStat)} disabled={aiLoading}>
+                {aiLoading ? <span className="dots"><span className="dot"/><span className="dot"/><span className="dot"/></span> : `✦ Generate ${cfg.label} Quests`}
               </button>
 
               <div className="sh">
                 <div className="sh-title">Active Quests</div>
-                <button className="sh-action" onClick={() => setShowAdd(f => !f)}>{showAdd ? "Cancel" : "+ Add"}</button>
+                <button className="sh-action" onClick={()=>setShowAdd(f=>!f)}>{showAdd?"Cancel":"+ Add"}</button>
               </div>
 
               {showAdd && (
                 <div className="add-form">
                   <div className="add-form-title">New Quest</div>
-                  <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={newQ.title} onChange={e => setNewQ(p => ({ ...p, title: e.target.value }))} placeholder="What needs to be done?" /></div>
-                  <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={newQ.desc} onChange={e => setNewQ(p => ({ ...p, desc: e.target.value }))} placeholder="Details..." /></div>
+                  <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={newQ.title} onChange={e=>setNewQ(p=>({...p,title:e.target.value}))} placeholder="What needs to be done?"/></div>
+                  <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={newQ.desc} onChange={e=>setNewQ(p=>({...p,desc:e.target.value}))} placeholder="Details..."/></div>
                   <div className="ep-2">
-                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Type</label><select className="ep-select" value={newQ.type} onChange={e => setNewQ(p => ({ ...p, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
-                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Priority</label><select className="ep-select" value={newQ.priority} onChange={e => setNewQ(p => ({ ...p, priority: e.target.value }))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
+                    <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">Type</label><select className="ep-select" value={newQ.type} onChange={e=>setNewQ(p=>({...p,type:e.target.value}))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
+                    <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">Priority</label><select className="ep-select" value={newQ.priority} onChange={e=>setNewQ(p=>({...p,priority:e.target.value}))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
                   </div>
-                  <div className="ep-2" style={{ marginTop: 8 }}>
-                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">XP</label><input className="ep-input" type="number" value={newQ.xp} onChange={e => setNewQ(p => ({ ...p, xp: e.target.value }))} /></div>
-                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={newQ.deadline} onChange={e => setNewQ(p => ({ ...p, deadline: e.target.value }))} /></div>
+                  <div className="ep-2" style={{marginTop:8}}>
+                    <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">XP</label><input className="ep-input" type="number" value={newQ.xp} onChange={e=>setNewQ(p=>({...p,xp:e.target.value}))}/></div>
+                    <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={newQ.deadline} onChange={e=>setNewQ(p=>({...p,deadline:e.target.value}))}/></div>
                   </div>
                   <div className="ep-actions">
-                    <button className="ep-cancel" onClick={() => setShowAdd(false)}>Cancel</button>
-                    <button className="ep-save" onClick={() => addManualQuest(activeStat)} disabled={!newQ.title.trim()}>Add Quest</button>
+                    <button className="ep-cancel" onClick={()=>setShowAdd(false)}>Cancel</button>
+                    <button className="ep-save" onClick={()=>addManualQuest(activeStat)} disabled={!newQ.title.trim()}>Add Quest</button>
                   </div>
                 </div>
               )}
 
               <div className="ql">
-                {active.length === 0 && !showAdd && <div className="empty">No active quests. Generate with AI or add manually.</div>}
+                {active.length===0&&!showAdd&&<div className="empty">No active quests. Generate with AI or add manually.</div>}
                 {active.map(q => (
                   <QCard key={q.id} q={q} onComplete={requestCompleteQuest} onEdit={openEdit} onDelete={removeQuest}
                     editingId={editingId} editForm={editForm} setEditForm={setEditForm}
-                    onSaveEdit={saveEdit} aiSuggestion={editingId === q.id ? aiSuggestion : null}
-                    aiLoading={editingId === q.id ? aiLoading : false} onAddSuggestion={addSuggestion}
-                    onCancelEdit={() => { setEditingId(null); setAiSuggestion(null); }}
+                    onSaveEdit={saveEdit} aiSuggestion={editingId===q.id?aiSuggestion:null}
+                    aiLoading={editingId===q.id?aiLoading:false} onAddSuggestion={addSuggestion}
+                    onCancelEdit={()=>{setEditingId(null);setAiSuggestion(null);}}
                   />
                 ))}
               </div>
-              {done.length > 0 && <><div className="sh"><div className="sh-title">Completed</div></div><div className="ql">{done.map(q => <QCard key={q.id} q={q} onComplete={() => { }} onEdit={() => { }} onUndo={undoQuest} editingId={null} onCancelEdit={() => { }} />)}</div></>}
+              {done.length>0&&<><div className="sh"><div className="sh-title">Completed</div></div><div className="ql">{done.map(q=><QCard key={q.id} q={q} onComplete={()=>{}} onEdit={()=>{}} onUndo={undoQuest} editingId={null} onCancelEdit={()=>{}}/>)}</div></>}
             </div>
           );
         })()}
@@ -1111,16 +1124,16 @@ export default function LifeRPG() {
         {/* NAV */}
         <div className="nav">
           {[
-            { id: "home", icon: "⌂", label: "Home" },
-            { id: "quests", icon: "📋", label: "Quests" },
-            { id: "str", icon: "⚔️", label: "Strength", stat: "strength" },
-            { id: "cre", icon: "🎨", label: "Create", stat: "creativity" },
-            { id: "int", icon: "🧠", label: "Intel", stat: "intelligence" },
-            { id: "per", icon: "🪞", label: "Persona", stat: "persona" },
+            {id:"home",  icon:"⌂",  label:"Home"},
+            {id:"quests",icon:"📋", label:"Quests"},
+            {id:"str",   icon:"⚔️", label:"Strength", stat:"strength"},
+            {id:"cre",   icon:"🎨", label:"Create",   stat:"creativity"},
+            {id:"int",   icon:"🧠", label:"Intel",    stat:"intelligence"},
+            {id:"per",   icon:"🪞", label:"Persona",  stat:"persona"},
           ].map(n => (
             <button key={n.id}
-              className={`nav-btn ${page === (n.stat ? "stat" : n.id) && (n.stat ? activeStat === n.stat : true) ? "active" : ""}`}
-              onClick={() => n.stat ? navTo("stat", n.stat) : navTo(n.id)}>
+              className={`nav-btn ${page===(n.stat?"stat":n.id)&&(n.stat?activeStat===n.stat:true)?"active":""}`}
+              onClick={()=>n.stat?navTo("stat",n.stat):navTo(n.id)}>
               <span className="nav-icon">{n.icon}</span>{n.label}
             </button>
           ))}
@@ -1135,28 +1148,28 @@ function QCard({ q, onComplete, onEdit, onDelete, onUndo, editingId, editForm, s
   const cfg = STAT_CFG[q.stat];
   const isEditing = editingId === q.id;
   const dl = dlLabel(q);
-  const typeColor = { boss: { background: "#f0c84015", color: "var(--gold)", border: "1px solid #f0c84030" }, main: { background: `${cfg?.color}12`, color: cfg?.color, border: `1px solid ${cfg?.color}25` }, side: {} };
+  const typeColor = { boss:{background:"#f0c84015",color:"var(--gold)",border:"1px solid #f0c84030"}, main:{background:`${cfg?.color}12`,color:cfg?.color,border:`1px solid ${cfg?.color}25`}, side:{} };
 
   return (
-    <div className={`qcard ${q.priority} ${q.done ? "done" : ""}`}>
+    <div className={`qcard ${q.priority} ${q.done?"done":""}`}>
       <div className="qcard-top">
-        <div className={`qcheck ${q.done ? "checked" : ""}`} onClick={() => !q.done && onComplete(q)}>{q.done ? "✓" : ""}</div>
+        <div className={`qcheck ${q.done?"checked":""}`} onClick={()=>!q.done&&onComplete(q)}>{q.done?"✓":""}</div>
         <div className="qbody">
           <div className="qtags">
-            <span className={`qtag ${q.type === "boss" ? "qtag-boss" : q.type === "main" ? "qtag-main" : "qtag-side"}`} style={typeColor[q.type] || {}}>
-              {q.type === "boss" ? "⚡ Boss" : q.type === "main" ? "Main" : "Side"}
+            <span className={`qtag ${q.type==="boss"?"qtag-boss":q.type==="main"?"qtag-main":"qtag-side"}`} style={typeColor[q.type]||{}}>
+              {q.type==="boss"?"⚡ Boss":q.type==="main"?"Main":"Side"}
             </span>
             <span className={`qprio-tag prio-${q.priority}`}>{q.priority}</span>
-            <span className="qstat-tag" style={{ background: `${cfg?.color}15`, color: cfg?.color, borderColor: `${cfg?.color}25` }}>{cfg?.icon} {cfg?.label}</span>
+            <span className="qstat-tag" style={{background:`${cfg?.color}15`,color:cfg?.color,borderColor:`${cfg?.color}25`}}>{cfg?.icon} {cfg?.label}</span>
           </div>
           <div className="qtitle">{q.title}</div>
           {q.desc && <div className="qdesc">{q.desc}</div>}
         </div>
         <div className="qaction-col">
           <div className="qxp">+{q.xp}</div>
-          {!q.done && onEdit && <button className="qedit-btn" onClick={() => onEdit(q)}>✎</button>}
-          {!q.done && onDelete && <button className="qmini-btn delete" onClick={() => onDelete(q)}>Remove</button>}
-          {q.done && onUndo && <button className="qmini-btn undo" onClick={() => onUndo(q)}>Undo</button>}
+          {!q.done && onEdit && <button className="qedit-btn" onClick={()=>onEdit(q)}>✎</button>}
+          {!q.done && onDelete && <button className="qmini-btn delete" onClick={()=>onDelete(q)}>Remove</button>}
+          {q.done && onUndo && <button className="qmini-btn undo" onClick={()=>onUndo(q)}>Undo</button>}
         </div>
       </div>
 
@@ -1169,21 +1182,21 @@ function QCard({ q, onComplete, onEdit, onDelete, onUndo, editingId, editForm, s
       {isEditing && (
         <div className="edit-panel">
           <div className="ep-title">Edit Quest</div>
-          <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={editForm.title || ""} onChange={e => setEditForm(f => ({ ...f, title: e.target.value }))} /></div>
-          <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={editForm.desc || ""} onChange={e => setEditForm(f => ({ ...f, desc: e.target.value }))} /></div>
+          <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={editForm.title||""} onChange={e=>setEditForm(f=>({...f,title:e.target.value}))}/></div>
+          <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={editForm.desc||""} onChange={e=>setEditForm(f=>({...f,desc:e.target.value}))}/></div>
           <div className="ep-2">
-            <div><label className="ep-label">Type</label><select className="ep-select" value={editForm.type || "main"} onChange={e => setEditForm(f => ({ ...f, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
-            <div><label className="ep-label">Priority</label><select className="ep-select" value={editForm.priority || "normal"} onChange={e => setEditForm(f => ({ ...f, priority: e.target.value }))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
+            <div><label className="ep-label">Type</label><select className="ep-select" value={editForm.type||"main"} onChange={e=>setEditForm(f=>({...f,type:e.target.value}))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
+            <div><label className="ep-label">Priority</label><select className="ep-select" value={editForm.priority||"normal"} onChange={e=>setEditForm(f=>({...f,priority:e.target.value}))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
           </div>
-          <div className="ep-2" style={{ marginTop: 8 }}>
-            <div><label className="ep-label">XP</label><input className="ep-input" type="number" value={editForm.xp || 30} onChange={e => setEditForm(f => ({ ...f, xp: e.target.value }))} /></div>
-            <div><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={editForm.deadline || ""} onChange={e => setEditForm(f => ({ ...f, deadline: e.target.value }))} /></div>
+          <div className="ep-2" style={{marginTop:8}}>
+            <div><label className="ep-label">XP</label><input className="ep-input" type="number" value={editForm.xp||30} onChange={e=>setEditForm(f=>({...f,xp:e.target.value}))}/></div>
+            <div><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={editForm.deadline||""} onChange={e=>setEditForm(f=>({...f,deadline:e.target.value}))}/></div>
           </div>
           <div className="ep-actions">
             <button className="ep-cancel" onClick={onCancelEdit}>Cancel</button>
-            <button className="ep-save" onClick={() => onSaveEdit(q)} disabled={!editForm.title?.trim()}>Save & Get Next Quest</button>
+            <button className="ep-save" onClick={()=>onSaveEdit(q)} disabled={!editForm.title?.trim()}>Save & Get Next Quest</button>
           </div>
-          {aiLoading && <div className="ai-suggestion"><div className="ai-sug-label">Oracle thinking...</div><div className="dots" style={{ justifyContent: "flex-start", marginTop: 4 }}><span className="dot" /><span className="dot" /><span className="dot" /></div></div>}
+          {aiLoading && <div className="ai-suggestion"><div className="ai-sug-label">Oracle thinking...</div><div className="dots" style={{justifyContent:"flex-start",marginTop:4}}><span className="dot"/><span className="dot"/><span className="dot"/></div></div>}
           {aiSuggestion && (
             <div className="ai-suggestion">
               <div className="ai-sug-label">Next Quest Suggested</div>
