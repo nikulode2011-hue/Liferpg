@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 // ── STYLES ───────────────────────────────────────────────────────────────────
 const S = `
@@ -101,6 +101,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .cxp-bottom{display:flex;justify-content:space-between;}
 .cxp-nums{font-size:10px;color:var(--text3);}
 .cxp-quests{font-size:10px;color:var(--text3);}
+.cxp-coins{font-size:11px;color:var(--gold);margin-top:8px;font-family:'Syne',sans-serif;font-weight:700;}
 .level-timer-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:15px 16px;}
 .level-timer-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;}
 .level-timer-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
@@ -111,6 +112,15 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 20px 16px;}
 .quick-action-btn{padding:12px 10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.15s;}
 .quick-action-btn:hover{border-color:var(--border2);}
+.reward-home-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
+.reward-home-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+.reward-home-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.reward-home-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;line-height:1;}
+.reward-home-copy{font-size:11px;color:var(--text2);line-height:1.5;margin-top:6px;}
+.reward-home-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.reward-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;border:1px solid var(--border2);background:var(--bg3);font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text2);}
+.reward-pill.gold{color:var(--gold);border-color:#f0c84025;background:#20190b;}
+.reward-open-btn{margin-top:12px;width:100%;padding:12px;background:linear-gradient(135deg,var(--gold),#ffb82e);border:none;color:var(--bg);font-family:'Syne',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;border-radius:10px;}
 
 /* STAT MINIS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 20px 16px;}
@@ -289,28 +299,100 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 
 .empty{text-align:center;padding:24px 20px;color:var(--text3);font-size:12px;font-style:italic;}
 .divider{height:1px;background:var(--border);margin:4px 20px 12px;}
+
+/* REWARDS */
+.rw-page{padding:40px 20px 88px;}
+.rw-stack{display:flex;flex-direction:column;gap:12px;}
+.rw-panel,.rw-card,.rw-result,.rw-toast{background:var(--surface);border:1px solid var(--border);border-radius:16px;}
+.rw-panel,.rw-card,.rw-result{padding:14px;}
+.rw-topline{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.rw-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1;margin-bottom:4px;}
+.rw-sub{font-size:12px;color:var(--text2);line-height:1.6;}
+.rw-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.rw-tab{padding:10px 8px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text3);font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
+.rw-tab.active{background:var(--text);color:var(--bg);border-color:var(--text);}
+.rw-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.rw-metric{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.rw-metric-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1;}
+.rw-metric-note{font-size:11px;color:var(--text2);line-height:1.5;margin-top:6px;}
+.rw-row{display:flex;gap:10px;}
+.rw-row > *{flex:1;}
+.rw-btn,.rw-btn-ghost,.rw-btn-danger{padding:12px 14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+.rw-btn{background:linear-gradient(135deg,var(--gold),#ffb82e);border:none;color:var(--bg);}
+.rw-btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);}
+.rw-btn-danger{background:var(--urgent);border:none;color:#fff;}
+.rw-btn:disabled,.rw-btn-ghost:disabled,.rw-btn-danger:disabled{opacity:.35;cursor:not-allowed;}
+.rw-list{display:flex;flex-direction:column;gap:10px;}
+.rw-card-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;}
+.rw-card-title{font-size:14px;font-weight:600;line-height:1.4;}
+.rw-card-sub{font-size:11px;line-height:1.5;color:var(--text2);margin-top:6px;}
+.rw-chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+.rw-chip{display:inline-flex;align-items:center;border:1px solid var(--border);padding:4px 8px;border-radius:999px;font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text2);}
+.rw-chip.gold{color:var(--gold);border-color:#f0c84030;background:#20190b;}
+.rw-chip.green{color:var(--green);border-color:#214b35;background:#0e1b15;}
+.rw-chip.blue{color:var(--normal);border-color:#234166;background:#0d1724;}
+.rw-chip.red{color:var(--urgent);border-color:#4c2424;background:#201010;}
+.rw-chip.purple{color:var(--per);border-color:#43305f;background:#171221;}
+.rw-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.rw-label{display:block;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.rw-input,.rw-select{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;}
+.rw-checks{display:flex;flex-wrap:wrap;gap:8px;}
+.rw-check{display:inline-flex;align-items:center;gap:6px;padding:8px 10px;border:1px solid var(--border);border-radius:12px;background:var(--bg2);font-size:12px;color:var(--text2);}
+.rw-empty{padding:20px 10px;text-align:center;color:var(--text3);font-size:12px;line-height:1.6;}
+.rw-info-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.rw-info-title{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.rw-info-copy{font-size:12px;color:var(--text2);line-height:1.6;}
+.rw-wheel-stage{display:flex;flex-direction:column;align-items:center;gap:16px;}
+.rw-wheel-shell{position:relative;width:320px;height:320px;display:flex;align-items:center;justify-content:center}
+.rw-wheel-pointer{position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;border-top:28px solid var(--gold);z-index:4;filter:drop-shadow(0 0 18px rgba(240,200,64,.45))}
+.rw-wheel-disc{position:relative;width:100%;height:100%;border-radius:50%;border:10px solid #20202b;overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.45),0 0 0 2px #2e2e3d inset;transition:transform 2.8s cubic-bezier(.12,.82,.2,1)}
+.rw-wheel-label-layer{position:absolute;inset:0;z-index:2;pointer-events:none;transition:transform 2.8s cubic-bezier(.12,.82,.2,1)}
+.rw-wheel-center{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:92px;height:92px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,var(--surface));border:4px solid #343444;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;z-index:3;box-shadow:0 0 35px rgba(255,255,255,.12)}
+.rw-wheel-center-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:800;line-height:1.15;color:#15151b}
+.rw-wheel-label{position:absolute;left:50%;top:50%;width:74px;margin-left:-37px;text-align:center;font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:.35px;text-transform:uppercase;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.45);pointer-events:none;line-height:1.1;word-break:break-word;transition:transform .45s ease}
+.rw-tier-switch{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:100%}
+.rw-tier-btn{padding:12px 10px;border-radius:14px;border:1px solid var(--border);background:var(--bg2);color:var(--text3);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+.rw-tier-btn.active{background:linear-gradient(135deg,var(--gold),#ffb82e);color:#111;border-color:#73581d}
+.rw-toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-120px);min-width:220px;max-width:88vw;padding:14px 16px;z-index:220;box-shadow:0 20px 45px rgba(0,0,0,.5);transition:transform .35s ease;border-color:#57461d}
+.rw-toast.show{transform:translateX(-50%) translateY(0)}
+.rw-toast-top{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.rw-toast-title{font-size:13px;font-weight:700;color:var(--text);line-height:1.4}
+.rw-toast-body{font-size:11px;color:var(--text2);line-height:1.5;margin-top:5px}
+.rw-result-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--gold)}
+.rw-result-body{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
+@media (max-width:360px){
+  .rw-wheel-shell{width:280px;height:280px}
+  .rw-wheel-center{width:84px;height:84px}
+  .rw-wheel-center-title{font-size:10px}
+  .rw-wheel-label{width:62px;margin-left:-31px;font-size:7px}
+  .rw-tabs{grid-template-columns:repeat(2,1fr)}
+}
 `;
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
 const STAT_CFG = {
-  strength:     { label:"Strength",     icon:"⚔️", color:"var(--str)", lv_titles:["Rookie","Trainee","Athlete","Warrior","Champion","Beast"] },
-  creativity:   { label:"Creativity",   icon:"🎨", color:"var(--cre)", lv_titles:["Sketcher","Maker","Craftsman","Artist","Visionary","Auteur"] },
-  intelligence: { label:"Intelligence", icon:"🧠", color:"var(--int)", lv_titles:["Curious","Student","Scholar","Thinker","Sage","Oracle"] },
-  persona:      { label:"Persona",      icon:"🪞", color:"var(--per)", lv_titles:["Shy","Aware","Confident","Magnetic","Commanding","Legend"] },
+  strength: { label: "Strength", icon: "⚔️", color: "var(--str)", lv_titles: ["Rookie", "Trainee", "Athlete", "Warrior", "Champion", "Beast"] },
+  creativity: { label: "Creativity", icon: "🎨", color: "var(--cre)", lv_titles: ["Sketcher", "Maker", "Craftsman", "Artist", "Visionary", "Auteur"] },
+  intelligence: { label: "Intelligence", icon: "🧠", color: "var(--int)", lv_titles: ["Curious", "Student", "Scholar", "Thinker", "Sage", "Oracle"] },
+  persona: { label: "Persona", icon: "🪞", color: "var(--per)", lv_titles: ["Shy", "Aware", "Confident", "Magnetic", "Commanding", "Legend"] },
 };
-const STATS = ["strength","creativity","intelligence","persona"];
+const STATS = ["strength", "creativity", "intelligence", "persona"];
 const XP_PER_LEVEL = 300;
 const TOTAL_LV1_XP = XP_PER_LEVEL * 4;
 const DAY_MS = 1000 * 60 * 60 * 24;
 const APP_TODAY = "2026-04-24";
 const LEVEL_1_DEFAULT_DEADLINE = "2026-04-29T23:59:59";
-const AI_ROUTE = "/api/anthropic";
-const PRIO_ORDER = { urgent:0, high:1, normal:2, low:3 };
-const PRIO_COLOR = { urgent:"var(--urgent)", high:"var(--high)", normal:"var(--normal)", low:"var(--low)" };
+const MISSED_DEADLINE_COIN_PENALTY = 30;
+const COINS_BY_TYPE = { side: 5, main: 20, boss: 50 };
+const RW_SHOP_REFRESH_COST = 25;
+const RW_WHEEL_REFRESH_COST = 40;
+const RW_FULL_REFRESH_COST = 60;
+const PRIO_ORDER = { urgent: 0, high: 1, normal: 2, low: 3 };
+const PRIO_COLOR = { urgent: "var(--urgent)", high: "var(--high)", normal: "var(--normal)", low: "var(--low)" };
 const REWARDS = [
-  {e:"🔥",m:"On fire."},{e:"⚡",m:"Crushed."},{e:"💎",m:"Rare discipline."},
-  {e:"🏆",m:"Victory."},{e:"👑",m:"King behavior."},{e:"🎯",m:"Locked in."},
-  {e:"🚀",m:"Momentum."},{e:"⚡",m:"Level up energy."},
+  { e: "🔥", m: "On fire." }, { e: "⚡", m: "Crushed." }, { e: "💎", m: "Rare discipline." },
+  { e: "🏆", m: "Victory." }, { e: "👑", m: "King behavior." }, { e: "🎯", m: "Locked in." },
+  { e: "🚀", m: "Momentum." }, { e: "⚡", m: "Level up energy." },
 ];
 const ORACLES = [
   "Every frame of Sukoon is built today, not on shoot day.",
@@ -322,45 +404,91 @@ const ORACLES = [
   "One quest at a time. Highest priority first. Always.",
 ];
 const LEVEL_PUNISHMENTS = {
-  strength: { title:"Punishment Trial — 100 Push-ups", desc:"Break it into sets if needed, but finish all 100 with strict form before the day ends." },
-  creativity: { title:"Punishment Trial — 12 Shot Frames", desc:"Storyboard 12 clean frames for Sukoon or Rosaye. No vague ideas, only executable shots." },
-  intelligence: { title:"Punishment Trial — 90 Minute Deep Work Lock", desc:"Phone away. Finish one hard academic block in a single uninterrupted sitting and write the result." },
-  persona: { title:"Punishment Trial — 25 Minutes Voice Practice", desc:"Do one English voice session plus 10 minutes of shadowing. Record it and listen back once." },
+  strength: { title: "Punishment Trial — 100 Push-ups", desc: "Break it into sets if needed, but finish all 100 with strict form before the day ends." },
+  creativity: { title: "Punishment Trial — 12 Shot Frames", desc: "Storyboard 12 clean frames for Sukoon or Rosaye. No vague ideas, only executable shots." },
+  intelligence: { title: "Punishment Trial — 90 Minute Deep Work Lock", desc: "Phone away. Finish one hard academic block in a single uninterrupted sitting and write the result." },
+  persona: { title: "Punishment Trial — 25 Minutes Voice Practice", desc: "Do one English voice session plus 10 minutes of shadowing. Record it and listen back once." },
 };
+const RW_WHEEL_CONFIG = {
+  basic: {
+    label: "Basic Wheel",
+    cost: 10,
+    poolSize: 3,
+    staticSlots: [
+      { id: "nothing", label: "Nothing", kind: "nothing", weight: 30 },
+      { id: "bonus_5", label: "5 Bonus Coins", kind: "coins", coins: 5, weight: 25 },
+    ],
+  },
+  silver: {
+    label: "Silver Wheel",
+    cost: 30,
+    poolSize: 4,
+    staticSlots: [
+      { id: "nothing", label: "Nothing", kind: "nothing", weight: 25 },
+      { id: "bonus_10", label: "10 Bonus Coins", kind: "coins", coins: 10, weight: 15 },
+      { id: "mystery", label: "Mystery Bonus", kind: "mystery", weight: 10 },
+    ],
+  },
+  gold: {
+    label: "Gold Wheel",
+    cost: 75,
+    poolSize: 4,
+    staticSlots: [
+      { id: "bonus_50", label: "50 Bonus Coins", kind: "coins", coins: 50, weight: 10 },
+      { id: "double_next", label: "Double Coins Next Quest", kind: "boost", token: "double_next_quest", weight: 10 },
+      { id: "jackpot", label: "Jackpot Re-spin", kind: "jackpot", weight: 10 },
+    ],
+  },
+};
+const RW_DEFAULT_LIBRARY = [
+  { id: "r1", name: "15 min Instagram Scroll", cost: 10, category: "entertainment", emoji: "IG", rewardType: "token", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["basic"] },
+  { id: "r2", name: "15 min YouTube", cost: 10, category: "entertainment", emoji: "YT", rewardType: "token", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["basic"] },
+  { id: "r3", name: "30 min Manhwa Reading", cost: 20, category: "entertainment", emoji: "MH", rewardType: "token", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["basic", "silver"] },
+  { id: "r4", name: "1 Episode of a Show", cost: 35, category: "entertainment", emoji: "TV", rewardType: "token", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["silver"] },
+  { id: "r5", name: "Small Junk Food Snack", cost: 40, category: "food", emoji: "SN", rewardType: "item", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["silver"] },
+  { id: "r6", name: "1 Movie", cost: 60, category: "entertainment", emoji: "MV", rewardType: "token", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["gold"] },
+  { id: "r7", name: "Full Cheat Meal", cost: 80, category: "food", emoji: "CM", rewardType: "item", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["gold"] },
+  { id: "r8", name: "2hr Gaming Session", cost: 100, category: "time", emoji: "GM", rewardType: "token", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["silver", "gold"] },
+  { id: "r9", name: "Rest Day - No Workout Guilt", cost: 120, category: "rest", emoji: "RD", rewardType: "item", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["gold"] },
+  { id: "r10", name: "Wildcard - You Choose", cost: 150, category: "any", emoji: "WC", rewardType: "item", enabled: true, shopEligible: true, wheelEligible: false, tiers: [] },
+];
+function rwBlankReward() {
+  return { name: "", cost: 25, category: "entertainment", emoji: "RW", rewardType: "token", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["basic"] };
+}
 
-const DAY_WORKOUTS = {0:"Rest Day",1:"Chest & Bicep (Push)",2:"Legs & Shoulders",3:"Back & Tricep (Pull)",4:"Chest & Bicep (Push)",5:"Legs & Shoulders",6:"Back & Tricep (Pull)"};
+const DAY_WORKOUTS = { 0: "Rest Day", 1: "Chest & Bicep (Push)", 2: "Legs & Shoulders", 3: "Back & Tricep (Pull)", 4: "Chest & Bicep (Push)", 5: "Legs & Shoulders", 6: "Back & Tricep (Pull)" };
 const todayWorkout = DAY_WORKOUTS[new Date().getDay()];
 
 // ── ALL LEVEL 1 QUESTS POOL ──────────────────────────────────────────────────
 const QUEST_POOL = [
   // STRENGTH
-  { id:"s1", stat:"strength", type:"boss", priority:"urgent",  title:`Complete ${todayWorkout} session`, desc:"Full session. Track every set and rep. No skipping, no shortcuts.", xp:80,  deadline:"" },
-  { id:"s2", stat:"strength", type:"main", priority:"high",    title:"Progressive overload — Bench Press", desc:"Last session: 67.5kg × 8. Target today: 70kg × 6 reps.", xp:50,  deadline:"" },
-  { id:"s3", stat:"strength", type:"main", priority:"normal",  title:"Track full workout in detail", desc:"Log every exercise: sets, reps, weight. Build the data for next session.", xp:35,  deadline:"" },
-  { id:"s4", stat:"strength", type:"side", priority:"normal",  title:"Morning mobility — 10 minutes", desc:"Hip flexors, thoracic spine, shoulders. Before the session, not after.", xp:15,  deadline:"" },
-  { id:"s5", stat:"strength", type:"side", priority:"low",     title:"Plan next week's split", desc:"Write out Monday–Saturday workout plan so there's no guessing.", xp:15,  deadline:"" },
+  { id: "s1", stat: "strength", type: "boss", priority: "urgent", title: `Complete ${todayWorkout} session`, desc: "Full session. Track every set and rep. No skipping, no shortcuts.", xp: 80, deadline: "" },
+  { id: "s2", stat: "strength", type: "main", priority: "high", title: "Progressive overload — Bench Press", desc: "Last session: 67.5kg × 8. Target today: 70kg × 6 reps.", xp: 50, deadline: "" },
+  { id: "s3", stat: "strength", type: "main", priority: "normal", title: "Track full workout in detail", desc: "Log every exercise: sets, reps, weight. Build the data for next session.", xp: 35, deadline: "" },
+  { id: "s4", stat: "strength", type: "side", priority: "normal", title: "Morning mobility — 10 minutes", desc: "Hip flexors, thoracic spine, shoulders. Before the session, not after.", xp: 15, deadline: "" },
+  { id: "s5", stat: "strength", type: "side", priority: "low", title: "Plan next week's split", desc: "Write out Monday–Saturday workout plan so there's no guessing.", xp: 15, deadline: "" },
   // CREATIVITY
-  { id:"c1", stat:"creativity", type:"boss", priority:"urgent", title:"Complete the Sukoon shoot", desc:"April 25. Every shot on the list. Don't leave the location without all footage.", xp:120, deadline:"2026-04-25" },
-  { id:"c2", stat:"creativity", type:"main", priority:"urgent", title:"Finalize Sukoon shot list", desc:"Every scene, lens choice, camera movement. Done before the shoot day.", xp:60,  deadline:"2026-04-24" },
-  { id:"c3", stat:"creativity", type:"main", priority:"high",   title:"Gear check for Sukoon shoot", desc:"Camera, lenses, audio, batteries, cards. All ready the night before.", xp:40,  deadline:"2026-04-24" },
-  { id:"c4", stat:"creativity", type:"main", priority:"high",   title:"Post-production plan for Sukoon", desc:"Map the edit timeline: rough cut, color, sound, delivery date.", xp:45,  deadline:"2026-04-30" },
-  { id:"c5", stat:"creativity", type:"main", priority:"normal", title:"Begin Sukoon rough cut", desc:"Import footage, organize bins, lay the first assembly edit.", xp:55,  deadline:"2026-05-02" },
-  { id:"c6", stat:"creativity", type:"side", priority:"normal", title:"Rosaye — one content idea", desc:"One reel concept or visual direction for the agency's Instagram.", xp:20,  deadline:"" },
+  { id: "c1", stat: "creativity", type: "boss", priority: "urgent", title: "Complete the Sukoon shoot", desc: "April 25. Every shot on the list. Don't leave the location without all footage.", xp: 120, deadline: "2026-04-25" },
+  { id: "c2", stat: "creativity", type: "main", priority: "urgent", title: "Finalize Sukoon shot list", desc: "Every scene, lens choice, camera movement. Done before the shoot day.", xp: 60, deadline: "2026-04-24" },
+  { id: "c3", stat: "creativity", type: "main", priority: "high", title: "Gear check for Sukoon shoot", desc: "Camera, lenses, audio, batteries, cards. All ready the night before.", xp: 40, deadline: "2026-04-24" },
+  { id: "c4", stat: "creativity", type: "main", priority: "high", title: "Post-production plan for Sukoon", desc: "Map the edit timeline: rough cut, color, sound, delivery date.", xp: 45, deadline: "2026-04-30" },
+  { id: "c5", stat: "creativity", type: "main", priority: "normal", title: "Begin Sukoon rough cut", desc: "Import footage, organize bins, lay the first assembly edit.", xp: 55, deadline: "2026-05-02" },
+  { id: "c6", stat: "creativity", type: "side", priority: "normal", title: "Rosaye — one content idea", desc: "One reel concept or visual direction for the agency's Instagram.", xp: 20, deadline: "" },
   // INTELLIGENCE
-  { id:"i1", stat:"intelligence", type:"boss", priority:"urgent", title:"Submit all 5 assignments by April 27", desc:"OOP, OS, ADA, COA and the 5th subject. All submitted before deadline.", xp:120, deadline:"2026-04-27" },
-  { id:"i2", stat:"intelligence", type:"main", priority:"urgent", title:"Complete OOP assignment", desc:"Start and finish in one session. Submit today.", xp:55,  deadline:"2026-04-26" },
-  { id:"i3", stat:"intelligence", type:"main", priority:"urgent", title:"Complete OS assignment", desc:"One session. No multitasking. Submit.", xp:50,  deadline:"2026-04-26" },
-  { id:"i4", stat:"intelligence", type:"main", priority:"urgent", title:"Complete ADA assignment", desc:"Algorithm Design & Analysis. Focus, finish, submit.", xp:50,  deadline:"2026-04-27" },
-  { id:"i5", stat:"intelligence", type:"main", priority:"urgent", title:"Complete COA assignment", desc:"Computer Organization & Architecture. Done before the exam.", xp:50,  deadline:"2026-04-27" },
-  { id:"i6", stat:"intelligence", type:"boss", priority:"urgent", title:"COA exam preparation", desc:"Revise all units. Focus on weak areas. Exam April 29.", xp:90,  deadline:"2026-04-28" },
-  { id:"i7", stat:"intelligence", type:"side", priority:"normal", title:"OS chapter summary", desc:"Summarize one chapter in 5 bullet points. 30 minutes, no phone.", xp:20,  deadline:"2026-04-27" },
+  { id: "i1", stat: "intelligence", type: "boss", priority: "urgent", title: "Submit all 5 assignments by April 27", desc: "OOP, OS, ADA, COA and the 5th subject. All submitted before deadline.", xp: 120, deadline: "2026-04-27" },
+  { id: "i2", stat: "intelligence", type: "main", priority: "urgent", title: "Complete OOP assignment", desc: "Start and finish in one session. Submit today.", xp: 55, deadline: "2026-04-26" },
+  { id: "i3", stat: "intelligence", type: "main", priority: "urgent", title: "Complete OS assignment", desc: "One session. No multitasking. Submit.", xp: 50, deadline: "2026-04-26" },
+  { id: "i4", stat: "intelligence", type: "main", priority: "urgent", title: "Complete ADA assignment", desc: "Algorithm Design & Analysis. Focus, finish, submit.", xp: 50, deadline: "2026-04-27" },
+  { id: "i5", stat: "intelligence", type: "main", priority: "urgent", title: "Complete COA assignment", desc: "Computer Organization & Architecture. Done before the exam.", xp: 50, deadline: "2026-04-27" },
+  { id: "i6", stat: "intelligence", type: "boss", priority: "urgent", title: "COA exam preparation", desc: "Revise all units. Focus on weak areas. Exam April 29.", xp: 90, deadline: "2026-04-28" },
+  { id: "i7", stat: "intelligence", type: "side", priority: "normal", title: "OS chapter summary", desc: "Summarize one chapter in 5 bullet points. 30 minutes, no phone.", xp: 20, deadline: "2026-04-27" },
   // PERSONA
-  { id:"p1", stat:"persona", type:"boss", priority:"high",    title:"7-day English Discord streak", desc:"Talk to real people in English every single day for 7 days. Initiate at least one conversation each day.", xp:100, deadline:"" },
-  { id:"p2", stat:"persona", type:"main", priority:"high",    title:"Discord English session — today", desc:"20 minutes minimum. Join a voice channel or send 10+ messages. You initiate.", xp:40,  deadline:"" },
-  { id:"p3", stat:"persona", type:"main", priority:"normal",  title:"Practice 70/30 listening rule", desc:"In any real conversation today — listen more than you speak. Notice the difference.", xp:35,  deadline:"" },
-  { id:"p4", stat:"persona", type:"main", priority:"normal",  title:"Initiate a conversation with a stranger", desc:"Could be anyone. You start it. Make it natural, not forced.", xp:40,  deadline:"" },
-  { id:"p5", stat:"persona", type:"side", priority:"normal",  title:"Steve Jobs speech shadowing — 10 min", desc:"Focus on pace, deliberate pausing, and presence. Record yourself and listen back.", xp:20,  deadline:"" },
-  { id:"p6", stat:"persona", type:"side", priority:"low",     title:"Morning mirror drill — 5 minutes", desc:"Speak confidently to yourself. Posture, eye contact, tone. Uncomfortable on purpose.", xp:15,  deadline:"" },
+  { id: "p1", stat: "persona", type: "boss", priority: "high", title: "7-day English Discord streak", desc: "Talk to real people in English every single day for 7 days. Initiate at least one conversation each day.", xp: 100, deadline: "" },
+  { id: "p2", stat: "persona", type: "main", priority: "high", title: "Discord English session — today", desc: "20 minutes minimum. Join a voice channel or send 10+ messages. You initiate.", xp: 40, deadline: "" },
+  { id: "p3", stat: "persona", type: "main", priority: "normal", title: "Practice 70/30 listening rule", desc: "In any real conversation today — listen more than you speak. Notice the difference.", xp: 35, deadline: "" },
+  { id: "p4", stat: "persona", type: "main", priority: "normal", title: "Initiate a conversation with a stranger", desc: "Could be anyone. You start it. Make it natural, not forced.", xp: 40, deadline: "" },
+  { id: "p5", stat: "persona", type: "side", priority: "normal", title: "Steve Jobs speech shadowing — 10 min", desc: "Focus on pace, deliberate pausing, and presence. Record yourself and listen back.", xp: 20, deadline: "" },
+  { id: "p6", stat: "persona", type: "side", priority: "low", title: "Morning mirror drill — 5 minutes", desc: "Speak confidently to yourself. Posture, eye contact, tone. Uncomfortable on purpose.", xp: 15, deadline: "" },
 ];
 
 function getLvInfo(xp) {
@@ -373,7 +501,7 @@ function getLvTitle(stat, level) {
   return t[Math.min(level - 1, t.length - 1)];
 }
 function sortQ(quests) {
-  const to = { boss:0, main:1, side:2 };
+  const to = { boss: 0, main: 1, side: 2 };
   return [...quests].sort((a, b) => {
     if (a.done !== b.done) return a.done ? 1 : -1;
     const tp = to[a.type] - to[b.type];
@@ -387,19 +515,116 @@ function normalizeDateInput(dateStr) {
 }
 function dateOnly(dateLike) {
   const d = new Date(dateLike);
-  d.setHours(0,0,0,0);
+  d.setHours(0, 0, 0, 0);
   return d;
 }
 function formatDate(dateLike) {
-  return new Intl.DateTimeFormat("en-GB", { day:"numeric", month:"short", year:"numeric" }).format(new Date(dateLike));
+  return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" }).format(new Date(dateLike));
 }
 function toDateInput(dateLike) {
   return new Date(dateLike).toISOString().slice(0, 10);
+}
+function localDateKey(dateLike = new Date()) {
+  const d = new Date(dateLike);
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 function addDays(dateLike, days) {
   const d = new Date(dateLike);
   d.setDate(d.getDate() + days);
   return d;
+}
+function getDeadlineWindowDays(deadline, base = new Date()) {
+  if (!deadline) return null;
+  return Math.max(1, daysUntil(deadline, base) || 0);
+}
+function attachDeadlineWindow(q, base = new Date()) {
+  const deadline = normalizeDateInput(q.deadline || "");
+  const deadlineWindowDays = deadline
+    ? Number(q.deadlineWindowDays) || getDeadlineWindowDays(deadline, base)
+    : null;
+  return {
+    ...q,
+    deadline,
+    deadlineWindowDays,
+  };
+}
+function rwPool(list, count) {
+  const copy = [...list];
+  const out = [];
+  while (copy.length && out.length < count) {
+    const index = Math.floor(Math.random() * copy.length);
+    out.push(copy.splice(index, 1)[0]);
+  }
+  return out;
+}
+function rwShopCandidates(library) {
+  return library.filter(item => item.enabled && item.shopEligible);
+}
+function rwWheelCandidates(library, tier) {
+  return library.filter(item => item.enabled && item.wheelEligible && item.tiers.includes(tier));
+}
+function rwBuildPools(library) {
+  return {
+    shop: rwPool(rwShopCandidates(library).map(item => item.id), 6),
+    wheel: {
+      basic: rwPool(rwWheelCandidates(library, "basic").map(item => item.id), RW_WHEEL_CONFIG.basic.poolSize),
+      silver: rwPool(rwWheelCandidates(library, "silver").map(item => item.id), RW_WHEEL_CONFIG.silver.poolSize),
+      gold: rwPool(rwWheelCandidates(library, "gold").map(item => item.id), RW_WHEEL_CONFIG.gold.poolSize),
+    },
+  };
+}
+function rwRewardTokenKey(id) {
+  return `reward_${id}`;
+}
+function rwInventoryCount(inventory, key) {
+  return inventory[key] || 0;
+}
+function rwWeightedPick(items) {
+  const total = items.reduce((sum, item) => sum + item.weight, 0);
+  let roll = Math.random() * total;
+  for (const item of items) {
+    roll -= item.weight;
+    if (roll <= 0) return item;
+  }
+  return items[items.length - 1];
+}
+function rwWheelColors() {
+  return ["#f4c74f", "#ef8f38", "#4d9bf3", "#9b6df4", "#43c27a", "#e45555", "#3cc1bf", "#f06f9b"];
+}
+function rwBuildWheelSlices(tier, rewardPool) {
+  const cfg = RW_WHEEL_CONFIG[tier];
+  const rewardWeight = tier === "basic" ? 45 : tier === "silver" ? 50 : 70;
+  const colors = rwWheelColors();
+  const staticSlices = cfg.staticSlots.map((slot, index) => ({ ...slot, color: colors[index % colors.length] }));
+  const rewardSlices = rewardPool.map((item, index) => ({
+    id: `reward_${item.id}`,
+    label: item.name,
+    kind: "reward",
+    rewardId: item.id,
+    weight: rewardPool.length ? rewardWeight / rewardPool.length : 0,
+    color: colors[(index + staticSlices.length) % colors.length],
+  }));
+  return [...staticSlices, ...rewardSlices].filter(item => item.weight > 0);
+}
+function rwAddHistory(history, title, meta) {
+  return [{ id: Date.now() + Math.random(), title, meta, at: new Date().toLocaleString() }, ...history].slice(0, 30);
+}
+function deriveStreakFromQuests(quests, base = new Date()) {
+  const doneDays = new Set(
+    quests
+      .filter(q => q.done && q.completedAt)
+      .map(q => localDateKey(q.completedAt))
+  );
+  let streak = 0;
+  let cursor = dateOnly(base);
+  while (doneDays.has(localDateKey(cursor))) {
+    streak += 1;
+    cursor = addDays(cursor, -1);
+  }
+  return streak;
 }
 function daysUntil(dateStr, base = new Date()) {
   if (!dateStr) return null;
@@ -409,7 +634,7 @@ function daysUntil(dateStr, base = new Date()) {
 }
 function formatCountdown(deadline, nowMs) {
   const diff = new Date(deadline).getTime() - nowMs;
-  if (diff <= 0) return { expired:true, clock:"00:00:00", status:"Time expired" };
+  if (diff <= 0) return { expired: true, clock: "00:00:00", status: "Time expired" };
   const days = Math.floor(diff / DAY_MS);
   const hours = Math.floor((diff % DAY_MS) / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -418,8 +643,8 @@ function formatCountdown(deadline, nowMs) {
   const mm = String(minutes).padStart(2, "0");
   const ss = String(seconds).padStart(2, "0");
   return {
-    expired:false,
-    clock:`${days > 0 ? `${days}d ` : ""}${hh}:${mm}:${ss}`,
+    expired: false,
+    clock: `${days > 0 ? `${days}d ` : ""}${hh}:${mm}:${ss}`,
     status: days > 0 ? `${days} day${days !== 1 ? "s" : ""} left` : "Final day",
   };
 }
@@ -427,25 +652,28 @@ function getLevelPunishment(statXP, deadline) {
   const weakest = STATS.reduce((lowest, stat) => statXP[stat] < statXP[lowest] ? stat : lowest, STATS[0]);
   const cfg = LEVEL_PUNISHMENTS[weakest];
   return {
-    id:`punishment_${Date.now()}`,
+    id: `punishment_${Date.now()}`,
     stat: weakest,
-    type:"boss",
-    priority:"urgent",
-    xp:0,
-    done:false,
+    type: "boss",
+    priority: "urgent",
+    xp: 0,
+    done: false,
     deadline: toDateInput(addDays(deadline, 1)),
     title: cfg.title,
     desc: cfg.desc,
-    isPenalty:true,
+    isPenalty: true,
   };
 }
 function sanitizeState(raw) {
   if (!raw) return null;
   const hadLegacyDates = Array.isArray(raw.quests) && raw.quests.some(q => typeof q.deadline === "string" && q.deadline.startsWith("2025-"));
-  const quests = Array.isArray(raw.quests) ? raw.quests.map(q => ({
-    ...q,
-    deadline: normalizeDateInput(q.deadline || ""),
-  })) : [];
+  const quests = Array.isArray(raw.quests)
+    ? raw.quests.map(q => ({
+      ...attachDeadlineWindow(q, `${APP_TODAY}T00:00:00`),
+      completedAt: q.completedAt || null,
+      coinReward: Number(q.coinReward) || 0,
+    }))
+    : [];
   const statXP = {
     strength: Number(raw.statXP?.strength) || 0,
     creativity: Number(raw.statXP?.creativity) || 0,
@@ -457,18 +685,26 @@ function sanitizeState(raw) {
   return {
     quests,
     statXP,
-    streak: hadLegacyDates || totalDone === 0 || totalXP === 0 ? 0 : Math.min(Number(raw.streak) || 0, totalDone),
+    coins: Number(raw.coins) || 0,
+    rewardInventory: raw.rewardInventory && typeof raw.rewardInventory === "object" ? raw.rewardInventory : {},
+    rewardLibrary: Array.isArray(raw.rewardLibrary) && raw.rewardLibrary.length ? raw.rewardLibrary : RW_DEFAULT_LIBRARY,
+    rewardLocked: !!raw.rewardLocked,
+    rewardPools: raw.rewardPools || rwBuildPools(Array.isArray(raw.rewardLibrary) && raw.rewardLibrary.length ? raw.rewardLibrary : RW_DEFAULT_LIBRARY),
+    rewardHistory: Array.isArray(raw.rewardHistory) ? raw.rewardHistory : [],
+    rewardResult: raw.rewardResult || null,
+    questBoostReady: !!raw.questBoostReady,
+    streak: hadLegacyDates || totalDone === 0 || totalXP === 0 ? 0 : deriveStreakFromQuests(quests),
     levelDeadline: raw.levelDeadline?.startsWith?.("2025-") ? LEVEL_1_DEFAULT_DEADLINE : (raw.levelDeadline || LEVEL_1_DEFAULT_DEADLINE),
   };
 }
 function dlLabel(q) {
   const d = daysUntil(q.deadline);
   if (d === null) return null;
-  if (d < 0)  return { text:`${Math.abs(d)}d overdue`, cls:"dl-over" };
-  if (d === 0) return { text:"Due today", cls:"dl-urgent" };
-  if (d === 1) return { text:"Due tomorrow", cls:"dl-urgent" };
-  if (d <= 3)  return { text:`${d}d left`, cls:"dl-warn" };
-  return { text:`${d}d left`, cls:"dl-ok" };
+  if (d < 0) return { text: `${Math.abs(d)}d overdue`, cls: "dl-over" };
+  if (d === 0) return { text: "Due today", cls: "dl-urgent" };
+  if (d === 1) return { text: "Due tomorrow", cls: "dl-urgent" };
+  if (d <= 3) return { text: `${d}d left`, cls: "dl-warn" };
+  return { text: `${d}d left`, cls: "dl-ok" };
 }
 
 // ── STORAGE HELPERS ──────────────────────────────────────────────────────────
@@ -477,21 +713,11 @@ function loadState() {
   try {
     const raw = localStorage.getItem(LS_KEY);
     if (raw) return sanitizeState(JSON.parse(raw));
-  } catch(e) {}
+  } catch (e) { }
   return null;
 }
 function saveState(state) {
-  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch(e) {}
-}
-async function requestOracle(payload) {
-  const res = await fetch(AI_ROUTE, {
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify(payload),
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data?.error || "Oracle request failed");
-  return data;
+  try { localStorage.setItem(LS_KEY, JSON.stringify(state)); } catch (e) { }
 }
 
 // ── APP ──────────────────────────────────────────────────────────────────────
@@ -499,6 +725,8 @@ export default function LifeRPG() {
   const saved = useRef(loadState());
   const isNew = !saved.current;
   const seededNow = useRef(Date.now()).current;
+  const rewardSeedLibrary = useRef(saved.current?.rewardLibrary || RW_DEFAULT_LIBRARY).current;
+  const rewardSeedPools = useRef(saved.current?.rewardPools || rwBuildPools(rewardSeedLibrary)).current;
 
   // ONBOARDING STATE
   const [onboarding, setOnboarding] = useState(isNew);
@@ -507,34 +735,63 @@ export default function LifeRPG() {
   );
 
   // MAIN APP STATE — restored from localStorage or zero
-  const [quests, setQuests]     = useState(() => saved.current?.quests || []);
-  const [statXP, setStatXP]     = useState(() => saved.current?.statXP || { strength:0, creativity:0, intelligence:0, persona:0 });
-  const [streak, setStreak]     = useState(() => saved.current?.streak || 0);
+  const [quests, setQuests] = useState(() => saved.current?.quests || []);
+  const [statXP, setStatXP] = useState(() => saved.current?.statXP || { strength: 0, creativity: 0, intelligence: 0, persona: 0 });
+  const [coins, setCoins] = useState(() => saved.current?.coins || 0);
+  const [rewardInventory, setRewardInventory] = useState(() => saved.current?.rewardInventory || {});
+  const [rewardLibrary, setRewardLibrary] = useState(() => rewardSeedLibrary);
+  const [rewardLocked, setRewardLocked] = useState(() => saved.current?.rewardLocked || false);
+  const [rewardActiveShopIds, setRewardActiveShopIds] = useState(() => rewardSeedPools.shop);
+  const [rewardWheelPools, setRewardWheelPools] = useState(() => rewardSeedPools.wheel);
+  const [rewardHistory, setRewardHistory] = useState(() => saved.current?.rewardHistory || []);
+  const [rewardResult, setRewardResult] = useState(() => saved.current?.rewardResult || null);
+  const [rewardTab, setRewardTab] = useState("wheel");
+  const [rewardSpinTier, setRewardSpinTier] = useState("basic");
+  const [rewardWheelRotation, setRewardWheelRotation] = useState(0);
+  const [rewardSpinning, setRewardSpinning] = useState(false);
+  const [rewardToast, setRewardToast] = useState(null);
+  const [newReward, setNewReward] = useState(rwBlankReward);
+  const [questBoostReady, setQuestBoostReady] = useState(() => saved.current?.questBoostReady || false);
+  const [cheatRewardId, setCheatRewardId] = useState(() => rewardSeedLibrary[0]?.id || "");
+  const [streak, setStreak] = useState(() => saved.current?.streak || 0);
   const [levelDeadline, setLevelDeadline] = useState(() => saved.current?.levelDeadline || LEVEL_1_DEFAULT_DEADLINE);
-  const [page, setPage]         = useState("home");
+  const [page, setPage] = useState("home");
   const [activeStat, setActiveStat] = useState(null);
-  const [toast, setToast]       = useState(null);
-  const [levelUp, setLevelUp]   = useState(null);
-  const [penalty, setPenalty]   = useState(null);
+  const [toast, setToast] = useState(null);
+  const [levelUp, setLevelUp] = useState(null);
+  const [penalty, setPenalty] = useState(null);
   const [penaltyWhy, setPenaltyWhy] = useState("");
   const [levelPenalty, setLevelPenalty] = useState(null);
   const [levelPenaltyWhy, setLevelPenaltyWhy] = useState("");
   const [pendingComplete, setPendingComplete] = useState(null);
-  const [editingId, setEditingId]   = useState(null);
-  const [editForm, setEditForm]     = useState({});
+  const [editingId, setEditingId] = useState(null);
+  const [editForm, setEditForm] = useState({});
   const [aiSuggestion, setAiSuggestion] = useState(null);
-  const [aiLoading, setAiLoading]   = useState(false);
-  const [showAdd, setShowAdd]       = useState(false);
-  const [newQ, setNewQ]             = useState({ title:"", desc:"", type:"main", priority:"normal", xp:30, deadline:"" });
+  const [aiLoading, setAiLoading] = useState(false);
+  const [showAdd, setShowAdd] = useState(false);
+  const [newQ, setNewQ] = useState({ title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
   const [showBoardAdd, setShowBoardAdd] = useState(false);
-  const [boardQ, setBoardQ] = useState({ stat:"strength", title:"", desc:"", type:"main", priority:"normal", xp:30, deadline:"" });
-  const [nowMs, setNowMs]           = useState(seededNow);
+  const [boardQ, setBoardQ] = useState({ stat: "strength", title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
+  const [nowMs, setNowMs] = useState(seededNow);
   const oracle = useRef(ORACLES[Math.floor(Math.random() * ORACLES.length)]).current;
 
   // PERSIST on every change
   useEffect(() => {
-    if (!onboarding) saveState({ quests, statXP, streak, levelDeadline });
-  }, [quests, statXP, streak, onboarding, levelDeadline]);
+    if (!onboarding) saveState({
+      quests,
+      statXP,
+      coins,
+      rewardInventory,
+      rewardLibrary,
+      rewardLocked,
+      rewardPools: { shop: rewardActiveShopIds, wheel: rewardWheelPools },
+      rewardHistory,
+      rewardResult,
+      questBoostReady,
+      streak,
+      levelDeadline,
+    });
+  }, [quests, statXP, coins, rewardInventory, rewardLibrary, rewardLocked, rewardActiveShopIds, rewardWheelPools, rewardHistory, rewardResult, questBoostReady, streak, onboarding, levelDeadline]);
 
   useEffect(() => {
     const timer = setInterval(() => setNowMs(Date.now()), 1000);
@@ -548,6 +805,262 @@ export default function LifeRPG() {
     if (overdue) setPenalty(overdue);
   }, [onboarding, quests, penalty, levelPenalty]);
 
+  useEffect(() => {
+    const computed = deriveStreakFromQuests(quests);
+    if (computed !== streak) setStreak(computed);
+  }, [quests, streak, nowMs]);
+
+  const rewardLibraryMap = useMemo(() => Object.fromEntries(rewardLibrary.map(item => [item.id, item])), [rewardLibrary]);
+  const rewardActiveShop = useMemo(() => rewardActiveShopIds.map(id => rewardLibraryMap[id]).filter(Boolean), [rewardActiveShopIds, rewardLibraryMap]);
+  const rewardActiveShopTokens = useMemo(() => rewardActiveShop.filter(item => item.rewardType === "token"), [rewardActiveShop]);
+  const rewardActiveShopItems = useMemo(() => rewardActiveShop.filter(item => item.rewardType === "item"), [rewardActiveShop]);
+  const rewardActiveWheel = useMemo(() => ({
+    basic: (rewardWheelPools.basic || []).map(id => rewardLibraryMap[id]).filter(Boolean),
+    silver: (rewardWheelPools.silver || []).map(id => rewardLibraryMap[id]).filter(Boolean),
+    gold: (rewardWheelPools.gold || []).map(id => rewardLibraryMap[id]).filter(Boolean),
+  }), [rewardWheelPools, rewardLibraryMap]);
+  const rewardWheelSlices = useMemo(() => ({
+    basic: rwBuildWheelSlices("basic", rewardActiveWheel.basic || []),
+    silver: rwBuildWheelSlices("silver", rewardActiveWheel.silver || []),
+    gold: rwBuildWheelSlices("gold", rewardActiveWheel.gold || []),
+  }), [rewardActiveWheel]);
+  const rewardInventoryTotal = useMemo(() => Object.values(rewardInventory).reduce((sum, count) => sum + count, 0), [rewardInventory]);
+
+  useEffect(() => {
+    if (!cheatRewardId && rewardLibrary[0]?.id) setCheatRewardId(rewardLibrary[0].id);
+    if (cheatRewardId && !rewardLibraryMap[cheatRewardId] && rewardLibrary[0]?.id) setCheatRewardId(rewardLibrary[0].id);
+  }, [cheatRewardId, rewardLibrary, rewardLibraryMap]);
+
+  function rewardShowToast(title, body) {
+    setRewardToast({ title, body });
+    setTimeout(() => setRewardToast(null), 2600);
+  }
+
+  function rewardAddInventory(key, amount = 1) {
+    setRewardInventory(current => ({ ...current, [key]: (current[key] || 0) + amount }));
+  }
+
+  function rewardSpendCoins(cost) {
+    if (coins < cost) return false;
+    setCoins(current => Math.round(current - cost));
+    return true;
+  }
+
+  function rewardRebuildPools(nextLibrary, mode = "all") {
+    const pools = rwBuildPools(nextLibrary);
+    if (mode === "all" || mode === "shop") setRewardActiveShopIds(pools.shop);
+    if (mode === "all" || mode === "wheel") setRewardWheelPools(pools.wheel);
+  }
+
+  function rewardInjectItemIntoLivePools(item) {
+    if (item.shopEligible) {
+      setRewardActiveShopIds(current => current.includes(item.id) ? current : [item.id, ...current].slice(0, 6));
+    }
+    if (item.wheelEligible) {
+      setRewardWheelPools(current => {
+        const next = { ...current };
+        item.tiers.forEach(tier => {
+          const limit = RW_WHEEL_CONFIG[tier]?.poolSize || 0;
+          const existing = next[tier] || [];
+          next[tier] = existing.includes(item.id) ? existing : [item.id, ...existing].slice(0, limit);
+        });
+        return next;
+      });
+    }
+  }
+
+  function rewardLockEconomy() {
+    setRewardLocked(true);
+    rewardShowToast("Economy Locked", "Rewards are now frozen. Use refresh costs to rotate live pools.");
+    setRewardHistory(current => rwAddHistory(current, "Reward economy locked", "Library edits are now frozen until reset."));
+  }
+
+  function rewardRefreshShop(free = !rewardLocked) {
+    if (!free && !rewardSpendCoins(RW_SHOP_REFRESH_COST)) return;
+    setRewardActiveShopIds(rwPool(rwShopCandidates(rewardLibrary).map(item => item.id), 6));
+    setRewardHistory(current => rwAddHistory(current, free ? "Shop regenerated" : "Shop refreshed", free ? "Free refresh before lock." : `-${RW_SHOP_REFRESH_COST} coins to rotate active shop rewards.`));
+  }
+
+  function rewardRefreshWheel(free = !rewardLocked) {
+    if (!free && !rewardSpendCoins(RW_WHEEL_REFRESH_COST)) return;
+    setRewardWheelPools({
+      basic: rwPool(rwWheelCandidates(rewardLibrary, "basic").map(item => item.id), RW_WHEEL_CONFIG.basic.poolSize),
+      silver: rwPool(rwWheelCandidates(rewardLibrary, "silver").map(item => item.id), RW_WHEEL_CONFIG.silver.poolSize),
+      gold: rwPool(rwWheelCandidates(rewardLibrary, "gold").map(item => item.id), RW_WHEEL_CONFIG.gold.poolSize),
+    });
+    setRewardHistory(current => rwAddHistory(current, free ? "Wheel pools regenerated" : "Wheel pools refreshed", free ? "Free refresh before lock." : `-${RW_WHEEL_REFRESH_COST} coins to rotate wheel rewards.`));
+  }
+
+  function rewardRefreshAll() {
+    if (rewardLocked && !rewardSpendCoins(RW_FULL_REFRESH_COST)) return;
+    rewardRebuildPools(rewardLibrary, "all");
+    setRewardHistory(current => rwAddHistory(current, rewardLocked ? "Full reward refresh" : "Free reward regeneration", rewardLocked ? `-${RW_FULL_REFRESH_COST} coins to reroll shop and wheel pools.` : "Free refresh before lock."));
+  }
+
+  function rewardAddReward() {
+    if (rewardLocked || !newReward.name.trim()) return;
+    const item = {
+      ...newReward,
+      id: `rw_${Date.now()}`,
+      cost: parseInt(newReward.cost, 10) || 0,
+      emoji: (newReward.emoji || "RW").slice(0, 3),
+      tiers: newReward.wheelEligible ? newReward.tiers : [],
+    };
+    const nextLibrary = [...rewardLibrary, item];
+    setRewardLibrary(nextLibrary);
+    rewardInjectItemIntoLivePools(item);
+    setNewReward(rwBlankReward());
+    rewardShowToast("Reward Added", `${item.name} is now in your live reward library.`);
+    setRewardHistory(current => rwAddHistory(current, `Added reward: ${item.name}`, `${item.rewardType === "item" ? "Item" : "Token"} added to reward library.`));
+  }
+
+  function rewardUpdateItem(id, key, value) {
+    if (rewardLocked) return;
+    const nextLibrary = rewardLibrary.map(item => {
+      if (item.id !== id) return item;
+      const nextItem = { ...item, [key]: value };
+      if (key === "wheelEligible" && !value) nextItem.tiers = [];
+      return nextItem;
+    });
+    setRewardLibrary(nextLibrary);
+    if (["enabled", "shopEligible", "wheelEligible"].includes(key)) rewardRebuildPools(nextLibrary, "all");
+  }
+
+  function rewardToggleTier(id, tier) {
+    if (rewardLocked) return;
+    const nextLibrary = rewardLibrary.map(item => item.id === id ? {
+      ...item,
+      tiers: item.tiers.includes(tier) ? item.tiers.filter(value => value !== tier) : [...item.tiers, tier],
+    } : item);
+    setRewardLibrary(nextLibrary);
+    rewardRebuildPools(nextLibrary, "all");
+  }
+
+  function rewardRemoveItem(id) {
+    if (rewardLocked) return;
+    const nextLibrary = rewardLibrary.filter(item => item.id !== id);
+    setRewardLibrary(nextLibrary);
+    rewardRebuildPools(nextLibrary, "all");
+    setRewardInventory(current => {
+      const next = { ...current };
+      delete next[rwRewardTokenKey(id)];
+      return next;
+    });
+  }
+
+  function rewardBuy(item) {
+    if (!rewardSpendCoins(item.cost)) return;
+    rewardAddInventory(rwRewardTokenKey(item.id));
+    rewardShowToast("Reward Purchased", `${item.name} was added to your inventory.`);
+    setRewardResult({ title: "Reward token purchased", body: `${item.name} is now stored in inventory. Use it later when you actually want it.` });
+    setRewardHistory(current => rwAddHistory(current, `Bought ${item.name}`, `-${item.cost} coins. Token added to inventory.`));
+  }
+
+  function rewardUse(item) {
+    const key = rwRewardTokenKey(item.id);
+    if (!rwInventoryCount(rewardInventory, key)) return;
+    setRewardInventory(current => {
+      const next = { ...current, [key]: current[key] - 1 };
+      if (next[key] <= 0) delete next[key];
+      return next;
+    });
+    rewardShowToast(item.rewardType === "item" ? "Item Claimed" : "Token Used", `${item.name} is cleared for guilt-free use.`);
+    setRewardResult({ title: "Reward used cleanly", body: `${item.name} was consumed from inventory. The boundary stays honest because access follows the token, not impulse.` });
+    setRewardHistory(current => rwAddHistory(current, `Used ${item.name}`, "Token consumed. Access granted guilt-free."));
+  }
+
+  function rewardUseBoostToken() {
+    const key = "boost_double_next_quest";
+    if (!rwInventoryCount(rewardInventory, key) || questBoostReady) return;
+    setRewardInventory(current => {
+      const next = { ...current, [key]: current[key] - 1 };
+      if (next[key] <= 0) delete next[key];
+      return next;
+    });
+    setQuestBoostReady(true);
+    rewardShowToast("Boost Armed", "Your next completed quest will give double coins.");
+    setRewardHistory(current => rwAddHistory(current, "Quest boost armed", "Your next quest payout will be doubled."));
+  }
+
+  function rewardLogCheat() {
+    const item = rewardLibraryMap[cheatRewardId];
+    if (!item) return;
+    setCoins(current => Math.round(current - item.cost));
+    rewardShowToast("Debt Applied", `${item.name} was logged without payment. Your balance just took the hit.`);
+    setRewardResult({ title: "Cheat logged", body: `${item.name} was accessed without a token. The debt is now real, so the economy stays honest.` });
+    setRewardHistory(current => rwAddHistory(current, `Cheat logged: ${item.name}`, `-${item.cost} coins charged as debt.`));
+  }
+
+  function rewardApplyWheelResult(picked, tier, freeSpin = false) {
+    const cfg = RW_WHEEL_CONFIG[tier];
+    if (picked.kind === "reward") {
+      const reward = rewardLibraryMap[picked.rewardId];
+      if (!reward) return;
+      rewardAddInventory(rwRewardTokenKey(reward.id));
+      rewardShowToast("Congratulations", `You got ${reward.name}`);
+      setRewardResult({ title: `${cfg.label} reward`, body: `${reward.name} was added to inventory as a token. You do not have to use it immediately.` });
+      setRewardHistory(current => rwAddHistory(current, `${cfg.label} spun`, `Won token: ${reward.name}${freeSpin ? " on free spin." : "."}`));
+      return;
+    }
+    if (picked.kind === "coins") {
+      setCoins(current => Math.round(current + picked.coins));
+      rewardShowToast("Coin Win", `You got ${picked.coins} bonus coins`);
+      setRewardResult({ title: `${cfg.label} bonus`, body: `You landed on ${picked.label} and immediately gained ${picked.coins} coins.` });
+      setRewardHistory(current => rwAddHistory(current, `${cfg.label} spun`, `Won ${picked.coins} bonus coins${freeSpin ? " on free spin." : "."}`));
+      return;
+    }
+    if (picked.kind === "boost") {
+      rewardAddInventory("boost_double_next_quest");
+      rewardShowToast("Congratulations", "You got a Double Coins Next Quest token");
+      setRewardResult({ title: `${cfg.label} boost`, body: `You won a Double Coins Next Quest token. Arm it from inventory whenever you want.` });
+      setRewardHistory(current => rwAddHistory(current, `${cfg.label} spun`, "Won a Double Coins Next Quest token."));
+      return;
+    }
+    if (picked.kind === "mystery") {
+      const mysteryCoins = [12, 15, 18][Math.floor(Math.random() * 3)];
+      setCoins(current => Math.round(current + mysteryCoins));
+      rewardShowToast("Mystery Bonus", `You got ${mysteryCoins} coins`);
+      setRewardResult({ title: "Mystery Bonus", body: `Silver wheel mystery landed. You picked up ${mysteryCoins} bonus coins.` });
+      setRewardHistory(current => rwAddHistory(current, "Silver wheel mystery", `Mystery bonus paid ${mysteryCoins} coins.`));
+      return;
+    }
+    if (picked.kind === "jackpot") {
+      rewardShowToast("Jackpot", "Free Gold re-spin unlocked");
+      setRewardResult({ title: "Jackpot Re-spin", body: "Gold wheel hit the jackpot slot. The wheel spins again for free right now." });
+      setRewardHistory(current => rwAddHistory(current, "Gold wheel jackpot", "Free re-spin triggered."));
+      setTimeout(() => rewardSpinWheel("gold", true), 500);
+      return;
+    }
+    setRewardResult({ title: `${cfg.label} miss`, body: "Nothing this time. That empty slot is intentional so the wins keep their tension." });
+    setRewardHistory(current => rwAddHistory(current, `${cfg.label} spun`, `Landed on nothing${freeSpin ? " on free spin." : "."}`));
+  }
+
+  function rewardSpinWheel(tier, freeSpin = false) {
+    const cfg = RW_WHEEL_CONFIG[tier];
+    const slices = rewardWheelSlices[tier] || [];
+    if (rewardSpinning || !slices.length) return;
+    if (!freeSpin && coins < cfg.cost) return;
+    if (!freeSpin) setCoins(current => Math.round(current - cfg.cost));
+    const picked = rwWeightedPick(slices);
+    const targetIndex = Math.max(0, slices.findIndex(slice =>
+      slice.kind === picked.kind &&
+      ((slice.rewardId && slice.rewardId === picked.rewardId) || (!slice.rewardId && slice.id === picked.id))
+    ));
+    const sliceAngle = 360 / slices.length;
+    const targetCenter = targetIndex * sliceAngle + sliceAngle / 2;
+    const landingAngle = 360 - targetCenter;
+    const currentMod = ((rewardWheelRotation % 360) + 360) % 360;
+    const delta = ((landingAngle - currentMod) + 360) % 360;
+    const nextRotation = rewardWheelRotation + 360 * 5 + delta;
+    setRewardSpinning(true);
+    setRewardSpinTier(tier);
+    setRewardWheelRotation(nextRotation);
+    setTimeout(() => {
+      setRewardSpinning(false);
+      rewardApplyWheelResult(picked, tier, freeSpin);
+    }, 2800);
+  }
+
   // ── ONBOARDING ────────────────────────────────────────────────────────────
   function toggleSelect(id) {
     setSelectedIds(prev => {
@@ -558,9 +1071,10 @@ export default function LifeRPG() {
   }
 
   function confirmQuests() {
-    const chosen = QUEST_POOL.filter(q => selectedIds.has(q.id));
+    const chosen = QUEST_POOL.filter(q => selectedIds.has(q.id)).map(q => attachDeadlineWindow(q, `${APP_TODAY}T00:00:00`));
     setQuests(chosen);
-    setStatXP({ strength:0, creativity:0, intelligence:0, persona:0 });
+    setStatXP({ strength: 0, creativity: 0, intelligence: 0, persona: 0 });
+    setCoins(0);
     setStreak(0);
     setLevelDeadline(LEVEL_1_DEFAULT_DEADLINE);
     setOnboarding(false);
@@ -574,21 +1088,26 @@ export default function LifeRPG() {
 
   function completeQuest(q) {
     if (q.done) return;
-    const prevXP  = statXP[q.stat];
-    const prevLv  = getLvInfo(prevXP).level;
-    const newXP   = prevXP + q.xp;
-    const newLv   = getLvInfo(newXP).level;
-    const newStreak = streak + 1;
+    const prevXP = statXP[q.stat];
+    const prevLv = getLvInfo(prevXP).level;
+    const newXP = prevXP + q.xp;
+    const newLv = getLvInfo(newXP).level;
+    const earnedCoins = (COINS_BY_TYPE[q.type] || 0) * (questBoostReady ? 2 : 1);
+    const completedAt = new Date().toISOString();
 
-    setQuests(qs => qs.map(x => x.id === q.id ? { ...x, done:true } : x));
+    setQuests(qs => qs.map(x => x.id === q.id ? { ...x, done: true, coinReward: earnedCoins, completedAt } : x));
     setStatXP(p => ({ ...p, [q.stat]: p[q.stat] + q.xp }));
-    setStreak(newStreak);
+    setCoins(c => c + earnedCoins);
+    if (questBoostReady) {
+      setQuestBoostReady(false);
+      setRewardHistory(current => rwAddHistory(current, "Quest boost consumed", `Double coin token used on "${q.title}".`));
+    }
 
     const r = REWARDS[Math.floor(Math.random() * REWARDS.length)];
-    setToast({ ...r, xp: q.xp });
+    setToast({ ...r, xp: q.xp, coins: earnedCoins });
     setTimeout(() => setToast(null), 2800);
 
-    if (newLv > prevLv) setTimeout(() => setLevelUp({ stat:q.stat, level:newLv }), 900);
+    if (newLv > prevLv) setTimeout(() => setLevelUp({ stat: q.stat, level: newLv }), 900);
   }
 
   function confirmCompleteQuest() {
@@ -599,48 +1118,48 @@ export default function LifeRPG() {
 
   function undoQuest(q) {
     if (!q.done) return;
-    setQuests(qs => qs.map(x => x.id === q.id ? { ...x, done:false } : x));
+    const earnedCoins = q.coinReward ?? (COINS_BY_TYPE[q.type] || 0);
+    setQuests(qs => qs.map(x => x.id === q.id ? { ...x, done: false, coinReward: 0, completedAt: null } : x));
     setStatXP(p => ({ ...p, [q.stat]: Math.max(0, p[q.stat] - q.xp) }));
-    setStreak(s => Math.max(0, s - 1));
+    setCoins(c => Math.max(0, c - earnedCoins));
     setLevelUp(null);
-    setToast({ e:"↩", m:"Quest reopened.", xp:q.xp });
+    setToast({ e: "↩", m: "Quest reopened.", xp: -q.xp, coins: -earnedCoins });
     setTimeout(() => setToast(null), 2200);
   }
 
   function openEdit(q) {
     if (editingId === q.id) { setEditingId(null); setAiSuggestion(null); return; }
     setEditingId(q.id);
-    setEditForm({ title:q.title, desc:q.desc||"", type:q.type, priority:q.priority, xp:q.xp, deadline:q.deadline||"" });
+    setEditForm({ title: q.title, desc: q.desc || "", type: q.type, priority: q.priority, xp: q.xp, deadline: q.deadline || "" });
     setAiSuggestion(null);
   }
 
   async function saveEdit(q) {
-    const updated = { ...q, ...editForm, xp: parseInt(editForm.xp) || q.xp };
+    const updated = attachDeadlineWindow({ ...q, ...editForm, xp: parseInt(editForm.xp) || q.xp });
     setQuests(qs => qs.map(x => x.id === q.id ? updated : x));
     setEditingId(null);
     setAiLoading(true);
     setAiSuggestion(null);
     try {
-      const data = await requestOracle({
-        model:"claude-sonnet-4-20250514",
-        max_tokens:600,
-        system:"You are a Life RPG quest advisor. When a user edits a quest it signals progression. Generate the ONE most logical next quest. Be specific. Return ONLY valid JSON, no markdown.",
-        messages:[{ role:"user", content:`Stat: ${STAT_CFG[q.stat].label}\nOriginal: "${q.title}"\nUpdated to: "${updated.title}" — ${updated.desc}\nGenerate next logical quest.\nReturn: {"title":"...","desc":"...","type":"side|main|boss","priority":"urgent|high|normal|low","xp":30}` }],
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514", max_tokens: 600,
+          system: "You are a Life RPG quest advisor. When a user edits a quest it signals progression. Generate the ONE most logical next quest. Be specific. Return ONLY valid JSON, no markdown.",
+          messages: [{ role: "user", content: `Stat: ${STAT_CFG[q.stat].label}\nOriginal: "${q.title}"\nUpdated to: "${updated.title}" — ${updated.desc}\nGenerate next logical quest.\nReturn: {"title":"...","desc":"...","type":"side|main|boss","priority":"urgent|high|normal|low","xp":30}` }]
+        })
       });
+      const data = await res.json();
       const raw = data.content?.[0]?.text || "{}";
-      const parsed = JSON.parse(raw.replace(/```json|```/g,"").trim());
-      setAiSuggestion({ ...parsed, stat:q.stat });
-    } catch(e) {
-      console.error(e);
-      setToast({ e:"⚠", m:"Oracle unavailable right now.", xp:0 });
-      setTimeout(() => setToast(null), 2400);
-    }
+      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+      setAiSuggestion({ ...parsed, stat: q.stat });
+    } catch (e) { console.error(e); }
     setAiLoading(false);
   }
 
   function addSuggestion() {
     if (!aiSuggestion) return;
-    setQuests(qs => [...qs, { ...aiSuggestion, id:`ai_${Date.now()}`, done:false, xp:parseInt(aiSuggestion.xp)||30, deadline:null }]);
+    setQuests(qs => [...qs, attachDeadlineWindow({ ...aiSuggestion, id: `ai_${Date.now()}`, done: false, xp: parseInt(aiSuggestion.xp) || 30, deadline: null })]);
     setAiSuggestion(null);
   }
 
@@ -654,34 +1173,33 @@ export default function LifeRPG() {
       persona: "Confidence, communication, English fluency. Discord practice, 70/30 listening, Steve Jobs shadowing.",
     };
     try {
-      const data = await requestOracle({
-        model:"claude-sonnet-4-20250514",
-        max_tokens:800,
-        system:"You are a Life RPG quest advisor. Generate 3 specific actionable quests. Direct, no fluff. Return ONLY valid JSON array.",
-        messages:[{ role:"user", content:`Stat: ${STAT_CFG[stat].label}\nContext: ${ctx[stat]}\nDon't duplicate: ${existing}\nGenerate 3 quests. Each: title (action verb start), desc (1 specific sentence), type, priority, xp (15-120).\nReturn: [{"title":"...","desc":"...","type":"main","priority":"normal","xp":40}]` }],
+      const res = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-20250514", max_tokens: 800,
+          system: "You are a Life RPG quest advisor. Generate 3 specific actionable quests. Direct, no fluff. Return ONLY valid JSON array.",
+          messages: [{ role: "user", content: `Stat: ${STAT_CFG[stat].label}\nContext: ${ctx[stat]}\nDon't duplicate: ${existing}\nGenerate 3 quests. Each: title (action verb start), desc (1 specific sentence), type, priority, xp (15-120).\nReturn: [{"title":"...","desc":"...","type":"main","priority":"normal","xp":40}]` }]
+        })
       });
+      const data = await res.json();
       const raw = data.content?.[0]?.text || "[]";
-      const parsed = JSON.parse(raw.replace(/```json|```/g,"").trim());
-      setQuests(qs => [...qs, ...parsed.map(q => ({ ...q, id:`ai_${Date.now()}_${Math.random()}`, stat, done:false, xp:parseInt(q.xp)||30, deadline:null }))]);
-    } catch(e) {
-      console.error(e);
-      setToast({ e:"⚠", m:"Could not generate quests.", xp:0 });
-      setTimeout(() => setToast(null), 2400);
-    }
+      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
+      setQuests(qs => [...qs, ...parsed.map(q => attachDeadlineWindow({ ...q, id: `ai_${Date.now()}_${Math.random()}`, stat, done: false, xp: parseInt(q.xp) || 30, deadline: null }))]);
+    } catch (e) { console.error(e); }
     setAiLoading(false);
   }
 
   function addManualQuest(stat) {
     if (!newQ.title.trim()) return;
-    setQuests(qs => [...qs, { ...newQ, id:`m_${Date.now()}`, stat, done:false, xp:parseInt(newQ.xp)||30, deadline:newQ.deadline||null }]);
-    setNewQ({ title:"", desc:"", type:"main", priority:"normal", xp:30, deadline:"" });
+    setQuests(qs => [...qs, attachDeadlineWindow({ ...newQ, id: `m_${Date.now()}`, stat, done: false, xp: parseInt(newQ.xp) || 30, deadline: newQ.deadline || null })]);
+    setNewQ({ title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
     setShowAdd(false);
   }
 
   function addBoardQuest() {
     if (!boardQ.title.trim()) return;
-    setQuests(qs => [...qs, { ...boardQ, id:`b_${Date.now()}`, done:false, xp:parseInt(boardQ.xp)||30, deadline:boardQ.deadline||null }]);
-    setBoardQ({ stat:"strength", title:"", desc:"", type:"main", priority:"normal", xp:30, deadline:"" });
+    setQuests(qs => [...qs, attachDeadlineWindow({ ...boardQ, id: `b_${Date.now()}`, done: false, xp: parseInt(boardQ.xp) || 30, deadline: boardQ.deadline || null })]);
+    setBoardQ({ stat: "strength", title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
     setShowBoardAdd(false);
   }
 
@@ -691,15 +1209,22 @@ export default function LifeRPG() {
       setEditingId(null);
       setAiSuggestion(null);
     }
-    setToast({ e:"✕", m:"Quest removed.", xp:0 });
+    setToast({ e: "✕", m: "Quest removed.", xp: 0 });
     setTimeout(() => setToast(null), 2200);
   }
 
   function acceptPenalty() {
     if (!penalty || !penaltyWhy.trim()) return;
-    setStatXP(p => ({ ...p, [penalty.stat]: Math.max(0, p[penalty.stat] - 30) }));
-    setQuests(qs => qs.map(q => q.id === penalty.id ? { ...q, deadline:null } : q));
-    setPenalty(null); setPenaltyWhy("");
+    const resetDays = Math.max(1, Number(penalty.deadlineWindowDays) || getDeadlineWindowDays(penalty.deadline, `${APP_TODAY}T00:00:00`) || 1);
+    const newDeadline = toDateInput(addDays(new Date(), resetDays));
+    setCoins(c => Math.max(0, c - MISSED_DEADLINE_COIN_PENALTY));
+    setQuests(qs => qs.map(q => q.id === penalty.id
+      ? { ...q, deadline: newDeadline, deadlineWindowDays: resetDays }
+      : q));
+    setPenalty(null);
+    setPenaltyWhy("");
+    setToast({ e: "💀", m: `Deadline reset. ${MISSED_DEADLINE_COIN_PENALTY} coins lost.`, xp: 0, coins: -MISSED_DEADLINE_COIN_PENALTY });
+    setTimeout(() => setToast(null), 2600);
   }
 
   function acceptLevelPenalty() {
@@ -709,7 +1234,7 @@ export default function LifeRPG() {
     setLevelDeadline(extendedDeadline);
     setLevelPenalty(null);
     setLevelPenaltyWhy("");
-    setToast({ e:"⏳", m:"Level 1 extended. Punishment quest added.", xp:0 });
+    setToast({ e: "⏳", m: "Level 1 extended. Punishment quest added.", xp: 0 });
     setTimeout(() => setToast(null), 2800);
   }
 
@@ -729,7 +1254,7 @@ export default function LifeRPG() {
   }
 
   // ── DERIVED ──────────────────────────────────────────────────────────────
-  const totalXP = Object.values(statXP).reduce((a,b) => a+b, 0);
+  const totalXP = Object.values(statXP).reduce((a, b) => a + b, 0);
   const totalProgress = Math.min((totalXP / TOTAL_LV1_XP) * 100, 100);
   const totalDone = quests.filter(q => q.done).length;
   const todayQ = sortQ(quests.filter(q => !q.done)).slice(0, 5);
@@ -762,11 +1287,11 @@ export default function LifeRPG() {
                 <div className="ob-progress-count">{selectedCount} / {QUEST_POOL.length}</div>
               </div>
               <div className="ob-track">
-                <div className="ob-fill" style={{ width:`${(selectedCount/QUEST_POOL.length)*100}%` }}/>
+                <div className="ob-fill" style={{ width: `${(selectedCount / QUEST_POOL.length) * 100}%` }} />
               </div>
             </div>
 
-            <div style={{flex:1,overflowY:"auto",paddingBottom:100}}>
+            <div style={{ flex: 1, overflowY: "auto", paddingBottom: 100 }}>
               {STATS.map(stat => {
                 const cfg = STAT_CFG[stat];
                 const pool = QUEST_POOL.filter(q => q.stat === stat);
@@ -775,7 +1300,7 @@ export default function LifeRPG() {
                   <div className="ob-stat-section" key={stat}>
                     <div className="ob-stat-header">
                       <div className="ob-stat-icon">{cfg.icon}</div>
-                      <div className="ob-stat-name" style={{color:cfg.color}}>{cfg.label}</div>
+                      <div className="ob-stat-name" style={{ color: cfg.color }}>{cfg.label}</div>
                       <div className="ob-stat-count">{selCount}/{pool.length} selected</div>
                     </div>
                     <div className="ob-quest-list">
@@ -783,13 +1308,13 @@ export default function LifeRPG() {
                         const sel = selectedIds.has(q.id);
                         const dl = dlLabel(q);
                         return (
-                          <div key={q.id} className={`ob-qcard ${q.priority} ${sel?"selected":""}`} onClick={()=>toggleSelect(q.id)}>
-                            <div className={`ob-check`}>{sel?"✓":""}</div>
+                          <div key={q.id} className={`ob-qcard ${q.priority} ${sel ? "selected" : ""}`} onClick={() => toggleSelect(q.id)}>
+                            <div className={`ob-check`}>{sel ? "✓" : ""}</div>
                             <div className="ob-qinfo">
                               <div className="ob-qtags">
-                                <span className={`ob-qtag ${q.type==="boss"?"ob-qtype-boss":q.type==="main"?"ob-qtype-main":"ob-qtype-side"}`}
-                                  style={q.type==="main"?{color:cfg.color,borderColor:cfg.color}:{}}>
-                                  {q.type==="boss"?"⚡ Boss":q.type==="main"?"Main":"Side"}
+                                <span className={`ob-qtag ${q.type === "boss" ? "ob-qtype-boss" : q.type === "main" ? "ob-qtype-main" : "ob-qtype-side"}`}
+                                  style={q.type === "main" ? { color: cfg.color, borderColor: cfg.color } : {}}>
+                                  {q.type === "boss" ? "⚡ Boss" : q.type === "main" ? "Main" : "Side"}
                                 </span>
                                 <span className={`ob-qprio ${q.priority}`}>{q.priority}</span>
                                 {dl && <span className={`ob-qprio ${q.priority}`}>📅 {dl.text}</span>}
@@ -808,8 +1333,8 @@ export default function LifeRPG() {
             </div>
 
             <div className="ob-footer">
-              <button className="ob-confirm-btn" onClick={confirmQuests} disabled={selectedCount===0}>
-                Start with {selectedCount} Quest{selectedCount!==1?"s":""}  →
+              <button className="ob-confirm-btn" onClick={confirmQuests} disabled={selectedCount === 0}>
+                Start with {selectedCount} Quest{selectedCount !== 1 ? "s" : ""}  →
               </button>
               <div className="ob-confirm-hint">You can add, edit, or remove quests anytime</div>
             </div>
@@ -826,8 +1351,23 @@ export default function LifeRPG() {
       <div className="app">
 
         {/* TOAST */}
-        <div className={`toast ${toast?"show":""}`}>
-          {toast && <><div className="toast-e">{toast.e}</div><div className="toast-m">{toast.m}</div><div className="toast-xp">+{toast.xp} XP</div></>}
+        <div className={`toast ${toast ? "show" : ""}`}>
+          {toast && <>
+            <div className="toast-e">{toast.e}</div>
+            <div className="toast-m">{toast.m}</div>
+            <div className="toast-xp">
+              {`${toast.xp >= 0 ? "+" : ""}${toast.xp} XP`}
+              {typeof toast.coins === "number" ? ` · ${toast.coins >= 0 ? "+" : ""}${toast.coins} coins` : ""}
+            </div>
+          </>}
+        </div>
+
+        <div className={`rw-toast ${rewardToast ? "show" : ""}`}>
+          {rewardToast && <>
+            <div className="rw-toast-top">Reward Drop</div>
+            <div className="rw-toast-title">{rewardToast.title}</div>
+            <div className="rw-toast-body">{rewardToast.body}</div>
+          </>}
         </div>
 
         {/* LEVEL UP */}
@@ -836,7 +1376,7 @@ export default function LifeRPG() {
             <div className="lu-icon">{STAT_CFG[levelUp.stat].icon}</div>
             <div className="lu-title">LEVEL {levelUp.level}</div>
             <div className="lu-sub">{STAT_CFG[levelUp.stat].label} — {getLvTitle(levelUp.stat, levelUp.level)}</div>
-            <button className="lu-btn" onClick={()=>setLevelUp(null)}>Continue</button>
+            <button className="lu-btn" onClick={() => setLevelUp(null)}>Continue</button>
           </div>
         )}
 
@@ -849,7 +1389,7 @@ export default function LifeRPG() {
               <div className="confirm-desc">This will add XP and move the quest into completed.</div>
               <div className="confirm-quest">"{pendingComplete.title}"</div>
               <div className="confirm-actions">
-                <button className="confirm-cancel" onClick={()=>setPendingComplete(null)}>Cancel</button>
+                <button className="confirm-cancel" onClick={() => setPendingComplete(null)}>Cancel</button>
                 <button className="confirm-accept" onClick={confirmCompleteQuest}>Yes, Completed</button>
               </div>
             </div>
@@ -867,7 +1407,7 @@ export default function LifeRPG() {
               <div className="penalty-desc">Accept this hard task to continue Level 1 from where you left off.</div>
               <div className="penalty-sub">New level deadline after accepting: {formatDate(addDays(levelDeadline, 1))}</div>
               <div className="penalty-why-label">Why did Level 1 slip?</div>
-              <textarea className="penalty-textarea" placeholder="Name the real reason so the next push is tighter..." value={levelPenaltyWhy} onChange={e=>setLevelPenaltyWhy(e.target.value)}/>
+              <textarea className="penalty-textarea" placeholder="Name the real reason so the next push is tighter..." value={levelPenaltyWhy} onChange={e => setLevelPenaltyWhy(e.target.value)} />
               <button className="penalty-btn" onClick={acceptLevelPenalty} disabled={!levelPenaltyWhy.trim()}>Accept Punishment & Continue</button>
             </div>
           </div>
@@ -881,19 +1421,20 @@ export default function LifeRPG() {
               <div className="penalty-title">Quest Failed</div>
               <div className="penalty-desc">You missed the deadline for:</div>
               <div className="penalty-quest">"{penalty.title}"</div>
-              <div className="penalty-xp">−30 XP</div>
+              <div className="penalty-xp">−{MISSED_DEADLINE_COIN_PENALTY} coins</div>
+              <div className="penalty-sub">The quest stays active and gets the same time window again after you accept.</div>
               <div className="penalty-why-label">Why did you miss it?</div>
-              <input className="penalty-input" placeholder="Be honest with yourself..." value={penaltyWhy} onChange={e=>setPenaltyWhy(e.target.value)}/>
+              <input className="penalty-input" placeholder="Be honest with yourself..." value={penaltyWhy} onChange={e => setPenaltyWhy(e.target.value)} />
               <button className="penalty-btn" onClick={acceptPenalty} disabled={!penaltyWhy.trim()}>Accept & Continue</button>
             </div>
           </div>
         )}
 
         {/* ── HOME ── */}
-        {page==="home" && (
+        {page === "home" && (
           <div className="page">
             <div className="profile-header">
-              <div className="avatar">N<div className="avatar-ring"/></div>
+              <div className="avatar">N<div className="avatar-ring" /></div>
               <div className="profile-info">
                 <div className="profile-name">Nikul</div>
                 <div className="profile-role">Creative Director</div>
@@ -906,34 +1447,38 @@ export default function LifeRPG() {
                 <div className="cxp-label">Level 1 Progress</div>
                 <div className="cxp-pct">{Math.round(totalProgress)}%</div>
               </div>
-              <div className="cxp-track"><div className="cxp-fill" style={{width:`${totalProgress}%`}}/></div>
+              <div className="cxp-track"><div className="cxp-fill" style={{ width: `${totalProgress}%` }} /></div>
               <div className="cxp-bottom">
                 <div className="cxp-nums">{totalXP} / {TOTAL_LV1_XP} XP</div>
                 <div className="cxp-quests">{totalDone} / {quests.length} quests done</div>
               </div>
-            </div>
-
-            <div className="level-timer-card">
-              <div className="level-timer-top">
-                <div>
-                  <div className="level-timer-label">Level 1 Deadline</div>
-                  <div className="level-timer-deadline">Ends on {formatDate(levelDeadline)} · started from {formatDate(`${APP_TODAY}T00:00:00`)}</div>
-                </div>
-                <div className="level-timer-clock">{totalProgress >= 100 ? "CLEARED" : levelClock.clock}</div>
-              </div>
-              <div className="level-timer-meta">
-                <div className="level-timer-status">{totalProgress >= 100 ? "Level 1 complete." : levelClock.status}</div>
-                <div>{totalXP < TOTAL_LV1_XP ? `${TOTAL_LV1_XP - totalXP} XP remaining` : "Ready for Level 2"}</div>
-              </div>
+              <div className="cxp-coins">🪙 {coins} coins</div>
             </div>
 
             <div className="quick-actions">
-              <button className="quick-action-btn" onClick={()=>openQuestBoardAdd("strength")}>+ Add Quest</button>
-              <button className="quick-action-btn" onClick={()=>navTo("quests")}>Manage Quest List</button>
+              <button className="quick-action-btn" onClick={() => openQuestBoardAdd("strength")}>+ Add Quest</button>
+              <button className="quick-action-btn" onClick={() => navTo("quests")}>Manage Quest List</button>
+            </div>
+
+            <div className="reward-home-card">
+              <div className="reward-home-top">
+                <div>
+                  <div className="reward-home-label">Reward Economy</div>
+                  <div className="reward-home-title">Wheel + Shop</div>
+                  <div className="reward-home-copy">Coins earned from real quests feed the same reward system here. Spin, buy, save, or lock the economy.</div>
+                </div>
+                <div className="reward-pill gold">🪙 {coins}</div>
+              </div>
+              <div className="reward-home-meta">
+                <div className="reward-pill">Inventory {rewardInventoryTotal}</div>
+                <div className="reward-pill">{rewardLocked ? "Locked" : "Editable"}</div>
+                {questBoostReady && <div className="reward-pill gold">2x Next Quest Ready</div>}
+              </div>
+              <button className="reward-open-btn" onClick={() => navTo("rewards")}>Open Rewards</button>
             </div>
 
             <div className="oracle-card">
-              <div className="oracle-dot"><div className="oracle-pip"/><div className="oracle-lbl">Oracle</div></div>
+              <div className="oracle-dot"><div className="oracle-pip" /><div className="oracle-lbl">Oracle</div></div>
               <div className="oracle-text">"{oracle}"</div>
             </div>
 
@@ -943,10 +1488,10 @@ export default function LifeRPG() {
                 const cfg = STAT_CFG[key];
                 const info = getLvInfo(statXP[key]);
                 return (
-                  <div className="stat-mini" key={key} onClick={()=>navTo("stat",key)}>
+                  <div className="stat-mini" key={key} onClick={() => navTo("stat", key)}>
                     <div className="stat-mini-icon">{cfg.icon}</div>
-                    <div className="stat-mini-lv" style={{color:cfg.color}}>Lv {info.level}</div>
-                    <div className="stat-mini-bar"><div className="stat-mini-fill" style={{width:`${info.progress}%`,background:cfg.color}}/></div>
+                    <div className="stat-mini-lv" style={{ color: cfg.color }}>Lv {info.level}</div>
+                    <div className="stat-mini-bar"><div className="stat-mini-fill" style={{ width: `${info.progress}%`, background: cfg.color }} /></div>
                   </div>
                 );
               })}
@@ -954,60 +1499,442 @@ export default function LifeRPG() {
 
             <div className="sh">
               <div className="sh-title">Today's Priority</div>
-              <button className="sh-action" onClick={()=>navTo("quests")}>All →</button>
+              <button className="sh-action" onClick={() => navTo("quests")}>All →</button>
             </div>
             <div className="ql">
-              {todayQ.length===0 && <div className="empty">All quests complete. Absolute monster. 🏆</div>}
+              {todayQ.length === 0 && <div className="empty">All quests complete. Absolute monster. 🏆</div>}
               {todayQ.map(q => (
                 <QCard key={q.id} q={q} onComplete={requestCompleteQuest} onEdit={openEdit} onDelete={removeQuest}
                   editingId={editingId} editForm={editForm} setEditForm={setEditForm}
-                  onSaveEdit={saveEdit} aiSuggestion={editingId===q.id?aiSuggestion:null}
-                  aiLoading={editingId===q.id?aiLoading:false} onAddSuggestion={addSuggestion}
-                  onCancelEdit={()=>{setEditingId(null);setAiSuggestion(null);}}
+                  onSaveEdit={saveEdit} aiSuggestion={editingId === q.id ? aiSuggestion : null}
+                  aiLoading={editingId === q.id ? aiLoading : false} onAddSuggestion={addSuggestion}
+                  onCancelEdit={() => { setEditingId(null); setAiSuggestion(null); }}
                 />
               ))}
             </div>
           </div>
         )}
 
+        {page === "rewards" && (
+          <div className="rw-page">
+            <div className="rw-stack">
+              <div className="rw-panel">
+                <div className="rw-topline">Reward System</div>
+                <div className="rw-title">Coins. Wheel. Boundaries.</div>
+                <div className="rw-sub">This is the reward layer inside Life RPG. Your quest coins, wheel wins, shop buys, and inventory all live here in one shared economy.</div>
+              </div>
+
+              <div className="rw-tabs">
+                {[["wheel", "Wheel"], ["shop", "Shop"], ["inventory", "Inventory"], ["manage", "Manage"]].map(([id, label]) => (
+                  <button key={id} className={`rw-tab ${rewardTab === id ? "active" : ""}`} onClick={() => setRewardTab(id)}>{label}</button>
+                ))}
+              </div>
+
+              {rewardTab === "wheel" && (
+                <>
+                  <div className="rw-panel">
+                    <div className="rw-topline">Wheel Room</div>
+                    <div className="rw-sub">Pick a tier, spend coins, and let the wheel decide the drop. Rewards go into inventory as tokens instead of disappearing instantly.</div>
+                    <div className="rw-metrics" style={{ marginTop: 12 }}>
+                      <div className="rw-metric">
+                        <div className="rw-topline">Coins</div>
+                        <div className="rw-metric-value" style={{ color: "var(--gold)" }}>{coins}</div>
+                        <div className="rw-metric-note">This is the live balance used by wheels and the shop.</div>
+                      </div>
+                      <div className="rw-metric">
+                        <div className="rw-topline">Inventory</div>
+                        <div className="rw-metric-value">{rewardInventoryTotal}</div>
+                        <div className="rw-metric-note">Saved tokens and items waiting to be used.</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="rw-wheel-stage">
+                    <div className="rw-wheel-shell">
+                      <div className="rw-wheel-pointer" />
+                      <div
+                        className="rw-wheel-disc"
+                        style={{
+                          transform: `rotate(${rewardWheelRotation}deg)`,
+                          background: (rewardWheelSlices[rewardSpinTier] || []).length
+                            ? `conic-gradient(${(rewardWheelSlices[rewardSpinTier] || []).map((slice, index, arr) => {
+                              const start = (index / arr.length) * 360;
+                              const end = ((index + 1) / arr.length) * 360;
+                              return `${slice.color} ${start}deg ${end}deg`;
+                            }).join(", ")})`
+                            : "var(--surface2)",
+                        }}
+                      />
+                      <div className="rw-wheel-label-layer">
+                        <div style={{ width: "100%", height: "100%", transform: `rotate(${rewardWheelRotation}deg)` }}>
+                          {(rewardWheelSlices[rewardSpinTier] || []).map((slice, index, arr) => {
+                            const baseAngle = (360 / arr.length) * index + 360 / arr.length / 2;
+                            const settleRotation = rewardSpinning ? 0 : -(baseAngle + rewardWheelRotation);
+                            return (
+                              <div
+                                key={`${rewardSpinTier}_${slice.id}`}
+                                className="rw-wheel-label"
+                                style={{ transform: `translate(-50%,-50%) rotate(${baseAngle}deg) translateY(-108px) rotate(${settleRotation}deg)` }}
+                              >
+                                {slice.label}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                      <div className="rw-wheel-center">
+                        <div className="rw-wheel-center-title">{rewardSpinning ? "Spinning..." : RW_WHEEL_CONFIG[rewardSpinTier].label}</div>
+                      </div>
+                    </div>
+
+                    <div className="rw-tier-switch">
+                      {Object.keys(RW_WHEEL_CONFIG).map(tier => (
+                        <button key={tier} className={`rw-tier-btn ${rewardSpinTier === tier ? "active" : ""}`} onClick={() => setRewardSpinTier(tier)}>
+                          {tier}
+                        </button>
+                      ))}
+                    </div>
+
+                    <button className="rw-btn" onClick={() => rewardSpinWheel(rewardSpinTier)} disabled={rewardSpinning || coins < RW_WHEEL_CONFIG[rewardSpinTier].cost}>
+                      {rewardSpinning ? "Wheel Spinning" : `Spin ${RW_WHEEL_CONFIG[rewardSpinTier].label} (${RW_WHEEL_CONFIG[rewardSpinTier].cost})`}
+                    </button>
+                  </div>
+
+                  <div className="rw-panel">
+                    <div className="rw-topline">Current Tier Pool</div>
+                    <div className="rw-chip-row">
+                      {(rewardActiveWheel[rewardSpinTier] || []).map(item => <span key={item.id} className="rw-chip blue">{item.emoji} {item.name}</span>)}
+                      {RW_WHEEL_CONFIG[rewardSpinTier].staticSlots.map(slot => <span key={slot.id} className="rw-chip gold">{slot.label}</span>)}
+                    </div>
+                  </div>
+
+                  {rewardResult && (
+                    <div className="rw-result">
+                      <div className="rw-result-title">{rewardResult.title}</div>
+                      <div className="rw-result-body">{rewardResult.body}</div>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {rewardTab === "shop" && (
+                <>
+                  <div className="rw-panel">
+                    <div className="rw-topline">Active Shop</div>
+                    <div className="rw-sub">Tokens are time-based permissions. Items are claimable rewards you can cash in later. Both get stored in inventory first.</div>
+                  </div>
+
+                  <div className="rw-panel">
+                    <div className="rw-topline">Time Tokens</div>
+                    <div className="rw-sub">Scrolling, watching, reading, gaming. Buy now, use later.</div>
+                  </div>
+                  <div className="rw-list">
+                    {rewardActiveShopTokens.map(item => (
+                      <div className="rw-card" key={item.id}>
+                        <div className="rw-card-top">
+                          <div>
+                            <div className="rw-card-title">{item.emoji} {item.name}</div>
+                            <div className="rw-card-sub">{item.category} token. It sits in inventory until you choose to use the time block.</div>
+                          </div>
+                          <div className="rw-chip gold">{item.cost} coins</div>
+                        </div>
+                        <div className="rw-row" style={{ marginTop: 12 }}>
+                          <button className="rw-btn" onClick={() => rewardBuy(item)} disabled={coins < item.cost}>Buy Token</button>
+                          <button className="rw-btn-ghost" onClick={() => rewardUse(item)} disabled={!rwInventoryCount(rewardInventory, rwRewardTokenKey(item.id))}>Use Token</button>
+                        </div>
+                      </div>
+                    ))}
+                    {!rewardActiveShopTokens.length && <div className="rw-empty">No time tokens in the active shop right now.</div>}
+                  </div>
+
+                  <div className="rw-panel">
+                    <div className="rw-topline">Claimable Items</div>
+                    <div className="rw-sub">Physical or one-off rewards. Buy them first, then claim them from inventory whenever you want.</div>
+                  </div>
+                  <div className="rw-list">
+                    {rewardActiveShopItems.map(item => (
+                      <div className="rw-card" key={item.id}>
+                        <div className="rw-card-top">
+                          <div>
+                            <div className="rw-card-title">{item.emoji} {item.name}</div>
+                            <div className="rw-card-sub">{item.category} item. Buying it adds a claim token to inventory.</div>
+                          </div>
+                          <div className="rw-chip gold">{item.cost} coins</div>
+                        </div>
+                        <div className="rw-row" style={{ marginTop: 12 }}>
+                          <button className="rw-btn" onClick={() => rewardBuy(item)} disabled={coins < item.cost}>Buy Item</button>
+                          <button className="rw-btn-ghost" onClick={() => rewardUse(item)} disabled={!rwInventoryCount(rewardInventory, rwRewardTokenKey(item.id))}>Claim Item</button>
+                        </div>
+                      </div>
+                    ))}
+                    {!rewardActiveShopItems.length && <div className="rw-empty">No claimable items in the active shop right now.</div>}
+                  </div>
+                </>
+              )}
+
+              {rewardTab === "inventory" && (
+                <>
+                  <div className="rw-panel">
+                    <div className="rw-topline">Inventory</div>
+                    <div className="rw-sub">Wheel wins and shop purchases both become tokens here, so rewards feel earned and saved instead of instantly disposable.</div>
+                  </div>
+                  <div className="rw-list">
+                    {Object.keys(rewardInventory).length === 0 && <div className="rw-empty">No tokens yet. Spin a wheel or buy something from the shop.</div>}
+                    {Object.entries(rewardInventory).map(([key, count]) => {
+                      if (key === "boost_double_next_quest") {
+                        return (
+                          <div className="rw-card" key={key}>
+                            <div className="rw-card-top">
+                              <div>
+                                <div className="rw-card-title">Double Coins Next Quest</div>
+                                <div className="rw-card-sub">Arm this before finishing a valuable quest to double the coin payout.</div>
+                              </div>
+                              <div className="rw-chip purple">x{count}</div>
+                            </div>
+                            <button className="rw-btn" style={{ marginTop: 12, width: "100%" }} onClick={rewardUseBoostToken} disabled={questBoostReady}>Use Boost</button>
+                          </div>
+                        );
+                      }
+                      const id = key.replace("reward_", "");
+                      const item = rewardLibraryMap[id];
+                      if (!item) return null;
+                      return (
+                        <div className="rw-card" key={key}>
+                          <div className="rw-card-top">
+                            <div>
+                              <div className="rw-card-title">{item.emoji} {item.name}</div>
+                              <div className="rw-card-sub">{item.rewardType === "item" ? `${item.category} item ready to claim whenever you want.` : `${item.category} token ready to use whenever you want guilt-free access.`}</div>
+                            </div>
+                            <div className="rw-chip green">x{count}</div>
+                          </div>
+                          <button className="rw-btn" style={{ marginTop: 12, width: "100%" }} onClick={() => rewardUse(item)}>{item.rewardType === "item" ? "Claim Item" : "Use Token"}</button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </>
+              )}
+
+              {rewardTab === "manage" && (
+                <>
+                  <div className="rw-metrics">
+                    <div className="rw-metric">
+                      <div className="rw-topline">Coin Balance</div>
+                      <div className="rw-metric-value" style={{ color: coins >= 0 ? "var(--gold)" : "var(--urgent)" }}>{coins}</div>
+                      <div className="rw-metric-note">This is your live reward economy balance.</div>
+                    </div>
+                    <div className="rw-metric">
+                      <div className="rw-topline">Reward State</div>
+                      <div className="rw-metric-value" style={{ color: rewardLocked ? "var(--high)" : "var(--green)" }}>{rewardLocked ? "Locked" : "Editable"}</div>
+                      <div className="rw-metric-note">{rewardLocked ? "Library edits are frozen. Refresh live pools with coins." : "Add, edit, remove, and arrange rewards freely."}</div>
+                    </div>
+                  </div>
+
+                  <div className="rw-panel rw-stack">
+                    <div className="rw-topline">How To Use This Page</div>
+                    <div className="rw-info-card">
+                      <div className="rw-info-title">Add Rewards Cleanly</div>
+                      <div className="rw-info-copy">Put every possible reward in the master library here. Choose its cost, category, reward type, and whether it should appear in the shop, the wheel, or both.</div>
+                    </div>
+                    <div className="rw-info-card">
+                      <div className="rw-info-title">Lock, Then Refresh</div>
+                      <div className="rw-info-copy">Before locking, edits are free. After locking, you keep the library fixed and rotate the live pools by spending coins on refreshes.</div>
+                    </div>
+                    <div className="rw-info-card">
+                      <div className="rw-info-title">Cheat Rule</div>
+                      <div className="rw-info-copy">If you use a pleasure reward without paying or using a token first, log it here and let the debt hit your balance.</div>
+                    </div>
+                  </div>
+
+                  <div className="rw-panel rw-stack">
+                    <div className="rw-topline">Reward Library Manager</div>
+                    <div className="rw-row">
+                      <button className="rw-btn" onClick={rewardLockEconomy} disabled={rewardLocked}>Lock Reward Economy</button>
+                      <button className="rw-btn-ghost" onClick={() => rewardRefreshShop(!rewardLocked)}>{rewardLocked ? `Refresh Shop (${RW_SHOP_REFRESH_COST})` : "Free Shop Refresh"}</button>
+                    </div>
+                    <div className="rw-row">
+                      <button className="rw-btn-ghost" onClick={() => rewardRefreshWheel(!rewardLocked)}>{rewardLocked ? `Refresh Wheel (${RW_WHEEL_REFRESH_COST})` : "Free Wheel Refresh"}</button>
+                      <button className="rw-btn-ghost" onClick={rewardRefreshAll}>{rewardLocked ? `Full Refresh (${RW_FULL_REFRESH_COST})` : "Free Full Refresh"}</button>
+                    </div>
+                  </div>
+
+                  <div className="rw-panel rw-stack">
+                    <div className="rw-topline">Add Reward</div>
+                    <div className="rw-grid2">
+                      <div>
+                        <label className="rw-label">Name</label>
+                        <input className="rw-input" value={newReward.name} onChange={e => setNewReward(current => ({ ...current, name: e.target.value }))} disabled={rewardLocked} />
+                      </div>
+                      <div>
+                        <label className="rw-label">Cost</label>
+                        <input className="rw-input" type="number" value={newReward.cost} onChange={e => setNewReward(current => ({ ...current, cost: e.target.value }))} disabled={rewardLocked} />
+                      </div>
+                    </div>
+                    <div className="rw-grid2">
+                      <div>
+                        <label className="rw-label">Category</label>
+                        <select className="rw-select" value={newReward.category} onChange={e => setNewReward(current => ({ ...current, category: e.target.value }))} disabled={rewardLocked}>
+                          {["entertainment", "food", "time", "rest", "any"].map(value => <option key={value} value={value}>{value}</option>)}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="rw-label">Reward Type</label>
+                        <select className="rw-select" value={newReward.rewardType} onChange={e => setNewReward(current => ({ ...current, rewardType: e.target.value }))} disabled={rewardLocked}>
+                          <option value="token">Time Token</option>
+                          <option value="item">Claimable Item</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="rw-grid2">
+                      <div>
+                        <label className="rw-label">Short Tag</label>
+                        <input className="rw-input" value={newReward.emoji} onChange={e => setNewReward(current => ({ ...current, emoji: e.target.value.slice(0, 3) }))} disabled={rewardLocked} />
+                      </div>
+                      <div>
+                        <label className="rw-label">Preview</label>
+                        <div className="rw-input" style={{ display: "flex", alignItems: "center" }}>{newReward.rewardType === "item" ? "This will appear as a claimable shop item." : "This will appear as a time-based token."}</div>
+                      </div>
+                    </div>
+                    <div className="rw-checks">
+                      {["basic", "silver", "gold"].map(tier => (
+                        <label key={tier} className="rw-check">
+                          <input
+                            type="checkbox"
+                            checked={newReward.tiers.includes(tier)}
+                            onChange={() => setNewReward(current => ({
+                              ...current,
+                              tiers: current.tiers.includes(tier) ? current.tiers.filter(value => value !== tier) : [...current.tiers, tier],
+                            }))}
+                            disabled={rewardLocked}
+                          />
+                          <span>{tier}</span>
+                        </label>
+                      ))}
+                    </div>
+                    <div className="rw-row">
+                      <button className="rw-btn-ghost" onClick={() => setNewReward(current => ({ ...current, shopEligible: !current.shopEligible }))} disabled={rewardLocked}>{newReward.shopEligible ? "Shop On" : "Shop Off"}</button>
+                      <button className="rw-btn-ghost" onClick={() => setNewReward(current => ({ ...current, wheelEligible: !current.wheelEligible }))} disabled={rewardLocked}>{newReward.wheelEligible ? "Wheel On" : "Wheel Off"}</button>
+                    </div>
+                    <button className="rw-btn" onClick={rewardAddReward} disabled={rewardLocked || !newReward.name.trim()}>Add Reward To Library</button>
+                  </div>
+
+                  <div className="rw-list">
+                    {rewardLibrary.map(item => (
+                      <div className="rw-card" key={item.id}>
+                        <div className="rw-grid2">
+                          <div>
+                            <label className="rw-label">Name</label>
+                            <input className="rw-input" value={item.name} onChange={e => rewardUpdateItem(item.id, "name", e.target.value)} disabled={rewardLocked} />
+                          </div>
+                          <div>
+                            <label className="rw-label">Cost</label>
+                            <input className="rw-input" type="number" value={item.cost} onChange={e => rewardUpdateItem(item.id, "cost", parseInt(e.target.value, 10) || 0)} disabled={rewardLocked} />
+                          </div>
+                        </div>
+                        <div className="rw-grid2" style={{ marginTop: 10 }}>
+                          <div>
+                            <label className="rw-label">Category</label>
+                            <select className="rw-select" value={item.category} onChange={e => rewardUpdateItem(item.id, "category", e.target.value)} disabled={rewardLocked}>
+                              {["entertainment", "food", "time", "rest", "any"].map(value => <option key={value} value={value}>{value}</option>)}
+                            </select>
+                          </div>
+                          <div>
+                            <label className="rw-label">Reward Type</label>
+                            <select className="rw-select" value={item.rewardType} onChange={e => rewardUpdateItem(item.id, "rewardType", e.target.value)} disabled={rewardLocked}>
+                              <option value="token">Time Token</option>
+                              <option value="item">Claimable Item</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div className="rw-grid2" style={{ marginTop: 10 }}>
+                          <div>
+                            <label className="rw-label">Short Tag</label>
+                            <input className="rw-input" value={item.emoji} onChange={e => rewardUpdateItem(item.id, "emoji", e.target.value.slice(0, 3))} disabled={rewardLocked} />
+                          </div>
+                          <div>
+                            <label className="rw-label">Mode</label>
+                            <div className="rw-input" style={{ display: "flex", alignItems: "center" }}>{item.rewardType === "item" ? "Claimable item" : "Time token"}</div>
+                          </div>
+                        </div>
+                        <div className="rw-chip-row">
+                          <span className={`rw-chip ${item.shopEligible ? "green" : ""}`}>{item.shopEligible ? "Shop Eligible" : "Shop Off"}</span>
+                          <span className={`rw-chip ${item.wheelEligible ? "blue" : ""}`}>{item.wheelEligible ? "Wheel Eligible" : "Wheel Off"}</span>
+                          <span className={`rw-chip ${item.enabled ? "gold" : "red"}`}>{item.enabled ? "Enabled" : "Disabled"}</span>
+                        </div>
+                        <div className="rw-checks" style={{ marginTop: 10 }}>
+                          {["basic", "silver", "gold"].map(tier => (
+                            <label key={`${item.id}_${tier}`} className="rw-check">
+                              <input type="checkbox" checked={item.tiers.includes(tier)} onChange={() => rewardToggleTier(item.id, tier)} disabled={rewardLocked} />
+                              <span>{tier}</span>
+                            </label>
+                          ))}
+                        </div>
+                        <div className="rw-row" style={{ marginTop: 12 }}>
+                          <button className="rw-btn-ghost" onClick={() => rewardUpdateItem(item.id, "shopEligible", !item.shopEligible)} disabled={rewardLocked}>{item.shopEligible ? "Remove From Shop" : "Add To Shop"}</button>
+                          <button className="rw-btn-ghost" onClick={() => rewardUpdateItem(item.id, "wheelEligible", !item.wheelEligible)} disabled={rewardLocked}>{item.wheelEligible ? "Remove From Wheel" : "Add To Wheel"}</button>
+                        </div>
+                        <div className="rw-row" style={{ marginTop: 10 }}>
+                          <button className="rw-btn-ghost" onClick={() => rewardUpdateItem(item.id, "enabled", !item.enabled)} disabled={rewardLocked}>{item.enabled ? "Disable Reward" : "Enable Reward"}</button>
+                          <button className="rw-btn-danger" onClick={() => rewardRemoveItem(item.id)} disabled={rewardLocked}>Remove Reward</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="rw-panel rw-stack">
+                    <div className="rw-topline">Cheat And Debt</div>
+                    <div className="rw-sub">If you accessed a reward without a token first, log it and let the balance drop. That is the enforcement layer.</div>
+                    <div className="rw-row">
+                      <select className="rw-select" value={cheatRewardId} onChange={e => setCheatRewardId(e.target.value)}>
+                        {rewardLibrary.filter(item => item.enabled).map(item => <option key={item.id} value={item.id}>{item.name} ({item.cost})</option>)}
+                      </select>
+                      <button className="rw-btn-danger" onClick={rewardLogCheat}>Log Cheat</button>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* ── QUEST BOARD ── */}
-        {page==="quests" && (
+        {page === "quests" && (
           <div className="page">
-            <div style={{padding:"40px 20px 16px"}}>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:9,fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"var(--text3)",marginBottom:6}}>Level 1</div>
-              <div style={{fontFamily:"'Syne',sans-serif",fontSize:26,fontWeight:800,marginBottom:4}}>Quest Board</div>
-              <div style={{fontSize:12,color:"var(--text2)"}}>{totalDone}/{quests.length} complete · {Math.round(totalProgress)}% to Level 2</div>
+            <div style={{ padding: "40px 20px 16px" }}>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "var(--text3)", marginBottom: 6 }}>Level 1</div>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, marginBottom: 4 }}>Quest Board</div>
+              <div style={{ fontSize: 12, color: "var(--text2)" }}>{totalDone}/{quests.length} complete · {Math.round(totalProgress)}% to Level 2</div>
             </div>
 
             <div className="sh">
               <div className="sh-title">Manage Quests</div>
-              <button className="sh-action" onClick={()=>setShowBoardAdd(v=>!v)}>{showBoardAdd ? "Cancel" : "+ Add Quest"}</button>
+              <button className="sh-action" onClick={() => setShowBoardAdd(v => !v)}>{showBoardAdd ? "Cancel" : "+ Add Quest"}</button>
             </div>
 
             {showBoardAdd && (
               <div className="add-form">
                 <div className="add-form-title">Add Quest To Board</div>
                 <div className="ep-2">
-                  <div className="ep-row" style={{marginBottom:0}}>
+                  <div className="ep-row" style={{ marginBottom: 0 }}>
                     <label className="ep-label">Stat</label>
-                    <select className="ep-select" value={boardQ.stat} onChange={e=>setBoardQ(p=>({...p,stat:e.target.value}))}>
+                    <select className="ep-select" value={boardQ.stat} onChange={e => setBoardQ(p => ({ ...p, stat: e.target.value }))}>
                       {STATS.map(stat => <option key={stat} value={stat}>{STAT_CFG[stat].label}</option>)}
                     </select>
                   </div>
-                  <div className="ep-row" style={{marginBottom:0}}>
+                  <div className="ep-row" style={{ marginBottom: 0 }}>
                     <label className="ep-label">Type</label>
-                    <select className="ep-select" value={boardQ.type} onChange={e=>setBoardQ(p=>({...p,type:e.target.value}))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select>
+                    <select className="ep-select" value={boardQ.type} onChange={e => setBoardQ(p => ({ ...p, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select>
                   </div>
                 </div>
-                <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={boardQ.title} onChange={e=>setBoardQ(p=>({...p,title:e.target.value}))} placeholder="What needs to be done?"/></div>
-                <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={boardQ.desc} onChange={e=>setBoardQ(p=>({...p,desc:e.target.value}))} placeholder="Details..."/></div>
+                <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={boardQ.title} onChange={e => setBoardQ(p => ({ ...p, title: e.target.value }))} placeholder="What needs to be done?" /></div>
+                <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={boardQ.desc} onChange={e => setBoardQ(p => ({ ...p, desc: e.target.value }))} placeholder="Details..." /></div>
                 <div className="ep-2">
-                  <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">Priority</label><select className="ep-select" value={boardQ.priority} onChange={e=>setBoardQ(p=>({...p,priority:e.target.value}))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
-                  <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">XP</label><input className="ep-input" type="number" value={boardQ.xp} onChange={e=>setBoardQ(p=>({...p,xp:e.target.value}))}/></div>
+                  <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Priority</label><select className="ep-select" value={boardQ.priority} onChange={e => setBoardQ(p => ({ ...p, priority: e.target.value }))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
+                  <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">XP</label><input className="ep-input" type="number" value={boardQ.xp} onChange={e => setBoardQ(p => ({ ...p, xp: e.target.value }))} /></div>
                 </div>
-                <div className="ep-row" style={{marginTop:8,marginBottom:0}}><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={boardQ.deadline} onChange={e=>setBoardQ(p=>({...p,deadline:e.target.value}))}/></div>
+                <div className="ep-row" style={{ marginTop: 8, marginBottom: 0 }}><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={boardQ.deadline} onChange={e => setBoardQ(p => ({ ...p, deadline: e.target.value }))} /></div>
                 <div className="ep-actions">
-                  <button className="ep-cancel" onClick={()=>setShowBoardAdd(false)}>Cancel</button>
+                  <button className="ep-cancel" onClick={() => setShowBoardAdd(false)}>Cancel</button>
                   <button className="ep-save" onClick={addBoardQuest} disabled={!boardQ.title.trim()}>Add To Quest Board</button>
                 </div>
               </div>
@@ -1015,33 +1942,33 @@ export default function LifeRPG() {
 
             {STATS.map(stat => {
               const cfg = STAT_CFG[stat];
-              const statQ = sortQ(quests.filter(q => q.stat===stat));
+              const statQ = sortQ(quests.filter(q => q.stat === stat));
               const active = statQ.filter(q => !q.done);
-              const done   = statQ.filter(q => q.done);
-              const pct = statQ.length ? (done.length/statQ.length)*100 : 0;
+              const done = statQ.filter(q => q.done);
+              const pct = statQ.length ? (done.length / statQ.length) * 100 : 0;
               return (
                 <div className="stat-group" key={stat}>
                   <div className="stat-group-header">
                     <div className="stat-group-icon">{cfg.icon}</div>
-                    <div className="stat-group-name" style={{color:cfg.color}}>{cfg.label}</div>
+                    <div className="stat-group-name" style={{ color: cfg.color }}>{cfg.label}</div>
                     <div className="stat-group-count">{done.length}/{statQ.length} done</div>
                   </div>
                   <div className="stat-group-bar">
-                    <div className="stat-group-bar-fill" style={{width:`${pct}%`,background:cfg.color}}/>
+                    <div className="stat-group-bar-fill" style={{ width: `${pct}%`, background: cfg.color }} />
                   </div>
-                  <div className="ql" style={{marginBottom:0}}>
-                    {active.length===0 && <div className="empty" style={{padding:"10px 0"}}>All {cfg.label} quests complete ✓</div>}
+                  <div className="ql" style={{ marginBottom: 0 }}>
+                    {active.length === 0 && <div className="empty" style={{ padding: "10px 0" }}>All {cfg.label} quests complete ✓</div>}
                     {active.map(q => (
                       <QCard key={q.id} q={q} onComplete={requestCompleteQuest} onEdit={openEdit} onDelete={removeQuest}
                         editingId={editingId} editForm={editForm} setEditForm={setEditForm}
-                        onSaveEdit={saveEdit} aiSuggestion={editingId===q.id?aiSuggestion:null}
-                        aiLoading={editingId===q.id?aiLoading:false} onAddSuggestion={addSuggestion}
-                        onCancelEdit={()=>{setEditingId(null);setAiSuggestion(null);}}
+                        onSaveEdit={saveEdit} aiSuggestion={editingId === q.id ? aiSuggestion : null}
+                        aiLoading={editingId === q.id ? aiLoading : false} onAddSuggestion={addSuggestion}
+                        onCancelEdit={() => { setEditingId(null); setAiSuggestion(null); }}
                       />
                     ))}
-                    {done.map(q => <QCard key={q.id} q={q} onComplete={()=>{}} onEdit={()=>{}} onUndo={undoQuest} editingId={null} onCancelEdit={()=>{}}/>)}
+                    {done.map(q => <QCard key={q.id} q={q} onComplete={() => { }} onEdit={() => { }} onUndo={undoQuest} editingId={null} onCancelEdit={() => { }} />)}
                   </div>
-                  <div className="divider"/>
+                  <div className="divider" />
                 </div>
               );
             })}
@@ -1049,74 +1976,74 @@ export default function LifeRPG() {
         )}
 
         {/* ── STAT PAGE ── */}
-        {page==="stat" && activeStat && (() => {
-          const cfg  = STAT_CFG[activeStat];
+        {page === "stat" && activeStat && (() => {
+          const cfg = STAT_CFG[activeStat];
           const info = getLvInfo(statXP[activeStat]);
-          const sq   = sortQ(quests.filter(q => q.stat===activeStat));
+          const sq = sortQ(quests.filter(q => q.stat === activeStat));
           const active = sq.filter(q => !q.done);
-          const done   = sq.filter(q => q.done);
+          const done = sq.filter(q => q.done);
           return (
             <div className="page">
               <div className="sph">
                 <div className="sph-top">
                   <div className="sph-icon-big">{cfg.icon}</div>
-                  <div><div className="sph-name" style={{color:cfg.color}}>{cfg.label}</div><div className="sph-lv">Level {info.level} — {getLvTitle(activeStat,info.level)}</div></div>
+                  <div><div className="sph-name" style={{ color: cfg.color }}>{cfg.label}</div><div className="sph-lv">Level {info.level} — {getLvTitle(activeStat, info.level)}</div></div>
                 </div>
                 <div className="sph-xp-card">
                   <div className="sph-xp-top">
                     <div className="sph-xp-label">XP Progress</div>
-                    <div className="sph-xp-val" style={{color:cfg.color}}>{info.current} / {XP_PER_LEVEL}</div>
+                    <div className="sph-xp-val" style={{ color: cfg.color }}>{info.current} / {XP_PER_LEVEL}</div>
                   </div>
-                  <div className="sph-track"><div className="sph-fill" style={{width:`${info.progress}%`,background:cfg.color}}/></div>
+                  <div className="sph-track"><div className="sph-fill" style={{ width: `${info.progress}%`, background: cfg.color }} /></div>
                 </div>
                 <div className="sph-quest-stats">
-                  <div className="sph-qs-card"><div className="sph-qs-num" style={{color:cfg.color}}>{sq.length}</div><div className="sph-qs-label">Total</div></div>
-                  <div className="sph-qs-card"><div className="sph-qs-num" style={{color:"var(--urgent)"}}>{active.filter(q=>q.type==="boss").length}</div><div className="sph-qs-label">Boss</div></div>
-                  <div className="sph-qs-card"><div className="sph-qs-num" style={{color:"var(--green)"}}>{done.length}</div><div className="sph-qs-label">Done</div></div>
+                  <div className="sph-qs-card"><div className="sph-qs-num" style={{ color: cfg.color }}>{sq.length}</div><div className="sph-qs-label">Total</div></div>
+                  <div className="sph-qs-card"><div className="sph-qs-num" style={{ color: "var(--urgent)" }}>{active.filter(q => q.type === "boss").length}</div><div className="sph-qs-label">Boss</div></div>
+                  <div className="sph-qs-card"><div className="sph-qs-num" style={{ color: "var(--green)" }}>{done.length}</div><div className="sph-qs-label">Done</div></div>
                 </div>
               </div>
 
-              <button className="ai-gen-btn" onClick={()=>genAIQuests(activeStat)} disabled={aiLoading}>
-                {aiLoading ? <span className="dots"><span className="dot"/><span className="dot"/><span className="dot"/></span> : `✦ Generate ${cfg.label} Quests`}
+              <button className="ai-gen-btn" onClick={() => genAIQuests(activeStat)} disabled={aiLoading}>
+                {aiLoading ? <span className="dots"><span className="dot" /><span className="dot" /><span className="dot" /></span> : `✦ Generate ${cfg.label} Quests`}
               </button>
 
               <div className="sh">
                 <div className="sh-title">Active Quests</div>
-                <button className="sh-action" onClick={()=>setShowAdd(f=>!f)}>{showAdd?"Cancel":"+ Add"}</button>
+                <button className="sh-action" onClick={() => setShowAdd(f => !f)}>{showAdd ? "Cancel" : "+ Add"}</button>
               </div>
 
               {showAdd && (
                 <div className="add-form">
                   <div className="add-form-title">New Quest</div>
-                  <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={newQ.title} onChange={e=>setNewQ(p=>({...p,title:e.target.value}))} placeholder="What needs to be done?"/></div>
-                  <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={newQ.desc} onChange={e=>setNewQ(p=>({...p,desc:e.target.value}))} placeholder="Details..."/></div>
+                  <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={newQ.title} onChange={e => setNewQ(p => ({ ...p, title: e.target.value }))} placeholder="What needs to be done?" /></div>
+                  <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={newQ.desc} onChange={e => setNewQ(p => ({ ...p, desc: e.target.value }))} placeholder="Details..." /></div>
                   <div className="ep-2">
-                    <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">Type</label><select className="ep-select" value={newQ.type} onChange={e=>setNewQ(p=>({...p,type:e.target.value}))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
-                    <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">Priority</label><select className="ep-select" value={newQ.priority} onChange={e=>setNewQ(p=>({...p,priority:e.target.value}))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
+                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Type</label><select className="ep-select" value={newQ.type} onChange={e => setNewQ(p => ({ ...p, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
+                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Priority</label><select className="ep-select" value={newQ.priority} onChange={e => setNewQ(p => ({ ...p, priority: e.target.value }))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
                   </div>
-                  <div className="ep-2" style={{marginTop:8}}>
-                    <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">XP</label><input className="ep-input" type="number" value={newQ.xp} onChange={e=>setNewQ(p=>({...p,xp:e.target.value}))}/></div>
-                    <div className="ep-row" style={{marginBottom:0}}><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={newQ.deadline} onChange={e=>setNewQ(p=>({...p,deadline:e.target.value}))}/></div>
+                  <div className="ep-2" style={{ marginTop: 8 }}>
+                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">XP</label><input className="ep-input" type="number" value={newQ.xp} onChange={e => setNewQ(p => ({ ...p, xp: e.target.value }))} /></div>
+                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={newQ.deadline} onChange={e => setNewQ(p => ({ ...p, deadline: e.target.value }))} /></div>
                   </div>
                   <div className="ep-actions">
-                    <button className="ep-cancel" onClick={()=>setShowAdd(false)}>Cancel</button>
-                    <button className="ep-save" onClick={()=>addManualQuest(activeStat)} disabled={!newQ.title.trim()}>Add Quest</button>
+                    <button className="ep-cancel" onClick={() => setShowAdd(false)}>Cancel</button>
+                    <button className="ep-save" onClick={() => addManualQuest(activeStat)} disabled={!newQ.title.trim()}>Add Quest</button>
                   </div>
                 </div>
               )}
 
               <div className="ql">
-                {active.length===0&&!showAdd&&<div className="empty">No active quests. Generate with AI or add manually.</div>}
+                {active.length === 0 && !showAdd && <div className="empty">No active quests. Generate with AI or add manually.</div>}
                 {active.map(q => (
                   <QCard key={q.id} q={q} onComplete={requestCompleteQuest} onEdit={openEdit} onDelete={removeQuest}
                     editingId={editingId} editForm={editForm} setEditForm={setEditForm}
-                    onSaveEdit={saveEdit} aiSuggestion={editingId===q.id?aiSuggestion:null}
-                    aiLoading={editingId===q.id?aiLoading:false} onAddSuggestion={addSuggestion}
-                    onCancelEdit={()=>{setEditingId(null);setAiSuggestion(null);}}
+                    onSaveEdit={saveEdit} aiSuggestion={editingId === q.id ? aiSuggestion : null}
+                    aiLoading={editingId === q.id ? aiLoading : false} onAddSuggestion={addSuggestion}
+                    onCancelEdit={() => { setEditingId(null); setAiSuggestion(null); }}
                   />
                 ))}
               </div>
-              {done.length>0&&<><div className="sh"><div className="sh-title">Completed</div></div><div className="ql">{done.map(q=><QCard key={q.id} q={q} onComplete={()=>{}} onEdit={()=>{}} onUndo={undoQuest} editingId={null} onCancelEdit={()=>{}}/>)}</div></>}
+              {done.length > 0 && <><div className="sh"><div className="sh-title">Completed</div></div><div className="ql">{done.map(q => <QCard key={q.id} q={q} onComplete={() => { }} onEdit={() => { }} onUndo={undoQuest} editingId={null} onCancelEdit={() => { }} />)}</div></>}
             </div>
           );
         })()}
@@ -1124,16 +2051,16 @@ export default function LifeRPG() {
         {/* NAV */}
         <div className="nav">
           {[
-            {id:"home",  icon:"⌂",  label:"Home"},
-            {id:"quests",icon:"📋", label:"Quests"},
-            {id:"str",   icon:"⚔️", label:"Strength", stat:"strength"},
-            {id:"cre",   icon:"🎨", label:"Create",   stat:"creativity"},
-            {id:"int",   icon:"🧠", label:"Intel",    stat:"intelligence"},
-            {id:"per",   icon:"🪞", label:"Persona",  stat:"persona"},
+            { id: "home", icon: "⌂", label: "Home" },
+            { id: "quests", icon: "📋", label: "Quests" },
+            { id: "str", icon: "⚔️", label: "Strength", stat: "strength" },
+            { id: "cre", icon: "🎨", label: "Create", stat: "creativity" },
+            { id: "int", icon: "🧠", label: "Intel", stat: "intelligence" },
+            { id: "per", icon: "🪞", label: "Persona", stat: "persona" },
           ].map(n => (
             <button key={n.id}
-              className={`nav-btn ${page===(n.stat?"stat":n.id)&&(n.stat?activeStat===n.stat:true)?"active":""}`}
-              onClick={()=>n.stat?navTo("stat",n.stat):navTo(n.id)}>
+              className={`nav-btn ${page === (n.stat ? "stat" : n.id) && (n.stat ? activeStat === n.stat : true) ? "active" : ""}`}
+              onClick={() => n.stat ? navTo("stat", n.stat) : navTo(n.id)}>
               <span className="nav-icon">{n.icon}</span>{n.label}
             </button>
           ))}
@@ -1148,28 +2075,28 @@ function QCard({ q, onComplete, onEdit, onDelete, onUndo, editingId, editForm, s
   const cfg = STAT_CFG[q.stat];
   const isEditing = editingId === q.id;
   const dl = dlLabel(q);
-  const typeColor = { boss:{background:"#f0c84015",color:"var(--gold)",border:"1px solid #f0c84030"}, main:{background:`${cfg?.color}12`,color:cfg?.color,border:`1px solid ${cfg?.color}25`}, side:{} };
+  const typeColor = { boss: { background: "#f0c84015", color: "var(--gold)", border: "1px solid #f0c84030" }, main: { background: `${cfg?.color}12`, color: cfg?.color, border: `1px solid ${cfg?.color}25` }, side: {} };
 
   return (
-    <div className={`qcard ${q.priority} ${q.done?"done":""}`}>
+    <div className={`qcard ${q.priority} ${q.done ? "done" : ""}`}>
       <div className="qcard-top">
-        <div className={`qcheck ${q.done?"checked":""}`} onClick={()=>!q.done&&onComplete(q)}>{q.done?"✓":""}</div>
+        <div className={`qcheck ${q.done ? "checked" : ""}`} onClick={() => !q.done && onComplete(q)}>{q.done ? "✓" : ""}</div>
         <div className="qbody">
           <div className="qtags">
-            <span className={`qtag ${q.type==="boss"?"qtag-boss":q.type==="main"?"qtag-main":"qtag-side"}`} style={typeColor[q.type]||{}}>
-              {q.type==="boss"?"⚡ Boss":q.type==="main"?"Main":"Side"}
+            <span className={`qtag ${q.type === "boss" ? "qtag-boss" : q.type === "main" ? "qtag-main" : "qtag-side"}`} style={typeColor[q.type] || {}}>
+              {q.type === "boss" ? "⚡ Boss" : q.type === "main" ? "Main" : "Side"}
             </span>
             <span className={`qprio-tag prio-${q.priority}`}>{q.priority}</span>
-            <span className="qstat-tag" style={{background:`${cfg?.color}15`,color:cfg?.color,borderColor:`${cfg?.color}25`}}>{cfg?.icon} {cfg?.label}</span>
+            <span className="qstat-tag" style={{ background: `${cfg?.color}15`, color: cfg?.color, borderColor: `${cfg?.color}25` }}>{cfg?.icon} {cfg?.label}</span>
           </div>
           <div className="qtitle">{q.title}</div>
           {q.desc && <div className="qdesc">{q.desc}</div>}
         </div>
         <div className="qaction-col">
           <div className="qxp">+{q.xp}</div>
-          {!q.done && onEdit && <button className="qedit-btn" onClick={()=>onEdit(q)}>✎</button>}
-          {!q.done && onDelete && <button className="qmini-btn delete" onClick={()=>onDelete(q)}>Remove</button>}
-          {q.done && onUndo && <button className="qmini-btn undo" onClick={()=>onUndo(q)}>Undo</button>}
+          {!q.done && onEdit && <button className="qedit-btn" onClick={() => onEdit(q)}>✎</button>}
+          {!q.done && onDelete && <button className="qmini-btn delete" onClick={() => onDelete(q)}>Remove</button>}
+          {q.done && onUndo && <button className="qmini-btn undo" onClick={() => onUndo(q)}>Undo</button>}
         </div>
       </div>
 
@@ -1182,21 +2109,21 @@ function QCard({ q, onComplete, onEdit, onDelete, onUndo, editingId, editForm, s
       {isEditing && (
         <div className="edit-panel">
           <div className="ep-title">Edit Quest</div>
-          <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={editForm.title||""} onChange={e=>setEditForm(f=>({...f,title:e.target.value}))}/></div>
-          <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={editForm.desc||""} onChange={e=>setEditForm(f=>({...f,desc:e.target.value}))}/></div>
+          <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={editForm.title || ""} onChange={e => setEditForm(f => ({ ...f, title: e.target.value }))} /></div>
+          <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={editForm.desc || ""} onChange={e => setEditForm(f => ({ ...f, desc: e.target.value }))} /></div>
           <div className="ep-2">
-            <div><label className="ep-label">Type</label><select className="ep-select" value={editForm.type||"main"} onChange={e=>setEditForm(f=>({...f,type:e.target.value}))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
-            <div><label className="ep-label">Priority</label><select className="ep-select" value={editForm.priority||"normal"} onChange={e=>setEditForm(f=>({...f,priority:e.target.value}))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
+            <div><label className="ep-label">Type</label><select className="ep-select" value={editForm.type || "main"} onChange={e => setEditForm(f => ({ ...f, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
+            <div><label className="ep-label">Priority</label><select className="ep-select" value={editForm.priority || "normal"} onChange={e => setEditForm(f => ({ ...f, priority: e.target.value }))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
           </div>
-          <div className="ep-2" style={{marginTop:8}}>
-            <div><label className="ep-label">XP</label><input className="ep-input" type="number" value={editForm.xp||30} onChange={e=>setEditForm(f=>({...f,xp:e.target.value}))}/></div>
-            <div><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={editForm.deadline||""} onChange={e=>setEditForm(f=>({...f,deadline:e.target.value}))}/></div>
+          <div className="ep-2" style={{ marginTop: 8 }}>
+            <div><label className="ep-label">XP</label><input className="ep-input" type="number" value={editForm.xp || 30} onChange={e => setEditForm(f => ({ ...f, xp: e.target.value }))} /></div>
+            <div><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={editForm.deadline || ""} onChange={e => setEditForm(f => ({ ...f, deadline: e.target.value }))} /></div>
           </div>
           <div className="ep-actions">
             <button className="ep-cancel" onClick={onCancelEdit}>Cancel</button>
-            <button className="ep-save" onClick={()=>onSaveEdit(q)} disabled={!editForm.title?.trim()}>Save & Get Next Quest</button>
+            <button className="ep-save" onClick={() => onSaveEdit(q)} disabled={!editForm.title?.trim()}>Save & Get Next Quest</button>
           </div>
-          {aiLoading && <div className="ai-suggestion"><div className="ai-sug-label">Oracle thinking...</div><div className="dots" style={{justifyContent:"flex-start",marginTop:4}}><span className="dot"/><span className="dot"/><span className="dot"/></div></div>}
+          {aiLoading && <div className="ai-suggestion"><div className="ai-sug-label">Oracle thinking...</div><div className="dots" style={{ justifyContent: "flex-start", marginTop: 4 }}><span className="dot" /><span className="dot" /><span className="dot" /></div></div>}
           {aiSuggestion && (
             <div className="ai-suggestion">
               <div className="ai-sug-label">Next Quest Suggested</div>
