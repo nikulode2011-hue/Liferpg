@@ -5,19 +5,19 @@ const S = `
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#0a0a0c;--bg2:#0f0f12;--bg3:#141418;--surface:#18181e;--surface2:#1e1e26;
-  --border:#252530;--border2:#32323f;--text:#eeeef5;--text2:#7777a0;--text3:#3d3d55;
+  --bg:#080b10;--bg2:#0d121a;--bg3:#121a24;--surface:#111823;--surface2:#182232;
+  --border:#223146;--border2:#2f4765;--text:#e9f2ff;--text2:#9bb1cc;--text3:#5f7593;
   --urgent:#e84040;--urgent-dim:#2a0e0e;--urgent-border:#e8404035;
   --high:#f09030;--high-dim:#2a1a06;--high-border:#f0903035;
-  --normal:#3a9af0;--normal-dim:#061828;--normal-border:#3a9af035;
-  --low:#44aa66;--low-dim:#061a0e;--low-border:#44aa6635;
-  --str:#e85535;--cre:#f0a030;--int:#4a9af0;--per:#9a6af0;
-  --gold:#f0c840;--gold-dim:#2a2008;
+  --normal:#49b7ff;--normal-dim:#081c2d;--normal-border:#49b7ff35;
+  --low:#44aa66;--low-dim:#0b2515;--low-border:#44aa6635;
+  --str:#ff7a59;--cre:#ffba52;--int:#57b8ff;--per:#bf7dff;
+  --gold:#f4d35e;--gold-dim:#2a2411;
   --green:#2ecc71;--radius:12px;
 }
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
-.app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;}
-button{font-family:'Inter',sans-serif;cursor:pointer;}
+.app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;background:var(--bg);}
+button{font-family:'Inter',sans-serif;cursor:pointer;touch-action:manipulation;}
 
 /* ── ONBOARDING ── */
 .ob-wrap{min-height:100vh;display:flex;flex-direction:column;}
@@ -75,11 +75,11 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .ob-confirm-hint{font-size:11px;color:var(--text3);text-align:center;margin-top:8px;}
 
 /* ── MAIN APP ── */
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg2);border-top:1px solid var(--border);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom);}
-.nav-btn{flex:1;padding:11px 4px 13px;background:none;border:none;font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);transition:color 0.2s;display:flex;flex-direction:column;align-items:center;gap:3px;}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;background:var(--bg2);border-top:1px solid var(--border2);display:flex;z-index:50;padding-bottom:env(safe-area-inset-bottom);}
+.nav-btn{flex:1;min-height:58px;padding:10px 4px 12px;background:none;border:none;font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);transition:color 0.2s;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;}
 .nav-btn.active{color:var(--text);}
-.nav-icon{font-size:16px;}
-.page{padding-bottom:80px;min-height:100vh;}
+.nav-icon{font-size:17px;line-height:1;}
+.page{padding-bottom:94px;min-height:100vh;}
 
 /* PROFILE */
 .profile-header{padding:40px 20px 16px;display:grid;grid-template-columns:60px minmax(0,1fr);align-items:center;column-gap:16px;}
@@ -92,12 +92,12 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .streak-text{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--str);}
 
 /* COMBINED XP */
-.cxp-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;}
+.cxp-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:16px 18px;box-shadow:none;}
 .cxp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
 .cxp-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
 .cxp-pct{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--gold);}
 .cxp-track{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-bottom:6px;position:relative;}
-.cxp-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--str),var(--cre),var(--int),var(--per));transition:width 0.8s cubic-bezier(0.4,0,0.2,1);}
+.cxp-fill{height:100%;border-radius:4px;background:var(--normal);transition:width 0.8s cubic-bezier(0.4,0,0.2,1);}
 .cxp-bottom{display:flex;justify-content:space-between;}
 .cxp-nums{font-size:10px;color:var(--text3);}
 .cxp-quests{font-size:10px;color:var(--text3);}
@@ -109,10 +109,10 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .level-timer-clock{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--gold);text-align:right;line-height:1;}
 .level-timer-meta{display:flex;justify-content:space-between;gap:12px;font-size:10px;color:var(--text3);}
 .level-timer-status{color:var(--text2);}
-.quick-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 20px 16px;}
-.quick-action-btn{padding:12px 10px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;transition:all 0.15s;}
+.quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 20px 16px;}
+.quick-action-btn{min-height:44px;padding:12px 10px;background:transparent;border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;transition:all 0.15s;}
 .quick-action-btn:hover{border-color:var(--border2);}
-.reward-home-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;}
+.reward-home-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;}
 .reward-home-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
 .reward-home-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
 .reward-home-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;line-height:1;}
@@ -120,11 +120,11 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .reward-home-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;}
 .reward-pill{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:999px;border:1px solid var(--border2);background:var(--bg3);font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text2);}
 .reward-pill.gold{color:var(--gold);border-color:#f0c84025;background:#20190b;}
-.reward-open-btn{margin-top:12px;width:100%;padding:12px;background:linear-gradient(135deg,var(--gold),#ffb82e);border:none;color:var(--bg);font-family:'Syne',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;border-radius:10px;}
+.reward-open-btn{margin-top:12px;width:100%;padding:12px;background:transparent;border:1px solid var(--gold);color:var(--gold);font-family:'Syne',sans-serif;font-size:10px;font-weight:800;letter-spacing:2px;text-transform:uppercase;border-radius:10px;}
 
 /* STAT MINIS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 20px 16px;}
-.stat-mini{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all 0.15s;}
+.stat-mini{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all 0.15s;}
 .stat-mini:hover{border-color:var(--border2);}
 .stat-mini-icon{font-size:16px;margin-bottom:3px;}
 .stat-mini-lv{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;margin-bottom:4px;}
@@ -132,7 +132,7 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .stat-mini-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
 
 /* ORACLE */
-.oracle-card{margin:0 20px 16px;background:var(--surface);border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 14px;}
+.oracle-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;}
 .oracle-dot{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
 .oracle-pip{width:5px;height:5px;border-radius:50%;background:var(--gold);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
@@ -140,44 +140,44 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .oracle-text{font-size:12px;color:var(--text2);line-height:1.5;font-style:italic;}
 
 /* SECTION HEADER */
-.sh{padding:0 20px 10px;display:flex;align-items:center;justify-content:space-between;}
+.sh{padding:0 20px 10px;display:flex;align-items:center;justify-content:space-between;gap:10px;}
 .sh-title{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
-.sh-action{font-size:10px;color:var(--text3);font-family:'Syne',sans-serif;font-weight:700;background:none;border:none;letter-spacing:1px;text-transform:uppercase;transition:color 0.2s;padding:0;}
-.sh-action:hover{color:var(--text2);}
+.sh-action{min-height:36px;padding:8px 10px;border-radius:10px;font-size:10px;color:var(--text2);font-family:'Syne',sans-serif;font-weight:700;background:transparent;border:1px solid var(--border2);letter-spacing:1px;text-transform:uppercase;transition:all 0.2s;white-space:nowrap;}
+.sh-action:hover{color:var(--text);border-color:var(--border2);}
 
 /* QUEST LIST */
 .ql{padding:0 20px;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 
 /* QUEST CARD */
-.qcard{border-radius:var(--radius);padding:13px 14px;transition:all 0.15s;position:relative;overflow:hidden;}
+.qcard{border-radius:10px;padding:14px 14px;transition:all 0.15s;position:relative;overflow:hidden;box-shadow:none;}
 .qcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
-.qcard.urgent{background:var(--urgent-dim);border:1px solid var(--urgent-border);}
+.qcard.urgent{background:var(--bg2);border:1px solid var(--urgent-border);}
 .qcard.urgent::before{background:var(--urgent);}
-.qcard.high{background:var(--high-dim);border:1px solid var(--high-border);}
+.qcard.high{background:var(--bg2);border:1px solid var(--high-border);}
 .qcard.high::before{background:var(--high);}
-.qcard.normal{background:var(--normal-dim);border:1px solid var(--normal-border);}
+.qcard.normal{background:var(--bg2);border:1px solid var(--normal-border);}
 .qcard.normal::before{background:var(--normal);}
-.qcard.low{background:var(--low-dim);border:1px solid var(--low-border);}
+.qcard.low{background:var(--bg2);border:1px solid var(--low-border);}
 .qcard.low::before{background:var(--low);}
 .qcard.done{opacity:0.3;filter:grayscale(0.5);}
 .qcard-top{display:flex;align-items:flex-start;gap:10px;}
-.qcheck{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:10px;transition:all 0.2s;}
+.qcheck{width:30px;height:30px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:12px;transition:all 0.2s;}
 .qcheck:hover{border-color:var(--green);}
 .qcheck.checked{background:var(--green);border-color:var(--green);color:white;}
 .qbody{flex:1;min-width:0;}
 .qtags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;align-items:center;}
 .qtag{font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:4px;}
-.qtag-boss{background:#f0c84015;color:var(--gold);border:1px solid #f0c84030;}
+.qtag-boss{background:transparent;color:var(--gold);border:1px solid #f0c84045;}
 .qtag-main{border:1px solid currentColor;background:transparent;}
-.qtag-side{background:rgba(255,255,255,0.04);color:var(--text3);border:1px solid var(--border);}
+.qtag-side{background:transparent;color:var(--text3);border:1px solid var(--border2);}
 .qstat-tag{font-family:'Syne',sans-serif;font-size:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:4px;border:1px solid transparent;}
 .qprio-tag{font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:4px;}
 .prio-urgent{background:var(--urgent-dim);color:var(--urgent);border:1px solid var(--urgent-border);}
 .prio-high{background:var(--high-dim);color:var(--high);border:1px solid var(--high-border);}
 .prio-normal{background:var(--normal-dim);color:var(--normal);border:1px solid var(--normal-border);}
 .prio-low{background:var(--low-dim);color:var(--low);border:1px solid var(--low-border);}
-.qtitle{font-size:13px;font-weight:500;color:var(--text);line-height:1.4;margin-bottom:2px;}
-.qdesc{font-size:11px;color:var(--text2);line-height:1.4;}
+.qtitle{font-size:14px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:3px;}
+.qdesc{font-size:12px;color:var(--text2);line-height:1.45;}
 .qcard.done .qtitle{text-decoration:line-through;}
 .qmeta{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04);}
 .qdeadline{font-size:10px;font-weight:500;}
@@ -186,30 +186,32 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .dl-urgent{color:var(--urgent);}
 .dl-over{color:var(--urgent);font-weight:700;}
 .qright{display:flex;align-items:center;gap:8px;}
-.qxp{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--gold);}
+.qxp{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--gold);}
 .qedit-btn{background:none;border:none;color:var(--text3);font-size:13px;padding:2px 4px;border-radius:4px;transition:color 0.15s;line-height:1;}
 .qedit-btn:hover{color:var(--text2);}
-.qaction-col{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0;}
-.qmini-btn{background:none;border:1px solid var(--border);color:var(--text3);font-size:11px;padding:3px 6px;border-radius:6px;transition:all 0.15s;line-height:1;}
+.qaction-col{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;}
+.qmini-btn{min-height:30px;background:transparent;border:1px solid var(--border2);color:var(--text2);font-size:11px;padding:6px 10px;border-radius:8px;transition:all 0.15s;line-height:1;display:inline-flex;align-items:center;justify-content:center;}
 .qmini-btn:hover{color:var(--text);border-color:var(--border2);}
 .qmini-btn.delete:hover{color:var(--urgent);border-color:var(--urgent-border);}
 .qmini-btn.undo:hover{color:var(--gold);border-color:#f0c84035;}
+.qmini-btn.complete{color:#9de5b6;border-color:#2f6d45;background:transparent;}
+.qmini-btn.complete:hover{color:#c1f6d3;border-color:#3e9a62;}
 
 /* EDIT PANEL */
 .edit-panel{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-top:10px;}
 .ep-title{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
 .ep-row{margin-bottom:8px;}
 .ep-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);display:block;margin-bottom:4px;}
-.ep-input,.ep-select,.ep-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:8px 10px;font-family:'Inter',sans-serif;font-size:13px;border-radius:7px;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+.ep-input,.ep-select,.ep-textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);padding:11px 12px;font-family:'Inter',sans-serif;font-size:14px;border-radius:10px;outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
 .ep-input:focus,.ep-select:focus,.ep-textarea:focus{border-color:var(--border2);}
 .ep-textarea{min-height:56px;resize:none;line-height:1.5;}
 .ep-select option{background:var(--bg2);}
 .ep-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
 .ep-actions{display:flex;gap:6px;margin-top:10px;}
-.ep-save{flex:1;padding:9px;background:var(--text);border:none;color:var(--bg);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:7px;transition:opacity 0.2s;}
+.ep-save{flex:1;min-height:42px;padding:11px;background:transparent;border:1px solid var(--normal);color:var(--normal);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:9px;transition:opacity 0.2s;}
 .ep-save:hover{opacity:0.85;}
 .ep-save:disabled{opacity:0.35;cursor:not-allowed;}
-.ep-cancel{padding:9px 14px;background:none;border:1px solid var(--border);color:var(--text3);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:7px;}
+.ep-cancel{min-height:42px;padding:11px 14px;background:none;border:1px solid var(--border);color:var(--text3);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-radius:9px;}
 .ai-suggestion{background:var(--gold-dim);border:1px solid #f0c84025;border-radius:8px;padding:12px;margin-top:10px;}
 .ai-sug-label{font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:0.8;margin-bottom:6px;}
 .ai-sug-title{font-size:12px;font-weight:600;color:var(--text);margin-bottom:3px;}
@@ -249,11 +251,11 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 .ai-gen-btn:disabled{opacity:0.35;cursor:not-allowed;}
 
 /* ADD FORM */
-.add-form{margin:0 20px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.add-form{margin:0 20px 14px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:16px;}
 .add-form-title{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;}
 
 /* TOAST */
-.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-120px);background:var(--surface2);border:1px solid var(--border2);padding:12px 20px;border-radius:12px;z-index:200;text-align:center;transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);max-width:90vw;box-shadow:0 8px 40px rgba(0,0,0,0.6);min-width:180px;}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-120px);background:var(--surface2);border:1px solid var(--border2);padding:12px 20px;border-radius:10px;z-index:200;text-align:center;transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);max-width:90vw;box-shadow:none;min-width:180px;}
 .toast.show{transform:translateX(-50%) translateY(0);}
 .toast-e{font-size:22px;margin-bottom:4px;}
 .toast-m{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--text);}
@@ -303,23 +305,23 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
 /* REWARDS */
 .rw-page{padding:40px 20px 88px;}
 .rw-stack{display:flex;flex-direction:column;gap:12px;}
-.rw-panel,.rw-card,.rw-result,.rw-toast{background:var(--surface);border:1px solid var(--border);border-radius:16px;}
+.rw-panel,.rw-card,.rw-result,.rw-toast{background:var(--surface);border:1px solid var(--border2);border-radius:10px;}
 .rw-panel,.rw-card,.rw-result{padding:14px;}
 .rw-topline{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
 .rw-title{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1;margin-bottom:4px;}
 .rw-sub{font-size:12px;color:var(--text2);line-height:1.6;}
 .rw-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 .rw-tab{padding:10px 8px;border-radius:10px;border:1px solid var(--border);background:var(--bg2);color:var(--text3);font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;}
-.rw-tab.active{background:var(--text);color:var(--bg);border-color:var(--text);}
+.rw-tab.active{background:transparent;color:var(--gold);border-color:var(--gold);}
 .rw-metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .rw-metric{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;}
 .rw-metric-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;line-height:1;}
 .rw-metric-note{font-size:11px;color:var(--text2);line-height:1.5;margin-top:6px;}
 .rw-row{display:flex;gap:10px;}
 .rw-row > *{flex:1;}
-.rw-btn,.rw-btn-ghost,.rw-btn-danger{padding:12px 14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
-.rw-btn{background:linear-gradient(135deg,var(--gold),#ffb82e);border:none;color:var(--bg);}
-.rw-btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text);}
+.rw-btn,.rw-btn-ghost,.rw-btn-danger{min-height:44px;padding:12px 14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+.rw-btn{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+.rw-btn-ghost{background:transparent;border:1px solid var(--border2);color:var(--text);}
 .rw-btn-danger{background:var(--urgent);border:none;color:#fff;}
 .rw-btn:disabled,.rw-btn-ghost:disabled,.rw-btn-danger:disabled{opacity:.35;cursor:not-allowed;}
 .rw-list{display:flex;flex-direction:column;gap:10px;}
@@ -367,6 +369,13 @@ button{font-family:'Inter',sans-serif;cursor:pointer;}
   .rw-wheel-label{width:62px;margin-left:-31px;font-size:7px}
   .rw-tabs{grid-template-columns:repeat(2,1fr)}
 }
+@media (max-width:420px){
+  .quick-actions{grid-template-columns:1fr;}
+  .profile-header{padding-top:32px;}
+  .sh{align-items:flex-start;flex-direction:column;}
+  .sh > div[style*="display: flex"]{width:100%;display:grid !important;grid-template-columns:1fr 1fr;gap:8px !important;}
+  .qcard-top{gap:12px;}
+}
 `;
 
 // ── CONSTANTS ────────────────────────────────────────────────────────────────
@@ -378,7 +387,8 @@ const STAT_CFG = {
 };
 const STATS = ["strength", "creativity", "intelligence", "persona"];
 const XP_PER_LEVEL = 300;
-const TOTAL_LV1_XP = XP_PER_LEVEL * 4;
+const MIN_LEVEL_QUEST_TARGET = 25;
+const BASE_TARGET_XP_PER_QUEST = 30;
 const DAY_MS = 1000 * 60 * 60 * 24;
 const APP_TODAY = "2026-04-24";
 const LEVEL_1_DEFAULT_DEADLINE = "2026-04-29T23:59:59";
@@ -615,7 +625,7 @@ function rwAddHistory(history, title, meta) {
 function deriveStreakFromQuests(quests, base = new Date()) {
   const doneDays = new Set(
     quests
-      .filter(q => q.done && q.completedAt)
+      .filter(q => q.completedAt)
       .map(q => localDateKey(q.completedAt))
   );
   let streak = 0;
@@ -672,6 +682,8 @@ function sanitizeState(raw) {
       ...attachDeadlineWindow(q, `${APP_TODAY}T00:00:00`),
       completedAt: q.completedAt || null,
       coinReward: Number(q.coinReward) || 0,
+      isDaily: !!q.isDaily,
+      isFinalBoss: !!q.isFinalBoss,
     }))
     : [];
   const statXP = {
@@ -695,6 +707,17 @@ function sanitizeState(raw) {
     questBoostReady: !!raw.questBoostReady,
     streak: hadLegacyDates || totalDone === 0 || totalXP === 0 ? 0 : deriveStreakFromQuests(quests),
     levelDeadline: raw.levelDeadline?.startsWith?.("2025-") ? LEVEL_1_DEFAULT_DEADLINE : (raw.levelDeadline || LEVEL_1_DEFAULT_DEADLINE),
+  };
+}
+function calcLevelTargetXP(quests) {
+  const levelQuests = quests.filter(q => !q.isDaily && !q.isFinalBoss);
+  const questCountTarget = Math.max(MIN_LEVEL_QUEST_TARGET, levelQuests.length);
+  const baseXP = levelQuests.reduce((sum, q) => sum + (Number(q.xp) || 0), 0);
+  const missing = Math.max(0, questCountTarget - levelQuests.length);
+  return {
+    questCountTarget,
+    baseXP,
+    totalTargetXP: baseXP + missing * BASE_TARGET_XP_PER_QUEST,
   };
 }
 function dlLabel(q) {
@@ -769,9 +792,9 @@ export default function LifeRPG() {
   const [aiSuggestion, setAiSuggestion] = useState(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
-  const [newQ, setNewQ] = useState({ title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
+  const [newQ, setNewQ] = useState({ title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "", isDaily: false });
   const [showBoardAdd, setShowBoardAdd] = useState(false);
-  const [boardQ, setBoardQ] = useState({ stat: "strength", title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
+  const [boardQ, setBoardQ] = useState({ stat: "strength", title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "", isDaily: false });
   const [nowMs, setNowMs] = useState(seededNow);
   const oracle = useRef(ORACLES[Math.floor(Math.random() * ORACLES.length)]).current;
 
@@ -809,6 +832,20 @@ export default function LifeRPG() {
     const computed = deriveStreakFromQuests(quests);
     if (computed !== streak) setStreak(computed);
   }, [quests, streak, nowMs]);
+
+  useEffect(() => {
+    const todayKey = localDateKey();
+    setQuests(current => {
+      let changed = false;
+      const next = current.map(q => {
+        if (!q.isDaily || !q.done || !q.completedAt) return q;
+        if (localDateKey(q.completedAt) === todayKey) return q;
+        changed = true;
+        return { ...q, done: false, coinReward: 0 };
+      });
+      return changed ? next : current;
+    });
+  }, [nowMs]);
 
   const rewardLibraryMap = useMemo(() => Object.fromEntries(rewardLibrary.map(item => [item.id, item])), [rewardLibrary]);
   const rewardActiveShop = useMemo(() => rewardActiveShopIds.map(id => rewardLibraryMap[id]).filter(Boolean), [rewardActiveShopIds, rewardLibraryMap]);
@@ -1071,7 +1108,9 @@ export default function LifeRPG() {
   }
 
   function confirmQuests() {
-    const chosen = QUEST_POOL.filter(q => selectedIds.has(q.id)).map(q => attachDeadlineWindow(q, `${APP_TODAY}T00:00:00`));
+    const chosen = QUEST_POOL
+      .filter(q => selectedIds.has(q.id))
+      .map(q => attachDeadlineWindow({ ...q, isDaily: false, isFinalBoss: false }, `${APP_TODAY}T00:00:00`));
     setQuests(chosen);
     setStatXP({ strength: 0, creativity: 0, intelligence: 0, persona: 0 });
     setCoins(0);
@@ -1108,6 +1147,10 @@ export default function LifeRPG() {
     setTimeout(() => setToast(null), 2800);
 
     if (newLv > prevLv) setTimeout(() => setLevelUp({ stat: q.stat, level: newLv }), 900);
+    if (q.isFinalBoss) {
+      setToast({ e: "👑", m: "Final Boss cleared. Level gate unlocked.", xp: q.xp, coins: earnedCoins });
+      setTimeout(() => setToast(null), 3000);
+    }
   }
 
   function confirmCompleteQuest() {
@@ -1159,7 +1202,7 @@ export default function LifeRPG() {
 
   function addSuggestion() {
     if (!aiSuggestion) return;
-    setQuests(qs => [...qs, attachDeadlineWindow({ ...aiSuggestion, id: `ai_${Date.now()}`, done: false, xp: parseInt(aiSuggestion.xp) || 30, deadline: null })]);
+    setQuests(qs => [...qs, attachDeadlineWindow({ ...aiSuggestion, id: `ai_${Date.now()}`, done: false, xp: parseInt(aiSuggestion.xp) || 30, deadline: null, isDaily: false, isFinalBoss: false })]);
     setAiSuggestion(null);
   }
 
@@ -1184,23 +1227,69 @@ export default function LifeRPG() {
       const data = await res.json();
       const raw = data.content?.[0]?.text || "[]";
       const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setQuests(qs => [...qs, ...parsed.map(q => attachDeadlineWindow({ ...q, id: `ai_${Date.now()}_${Math.random()}`, stat, done: false, xp: parseInt(q.xp) || 30, deadline: null }))]);
+      setQuests(qs => [...qs, ...parsed.map(q => attachDeadlineWindow({ ...q, id: `ai_${Date.now()}_${Math.random()}`, stat, done: false, xp: parseInt(q.xp) || 30, deadline: null, isDaily: false, isFinalBoss: false }))]);
     } catch (e) { console.error(e); }
     setAiLoading(false);
   }
 
   function addManualQuest(stat) {
     if (!newQ.title.trim()) return;
-    setQuests(qs => [...qs, attachDeadlineWindow({ ...newQ, id: `m_${Date.now()}`, stat, done: false, xp: parseInt(newQ.xp) || 30, deadline: newQ.deadline || null })]);
-    setNewQ({ title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
+    setQuests(qs => [...qs, attachDeadlineWindow({ ...newQ, id: `m_${Date.now()}`, stat, done: false, xp: parseInt(newQ.xp) || 30, deadline: newQ.deadline || null, isFinalBoss: false })]);
+    setNewQ({ title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "", isDaily: false });
     setShowAdd(false);
   }
 
   function addBoardQuest() {
     if (!boardQ.title.trim()) return;
-    setQuests(qs => [...qs, attachDeadlineWindow({ ...boardQ, id: `b_${Date.now()}`, done: false, xp: parseInt(boardQ.xp) || 30, deadline: boardQ.deadline || null })]);
-    setBoardQ({ stat: "strength", title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "" });
+    setQuests(qs => [...qs, attachDeadlineWindow({ ...boardQ, id: `b_${Date.now()}`, done: false, xp: parseInt(boardQ.xp) || 30, deadline: boardQ.deadline || null, isFinalBoss: false })]);
+    setBoardQ({ stat: "strength", title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "", isDaily: false });
     setShowBoardAdd(false);
+  }
+
+  function addQuickDailyQuest(stat) {
+    setQuests(qs => [...qs, attachDeadlineWindow({
+      id: `d_${Date.now()}`,
+      stat,
+      title: `Daily ${STAT_CFG[stat].label} quest`,
+      desc: "Repeats every day. Complete it once daily for consistent momentum.",
+      type: "main",
+      priority: "normal",
+      xp: 30,
+      deadline: null,
+      done: false,
+      isDaily: true,
+      isFinalBoss: false,
+      coinReward: 0,
+      completedAt: null,
+    })]);
+    setToast({ e: "🔁", m: "Daily quest added.", xp: 0 });
+    setTimeout(() => setToast(null), 2000);
+  }
+
+  function addFinalBossQuest() {
+    const exists = quests.some(q => q.isFinalBoss);
+    if (exists) {
+      setToast({ e: "⚡", m: "Final boss already exists.", xp: 0 });
+      setTimeout(() => setToast(null), 1800);
+      return;
+    }
+    setQuests(qs => [...qs, attachDeadlineWindow({
+      id: `final_boss_${Date.now()}`,
+      stat: "intelligence",
+      title: "Final Boss - Unlock Level 2",
+      desc: "Complete this after your Level 1 grind to advance.",
+      type: "boss",
+      priority: "urgent",
+      xp: 150,
+      deadline: null,
+      done: false,
+      isDaily: false,
+      isFinalBoss: true,
+      coinReward: 0,
+      completedAt: null,
+    })]);
+    setToast({ e: "👑", m: "Final boss quest added.", xp: 0 });
+    setTimeout(() => setToast(null), 2200);
   }
 
   function removeQuest(q) {
@@ -1255,17 +1344,22 @@ export default function LifeRPG() {
 
   // ── DERIVED ──────────────────────────────────────────────────────────────
   const totalXP = Object.values(statXP).reduce((a, b) => a + b, 0);
-  const totalProgress = Math.min((totalXP / TOTAL_LV1_XP) * 100, 100);
+  const levelTarget = calcLevelTargetXP(quests);
+  const totalProgress = Math.min((totalXP / Math.max(1, levelTarget.totalTargetXP)) * 100, 100);
+  const finalBossQuest = quests.find(q => q.isFinalBoss);
+  const isFinalBossDone = !!finalBossQuest?.done;
+  const levelReadyByXP = totalProgress >= 100;
+  const canAdvanceLevel = levelReadyByXP && isFinalBossDone;
   const totalDone = quests.filter(q => q.done).length;
   const todayQ = sortQ(quests.filter(q => !q.done)).slice(0, 5);
   const levelClock = formatCountdown(levelDeadline, nowMs);
 
   useEffect(() => {
-    if (onboarding || totalProgress >= 100 || levelPenalty) return;
+    if (onboarding || canAdvanceLevel || levelPenalty) return;
     if (new Date(levelDeadline).getTime() <= nowMs) {
       setLevelPenalty(getLevelPunishment(statXP, levelDeadline));
     }
-  }, [onboarding, totalProgress, levelDeadline, nowMs, levelPenalty, statXP]);
+  }, [onboarding, canAdvanceLevel, levelDeadline, nowMs, levelPenalty, statXP]);
 
   // ── ONBOARDING SCREEN ─────────────────────────────────────────────────────
   if (onboarding) {
@@ -1449,14 +1543,20 @@ export default function LifeRPG() {
               </div>
               <div className="cxp-track"><div className="cxp-fill" style={{ width: `${totalProgress}%` }} /></div>
               <div className="cxp-bottom">
-                <div className="cxp-nums">{totalXP} / {TOTAL_LV1_XP} XP</div>
-                <div className="cxp-quests">{totalDone} / {quests.length} quests done</div>
+                <div className="cxp-nums">{totalXP} / {levelTarget.totalTargetXP} XP</div>
+                <div className="cxp-quests">Target quests: {levelTarget.questCountTarget} · done {totalDone}/{quests.length}</div>
               </div>
               <div className="cxp-coins">🪙 {coins} coins</div>
+              <div className="cxp-quests" style={{ marginTop: 6 }}>
+                {finalBossQuest
+                  ? (isFinalBossDone ? "Final Boss complete. Level 2 unlocked." : "Complete Final Boss quest to unlock Level 2.")
+                  : "Add a Final Boss quest to unlock Level 2."}
+              </div>
             </div>
 
             <div className="quick-actions">
               <button className="quick-action-btn" onClick={() => openQuestBoardAdd("strength")}>+ Add Quest</button>
+              <button className="quick-action-btn" onClick={addFinalBossQuest}>+ Final Boss</button>
               <button className="quick-action-btn" onClick={() => navTo("quests")}>Manage Quest List</button>
             </div>
 
@@ -1903,12 +2003,17 @@ export default function LifeRPG() {
             <div style={{ padding: "40px 20px 16px" }}>
               <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 9, fontWeight: 700, letterSpacing: 2, textTransform: "uppercase", color: "var(--text3)", marginBottom: 6 }}>Level 1</div>
               <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 26, fontWeight: 800, marginBottom: 4 }}>Quest Board</div>
-              <div style={{ fontSize: 12, color: "var(--text2)" }}>{totalDone}/{quests.length} complete · {Math.round(totalProgress)}% to Level 2</div>
+              <div style={{ fontSize: 12, color: "var(--text2)" }}>
+                {totalDone}/{quests.length} complete · {Math.round(totalProgress)}% by XP · {isFinalBossDone ? "Final Boss complete" : "Final Boss pending"}
+              </div>
             </div>
 
             <div className="sh">
               <div className="sh-title">Manage Quests</div>
-              <button className="sh-action" onClick={() => setShowBoardAdd(v => !v)}>{showBoardAdd ? "Cancel" : "+ Add Quest"}</button>
+              <div style={{ display: "flex", gap: 8 }}>
+                <button className="sh-action" onClick={() => addQuickDailyQuest("strength")}>+ Daily Quest</button>
+                <button className="sh-action" onClick={() => setShowBoardAdd(v => !v)}>{showBoardAdd ? "Cancel" : "+ Add Quest"}</button>
+              </div>
             </div>
 
             {showBoardAdd && (
@@ -1925,6 +2030,10 @@ export default function LifeRPG() {
                     <label className="ep-label">Type</label>
                     <select className="ep-select" value={boardQ.type} onChange={e => setBoardQ(p => ({ ...p, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select>
                   </div>
+                </div>
+                <div className="ep-row" style={{ marginTop: 8 }}>
+                  <label className="ep-label">Daily Repeat</label>
+                  <input type="checkbox" checked={!!boardQ.isDaily} onChange={e => setBoardQ(p => ({ ...p, isDaily: e.target.checked }))} />
                 </div>
                 <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={boardQ.title} onChange={e => setBoardQ(p => ({ ...p, title: e.target.value }))} placeholder="What needs to be done?" /></div>
                 <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={boardQ.desc} onChange={e => setBoardQ(p => ({ ...p, desc: e.target.value }))} placeholder="Details..." /></div>
@@ -2009,7 +2118,10 @@ export default function LifeRPG() {
 
               <div className="sh">
                 <div className="sh-title">Active Quests</div>
-                <button className="sh-action" onClick={() => setShowAdd(f => !f)}>{showAdd ? "Cancel" : "+ Add"}</button>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <button className="sh-action" onClick={() => addQuickDailyQuest(activeStat)}>+ Daily Quest</button>
+                  <button className="sh-action" onClick={() => setShowAdd(f => !f)}>{showAdd ? "Cancel" : "+ Add"}</button>
+                </div>
               </div>
 
               {showAdd && (
@@ -2024,6 +2136,10 @@ export default function LifeRPG() {
                   <div className="ep-2" style={{ marginTop: 8 }}>
                     <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">XP</label><input className="ep-input" type="number" value={newQ.xp} onChange={e => setNewQ(p => ({ ...p, xp: e.target.value }))} /></div>
                     <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Deadline</label><input className="ep-input" type="date" value={newQ.deadline} onChange={e => setNewQ(p => ({ ...p, deadline: e.target.value }))} /></div>
+                  </div>
+                  <div className="ep-row" style={{ marginTop: 8 }}>
+                    <label className="ep-label">Daily Repeat</label>
+                    <input type="checkbox" checked={!!newQ.isDaily} onChange={e => setNewQ(p => ({ ...p, isDaily: e.target.checked }))} />
                   </div>
                   <div className="ep-actions">
                     <button className="ep-cancel" onClick={() => setShowAdd(false)}>Cancel</button>
@@ -2084,8 +2200,9 @@ function QCard({ q, onComplete, onEdit, onDelete, onUndo, editingId, editForm, s
         <div className="qbody">
           <div className="qtags">
             <span className={`qtag ${q.type === "boss" ? "qtag-boss" : q.type === "main" ? "qtag-main" : "qtag-side"}`} style={typeColor[q.type] || {}}>
-              {q.type === "boss" ? "⚡ Boss" : q.type === "main" ? "Main" : "Side"}
+              {q.isFinalBoss ? "👑 Final Boss" : q.type === "boss" ? "⚡ Boss" : q.type === "main" ? "Main" : "Side"}
             </span>
+            {q.isDaily && <span className="qstat-tag" style={{ background: "#43c27a20", color: "#43c27a", borderColor: "#43c27a35" }}>🔁 Daily</span>}
             <span className={`qprio-tag prio-${q.priority}`}>{q.priority}</span>
             <span className="qstat-tag" style={{ background: `${cfg?.color}15`, color: cfg?.color, borderColor: `${cfg?.color}25` }}>{cfg?.icon} {cfg?.label}</span>
           </div>
@@ -2094,6 +2211,7 @@ function QCard({ q, onComplete, onEdit, onDelete, onUndo, editingId, editForm, s
         </div>
         <div className="qaction-col">
           <div className="qxp">+{q.xp}</div>
+          {!q.done && onComplete && <button className="qmini-btn complete" onClick={() => onComplete(q)}>Complete</button>}
           {!q.done && onEdit && <button className="qedit-btn" onClick={() => onEdit(q)}>✎</button>}
           {!q.done && onDelete && <button className="qmini-btn delete" onClick={() => onDelete(q)}>Remove</button>}
           {q.done && onUndo && <button className="qmini-btn undo" onClick={() => onUndo(q)}>Undo</button>}
