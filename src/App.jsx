@@ -1052,6 +1052,40 @@ function calcLevelTargetXP(quests) {
     totalTargetXP: baseXP + missing * BASE_TARGET_XP_PER_QUEST,
   };
 }
+
+// ── LEVEL 1 COMPLETION SYSTEM ────────────────────────────────────────────────
+const LEVEL1_XP_RATIO = 0.80;
+const LEVEL1_STREAK_DAYS = 7;
+// Kept for legacy references; no longer used for unlock prereqs.
+const LEVEL1_BOSS_STATS = ["strength", "creativity", "intelligence", "persona"];
+function checkLevel1Complete(quests, streak = 0) {
+  const scoringQuests = quests.filter(q => !q.isDaily);
+  const totalPossibleXP = scoringQuests.reduce((s, q) => s + (Number(q.xp) || 0), 0);
+  const earnedXP = scoringQuests
+    .filter(q => q.done)
+    .reduce((s, q) => s + (Number(q.xp) || 0), 0);
+  const level1Target = totalPossibleXP * LEVEL1_XP_RATIO;
+  const xpMet = totalPossibleXP > 0 && earnedXP >= level1Target;
+  const streakMet = (Number(streak) || 0) >= LEVEL1_STREAK_DAYS;
+  const finalBossQuest = quests.find(q => q.isFinalBoss || q.type === "finalBoss");
+  const finalBossMet = !!finalBossQuest?.done;
+  // Final Boss unlocks when EITHER 7-day streak OR 80% XP completed.
+  const prereqsMet = xpMet || streakMet;
+  return {
+    complete: prereqsMet && finalBossMet,
+    xpMet,
+    streakMet,
+    streak: Number(streak) || 0,
+    streakTarget: LEVEL1_STREAK_DAYS,
+    finalBossMet,
+    prereqsMet,
+    finalBossQuest,
+    progress: totalPossibleXP > 0 ? Math.min((earnedXP / Math.max(1, level1Target)) * 100, 100) : 0,
+    earnedXP,
+    totalPossibleXP,
+    level1Target: Math.round(level1Target),
+  };
+}
 function dlLabel(q) {
   const d = daysUntil(q.deadline);
   if (d === null) return null;
@@ -1136,6 +1170,35 @@ export default function LifeRPG() {
   const [boardQ, setBoardQ] = useState({ stat: "strength", title: "", desc: "", type: "main", priority: "normal", xp: 30, deadline: "", isDaily: false });
   const [nowMs, setNowMs] = useState(seededNow);
   const oracle = useRef(ORACLES[Math.floor(Math.random() * ORACLES.length)]).current;
+  const [carryReview, setCarryReview] = useState(false);
+  const [carryDecisions, setCarryDecisions] = useState({});
+  const [archivedQuests, setArchivedQuests] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("liferpg_archived_quests") || "[]"); } catch { return []; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem("liferpg_archived_quests", JSON.stringify(archivedQuests)); } catch {}
+  }, [archivedQuests]);
+  function applyCarryReview() {
+    const incomplete = quests.filter(q => !q.done && !q.isFinalBoss);
+    const toArchive = [];
+    const toDrop = new Set();
+    const toCarry = new Set();
+    incomplete.forEach(q => {
+      const d = carryDecisions[q.id] || "carry";
+      if (d === "archive") { toArchive.push({ ...q, archivedAt: new Date().toISOString(), fromLevel: 1 }); toDrop.add(q.id); }
+      else if (d === "drop") { toDrop.add(q.id); }
+      else { toCarry.add(q.id); }
+    });
+    setArchivedQuests(a => [...a, ...toArchive]);
+    setQuests(qs => qs
+      .filter(q => !toDrop.has(q.id))
+      .map(q => toCarry.has(q.id) ? { ...q, carriedFromLevel: 1 } : q)
+    );
+    setCarryReview(false);
+    setCarryDecisions({});
+    setToast({ e: "🎯", m: "Level 2 unlocked. Quests reviewed.", xp: 0 });
+    setTimeout(() => setToast(null), 2800);
+  }
 
   // PERSIST on every change
   useEffect(() => {
@@ -1583,6 +1646,18 @@ export default function LifeRPG() {
   // ── QUEST ACTIONS ────────────────────────────────────────────────────────
   function requestCompleteQuest(q) {
     if (q.done) return;
+    if (q.isFinalBoss || q.type === "finalBoss") {
+      const status = checkLevel1Complete(quests, streak);
+      if (!status.prereqsMet) {
+        setToast({
+          e: "🔒",
+          m: `Final Boss locked. Reach ${LEVEL1_STREAK_DAYS}-day streak (${status.streak}/${LEVEL1_STREAK_DAYS}) or 80% XP (${status.earnedXP}/${status.level1Target}).`,
+          xp: 0,
+        });
+        setTimeout(() => setToast(null), 3600);
+        return;
+      }
+    }
     setPendingComplete(q);
   }
 
@@ -1718,17 +1793,18 @@ export default function LifeRPG() {
       return;
     }
     setQuests(qs => [...qs, attachDeadlineWindow({
-      id: `final_boss_${Date.now()}`,
-      stat: "intelligence",
-      title: "Final Boss - Unlock Level 2",
-      desc: "Complete this after your Level 1 grind to advance.",
+      id: `final_boss_lv1`,
+      stat: "persona",
+      title: "Speak English Fluently — Final Boss",
+      desc: "Hold a 10-minute unscripted conversation in English without switching languages. Record it or have it witnessed. This is the Level 1 capstone.",
       type: "boss",
       priority: "urgent",
-      xp: 150,
+      xp: 200,
       deadline: null,
       done: false,
       isDaily: false,
       isFinalBoss: true,
+      locked: true,
       coinReward: 0,
       completedAt: null,
     })]);
@@ -1790,10 +1866,11 @@ export default function LifeRPG() {
   const totalXP = Object.values(statXP).reduce((a, b) => a + b, 0);
   const levelTarget = calcLevelTargetXP(quests);
   const totalProgress = Math.min((totalXP / Math.max(1, levelTarget.totalTargetXP)) * 100, 100);
-  const finalBossQuest = quests.find(q => q.isFinalBoss);
-  const isFinalBossDone = !!finalBossQuest?.done;
-  const levelReadyByXP = totalProgress >= 100;
-  const canAdvanceLevel = levelReadyByXP && isFinalBossDone;
+  const level1Status = useMemo(() => checkLevel1Complete(quests, streak), [quests, streak]);
+  const finalBossQuest = level1Status.finalBossQuest;
+  const isFinalBossDone = level1Status.finalBossMet;
+  const levelReadyByXP = level1Status.xpMet;
+  const canAdvanceLevel = level1Status.complete;
   const totalDone = quests.filter(q => q.done).length;
   const todayQ = sortQ(quests.filter(q => !q.done)).slice(0, 5);
   const levelClock = formatCountdown(levelDeadline, nowMs);
@@ -1918,7 +1995,47 @@ export default function LifeRPG() {
           </div>
         )}
 
-        {/* COMPLETE CONFIRM */}
+        {/* CARRY-FORWARD REVIEW */}
+        {carryReview && (
+          <div className="overlay" style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)", zIndex: 320, display: "flex", alignItems: "center", justifyContent: "center", padding: 16 }}>
+            <div style={{ background: "var(--surface)", border: "1px solid var(--border2)", borderRadius: 16, padding: 20, maxWidth: 440, width: "100%", maxHeight: "85vh", overflowY: "auto" }}>
+              <div style={{ fontFamily: "'Syne',sans-serif", fontSize: 18, fontWeight: 800, color: "var(--gold)", marginBottom: 4 }}>Level 2 Gate</div>
+              <div style={{ fontSize: 12, color: "var(--text2)", marginBottom: 16, lineHeight: 1.5 }}>
+                Decide what to do with each incomplete Level 1 quest before moving on.
+              </div>
+              {quests.filter(q => !q.done && !q.isFinalBoss).length === 0 && (
+                <div style={{ fontSize: 12, color: "var(--text2)" }}>Nothing to review.</div>
+              )}
+              {quests.filter(q => !q.done && !q.isFinalBoss).map(q => {
+                const decision = carryDecisions[q.id] || "carry";
+                return (
+                  <div key={q.id} style={{ background: "var(--bg2)", border: "1px solid var(--border)", borderRadius: 10, padding: 12, marginBottom: 10 }}>
+                    <div style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", marginBottom: 4 }}>{q.title}</div>
+                    <div style={{ fontSize: 10, color: "var(--text3)", marginBottom: 8, textTransform: "uppercase", letterSpacing: 1 }}>{q.stat} · {q.type} · {q.xp} XP</div>
+                    <div style={{ display: "flex", gap: 6 }}>
+                      {["carry", "archive", "drop"].map(opt => (
+                        <button key={opt}
+                          onClick={() => setCarryDecisions(d => ({ ...d, [q.id]: opt }))}
+                          style={{
+                            flex: 1, padding: "8px 6px", fontSize: 10, fontFamily: "'Syne',sans-serif", fontWeight: 700, letterSpacing: 1, textTransform: "uppercase", borderRadius: 8,
+                            background: decision === opt ? (opt === "drop" ? "var(--urgent-dim)" : opt === "archive" ? "var(--bg3)" : "var(--gold-dim)") : "transparent",
+                            color: decision === opt ? (opt === "drop" ? "var(--urgent)" : opt === "archive" ? "var(--text2)" : "var(--gold)") : "var(--text3)",
+                            border: `1px solid ${decision === opt ? (opt === "drop" ? "var(--urgent-border)" : "var(--border2)") : "var(--border)"}`
+                          }}>
+                          {opt}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+              <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
+                <button onClick={() => setCarryReview(false)} style={{ flex: 1, padding: 12, background: "transparent", color: "var(--text2)", border: "1px solid var(--border)", borderRadius: 10, fontWeight: 600 }}>Cancel</button>
+                <button onClick={applyCarryReview} style={{ flex: 2, padding: 12, background: "linear-gradient(90deg,#ef7a52,#cb5be7)", color: "#fff", border: 0, borderRadius: 10, fontWeight: 800, fontFamily: "'Syne',sans-serif", letterSpacing: 1 }}>Confirm & Enter Level 2</button>
+              </div>
+            </div>
+          </div>
+        )}
         {pendingComplete && (
           <div className="overlay">
             <div className="confirm-box">
@@ -1983,19 +2100,38 @@ export default function LifeRPG() {
             <div className="cxp-card">
               <div className="cxp-top">
                 <div className="cxp-label">Level 1 Progress</div>
-                <div className="cxp-pct">{Math.round(totalProgress)}%</div>
+                <div className="cxp-pct">{Math.round(level1Status.progress)}%</div>
               </div>
-              <div className="cxp-track"><div className="cxp-fill" style={{ width: `${totalProgress}%` }} /></div>
+              <div className="cxp-track"><div className="cxp-fill" style={{ width: `${level1Status.progress}%` }} /></div>
               <div className="cxp-bottom">
-                <div className="cxp-nums">{totalXP} / {levelTarget.totalTargetXP} XP</div>
-                <div className="cxp-quests">Target quests: {levelTarget.questCountTarget} ?? done {totalDone}/{quests.length}</div>
+                <div className="cxp-nums">{level1Status.earnedXP} / {level1Status.level1Target} XP (80% of {level1Status.totalPossibleXP})</div>
+                <div className="cxp-quests">done {totalDone}/{quests.length}</div>
               </div>
-              <div className="cxp-coins">???? {coins} coins</div>
-              <div className="cxp-quests" style={{ marginTop: 6 }}>
-                {finalBossQuest
-                  ? (isFinalBossDone ? "Final Boss complete. Level 2 unlocked." : "Complete Final Boss quest to unlock Level 2.")
-                  : "Add a Final Boss quest to unlock Level 2."}
+              <div className="cxp-coins">🪙 {coins} coins</div>
+              <div style={{ marginTop: 12, display: "flex", flexDirection: "column", gap: 6, fontSize: 11, color: "var(--text2)" }}>
+                <div style={{ fontWeight: 700, color: "var(--text1)" }}>Final Boss unlocks when EITHER condition is met:</div>
+                <div>{level1Status.streakMet ? "✅" : "⏳"} {LEVEL1_STREAK_DAYS}-day streak — {level1Status.streak}/{LEVEL1_STREAK_DAYS} days</div>
+                <div>{level1Status.xpMet ? "✅" : "⏳"} 80% XP completed — {level1Status.earnedXP}/{level1Status.level1Target}</div>
+                <div style={{ marginTop: 4 }}>
+                  {!finalBossQuest
+                    ? "👑 Final Boss — Add the Final Boss quest"
+                    : isFinalBossDone
+                      ? "✅ Final Boss — Completed"
+                      : level1Status.prereqsMet
+                        ? "👑 Final Boss — Unlocked. Complete to clear Level 1."
+                        : "🔒 Final Boss — Locked (meet one condition above)"}
+                </div>
               </div>
+              {!finalBossQuest && (
+                <button onClick={addFinalBossQuest} style={{ marginTop: 10, width: "100%", padding: "10px 12px", background: "var(--gold-dim)", color: "var(--gold)", border: "1px solid var(--gold-mid)", borderRadius: 10, fontWeight: 700, fontFamily: "'Syne',sans-serif", letterSpacing: 1, fontSize: 11 }}>
+                  + ADD FINAL BOSS QUEST
+                </button>
+              )}
+              {canAdvanceLevel && quests.some(q => !q.done && !q.isFinalBoss) && (
+                <button onClick={() => setCarryReview(true)} style={{ marginTop: 10, width: "100%", padding: "12px", background: "linear-gradient(90deg,#ef7a52,#cb5be7)", color: "#fff", border: 0, borderRadius: 10, fontWeight: 800, fontFamily: "'Syne',sans-serif", letterSpacing: 1.5, fontSize: 12 }}>
+                  REVIEW INCOMPLETE QUESTS → LEVEL 2
+                </button>
+              )}
             </div>
 
             <div className="sh"><div className="sh-title">Stats</div></div>
