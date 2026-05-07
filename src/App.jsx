@@ -2762,7 +2762,7 @@ export default function LifeRPG() {
                   </div>
                   <div className="ep-row" style={{ marginBottom: 0 }}>
                     <label className="ep-label">Type</label>
-                    <select className="ep-select" value={boardQ.type} onChange={e => setBoardQ(p => ({ ...p, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select>
+                    <select className="ep-select" value={boardQ.type} onChange={e => { const t = e.target.value; const xpMap = { boss: 50, main: 30, side: 15 }; setBoardQ(p => ({ ...p, type: t, xp: xpMap[t] ?? p.xp })); }}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select>
                   </div>
                 </div>
                 <div className="ep-row" style={{ marginTop: 8 }}>
@@ -2864,7 +2864,7 @@ export default function LifeRPG() {
                   <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={newQ.title} onChange={e => setNewQ(p => ({ ...p, title: e.target.value }))} placeholder="What needs to be done?" /></div>
                   <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={newQ.desc} onChange={e => setNewQ(p => ({ ...p, desc: e.target.value }))} placeholder="Details..." /></div>
                   <div className="ep-2">
-                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Type</label><select className="ep-select" value={newQ.type} onChange={e => setNewQ(p => ({ ...p, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
+                    <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Type</label><select className="ep-select" value={newQ.type} onChange={e => { const t = e.target.value; const xpMap = { boss: 50, main: 30, side: 15 }; setNewQ(p => ({ ...p, type: t, xp: xpMap[t] ?? p.xp })); }}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
                     <div className="ep-row" style={{ marginBottom: 0 }}><label className="ep-label">Priority</label><select className="ep-select" value={newQ.priority} onChange={e => setNewQ(p => ({ ...p, priority: e.target.value }))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
                   </div>
                   <div className="ep-2" style={{ marginTop: 8 }}>
@@ -2964,7 +2964,7 @@ function QCard({ q, onComplete, onEdit, onDelete, onUndo, editingId, editForm, s
           <div className="ep-row"><label className="ep-label">Title</label><input className="ep-input" value={editForm.title || ""} onChange={e => setEditForm(f => ({ ...f, title: e.target.value }))} /></div>
           <div className="ep-row"><label className="ep-label">Description</label><textarea className="ep-textarea" value={editForm.desc || ""} onChange={e => setEditForm(f => ({ ...f, desc: e.target.value }))} /></div>
           <div className="ep-2">
-            <div><label className="ep-label">Type</label><select className="ep-select" value={editForm.type || "main"} onChange={e => setEditForm(f => ({ ...f, type: e.target.value }))}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
+            <div><label className="ep-label">Type</label><select className="ep-select" value={editForm.type || "main"} onChange={e => { const t = e.target.value; const xpMap = { boss: 50, main: 30, side: 15 }; setEditForm(f => ({ ...f, type: t, xp: xpMap[t] ?? f.xp })); }}><option value="side">Side</option><option value="main">Main</option><option value="boss">Boss</option></select></div>
             <div><label className="ep-label">Priority</label><select className="ep-select" value={editForm.priority || "normal"} onChange={e => setEditForm(f => ({ ...f, priority: e.target.value }))}><option value="urgent">Urgent</option><option value="high">High</option><option value="normal">Normal</option><option value="low">Low</option></select></div>
           </div>
           <div className="ep-2" style={{ marginTop: 8 }}>
