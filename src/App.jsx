@@ -5,18 +5,21 @@ const S = `
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
-  --bg:#080b10;--bg2:#0d121a;--bg3:#121a24;--surface:#111823;--surface2:#182232;
-  --border:#223146;--border2:#2f4765;--text:#e9f2ff;--text2:#9bb1cc;--text3:#5f7593;
-  --urgent:#e84040;--urgent-dim:#2a0e0e;--urgent-border:#e8404035;
-  --high:#f09030;--high-dim:#2a1a06;--high-border:#f0903035;
-  --normal:#49b7ff;--normal-dim:#081c2d;--normal-border:#49b7ff35;
-  --low:#44aa66;--low-dim:#0b2515;--low-border:#44aa6635;
-  --str:#ff7a59;--cre:#ffba52;--int:#57b8ff;--per:#bf7dff;
-  --gold:#f4d35e;--gold-dim:#2a2411;
-  --green:#2ecc71;--radius:12px;
+  --bg:#0a0906;--bg2:#13110f;--bg3:#1c1a18;--surface:#16110f;--surface2:#1c1816;
+  --border:#332821;--border2:#4f3a2d;--text:#f3f0e8;--text2:#b9ac9e;--text3:#7f756b;
+  --urgent:#ff3a3a;--urgent-dim:#2d0d0d;--urgent-border:#ff3a3a35;
+  --high:#ff8c28;--high-dim:#2b1808;--high-border:#ff8c2835;
+  --normal:#4a88f0;--normal-dim:#0d1b36;--normal-border:#4a88f035;
+  --low:#38c870;--low-dim:#0b2114;--low-border:#38c87035;
+  --str:#e65032;--cre:#f0a030;--int:#4888f0;--per:#9860f0;
+  --gold:#f5c842;--gold-mid:#c99a18;--gold-dim:#2a2008;
+  --green:#38c870;--radius:14px;
 }
-body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
-.app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;background:var(--bg);}
+body{background:linear-gradient(180deg,#171313 0%, #120d10 100%);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
+.app{max-width:480px;margin:0 auto;min-height:100vh;position:relative;background:
+radial-gradient(circle at 85% 8%, rgba(99,39,150,.32), transparent 34%),
+radial-gradient(circle at 12% 42%, rgba(120,39,26,.18), transparent 26%),
+linear-gradient(180deg,#0c0b0f 0%, #0a0906 100%);}
 button{font-family:'Inter',sans-serif;cursor:pointer;touch-action:manipulation;}
 
 /* ── ONBOARDING ── */
@@ -92,12 +95,12 @@ button{font-family:'Inter',sans-serif;cursor:pointer;touch-action:manipulation;}
 .streak-text{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--str);}
 
 /* COMBINED XP */
-.cxp-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:16px 18px;box-shadow:none;}
+.cxp-card{margin:0 20px 16px;background:linear-gradient(180deg,rgba(35,28,43,.92),rgba(24,18,22,.96));border:1px solid rgba(120,91,138,.28);border-radius:18px;padding:18px 20px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03);}
 .cxp-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
 .cxp-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);}
 .cxp-pct{font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--gold);}
 .cxp-track{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;margin-bottom:6px;position:relative;}
-.cxp-fill{height:100%;border-radius:4px;background:var(--normal);transition:width 0.8s cubic-bezier(0.4,0,0.2,1);}
+.cxp-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#ef7a52 0%, #cb5be7 48%, #4d87f4 100%);transition:width 0.8s cubic-bezier(0.4,0,0.2,1);}
 .cxp-bottom{display:flex;justify-content:space-between;}
 .cxp-nums{font-size:10px;color:var(--text3);}
 .cxp-quests{font-size:10px;color:var(--text3);}
@@ -112,7 +115,9 @@ button{font-family:'Inter',sans-serif;cursor:pointer;touch-action:manipulation;}
 .quick-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 20px 16px;}
 .quick-action-btn{min-height:44px;padding:12px 10px;background:transparent;border:1px solid var(--border2);border-radius:10px;color:var(--text);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;transition:all 0.15s;}
 .quick-action-btn:hover{border-color:var(--border2);}
+.home-duo{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0 20px 16px;}
 .reward-home-card{margin:0 20px 16px;background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;}
+.home-duo .reward-home-card{margin:0;padding:14px 14px;min-height:168px;display:flex;flex-direction:column;justify-content:space-between;}
 .reward-home-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
 .reward-home-label{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
 .reward-home-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;line-height:1;}
@@ -124,11 +129,11 @@ button{font-family:'Inter',sans-serif;cursor:pointer;touch-action:manipulation;}
 
 /* STAT MINIS */
 .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 20px 16px;}
-.stat-mini{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all 0.15s;}
-.stat-mini:hover{border-color:var(--border2);}
+.stat-mini{background:linear-gradient(180deg,rgba(26,20,18,.95),rgba(18,16,14,.98));border:1px solid var(--border2);border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;transition:all 0.15s;box-shadow:inset 0 1px 0 rgba(255,255,255,.02);}
+.stat-mini:hover{border-color:#6b4f3a;transform:translateY(-1px);}
 .stat-mini-icon{font-size:16px;margin-bottom:3px;}
 .stat-mini-lv{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;margin-bottom:4px;}
-.stat-mini-bar{height:3px;background:var(--bg3);border-radius:2px;overflow:hidden;}
+.stat-mini-bar{height:4px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;margin-top:8px;}
 .stat-mini-fill{height:100%;border-radius:2px;transition:width 0.6s ease;}
 
 /* ORACLE */
@@ -149,16 +154,14 @@ button{font-family:'Inter',sans-serif;cursor:pointer;touch-action:manipulation;}
 .ql{padding:0 20px;display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 
 /* QUEST CARD */
-.qcard{border-radius:10px;padding:14px 14px;transition:all 0.15s;position:relative;overflow:hidden;box-shadow:none;}
+.qcard{border-radius:18px;padding:18px 18px;transition:all 0.15s;position:relative;overflow:hidden;box-shadow:inset 0 1px 0 rgba(255,255,255,.02);}
 .qcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
-.qcard.urgent{background:var(--bg2);border:1px solid var(--urgent-border);}
-.qcard.urgent::before{background:var(--urgent);}
-.qcard.high{background:var(--bg2);border:1px solid var(--high-border);}
-.qcard.high::before{background:var(--high);}
-.qcard.normal{background:var(--bg2);border:1px solid var(--normal-border);}
-.qcard.normal::before{background:var(--normal);}
-.qcard.low{background:var(--bg2);border:1px solid var(--low-border);}
-.qcard.low::before{background:var(--low);}
+.qcard.boss{background:linear-gradient(180deg,rgba(49,18,18,.96),rgba(33,12,13,.98));border:1px solid rgba(230,80,50,.32);}
+.qcard.boss::before{background:var(--str);}
+.qcard.main{background:linear-gradient(180deg,rgba(15,21,45,.96),rgba(11,15,31,.98));border:1px solid rgba(72,136,240,.30);}
+.qcard.main::before{background:var(--int);}
+.qcard.side{background:linear-gradient(180deg,rgba(9,29,21,.96),rgba(8,22,17,.98));border:1px solid rgba(56,200,112,.28);}
+.qcard.side::before{background:var(--low);}
 .qcard.done{opacity:0.3;filter:grayscale(0.5);}
 .qcard-top{display:flex;align-items:flex-start;gap:10px;}
 .qcheck{width:30px;height:30px;border-radius:50%;border:2px solid var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;font-size:12px;transition:all 0.2s;}
@@ -167,19 +170,19 @@ button{font-family:'Inter',sans-serif;cursor:pointer;touch-action:manipulation;}
 .qbody{flex:1;min-width:0;}
 .qtags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px;align-items:center;}
 .qtag{font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:4px;}
-.qtag-boss{background:transparent;color:var(--gold);border:1px solid #f0c84045;}
-.qtag-main{border:1px solid currentColor;background:transparent;}
-.qtag-side{background:transparent;color:var(--text3);border:1px solid var(--border2);}
+.qtag-boss{background:#3a1a12;color:var(--gold);border:1px solid rgba(245,200,66,.24);}
+.qtag-main{background:#172750;color:#7da8ff;border:1px solid rgba(72,136,240,.25);}
+.qtag-side{background:#102518;color:#63d58e;border:1px solid rgba(56,200,112,.22);}
 .qstat-tag{font-family:'Syne',sans-serif;font-size:8px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:4px;border:1px solid transparent;}
 .qprio-tag{font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:2px 6px;border-radius:4px;}
 .prio-urgent{background:var(--urgent-dim);color:var(--urgent);border:1px solid var(--urgent-border);}
 .prio-high{background:var(--high-dim);color:var(--high);border:1px solid var(--high-border);}
 .prio-normal{background:var(--normal-dim);color:var(--normal);border:1px solid var(--normal-border);}
 .prio-low{background:var(--low-dim);color:var(--low);border:1px solid var(--low-border);}
-.qtitle{font-size:14px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:3px;}
-.qdesc{font-size:12px;color:var(--text2);line-height:1.45;}
+.qtitle{font-size:15px;font-weight:700;color:var(--text);line-height:1.35;margin-bottom:4px;}
+.qdesc{font-size:12px;color:var(--text2);line-height:1.55;}
 .qcard.done .qtitle{text-decoration:line-through;}
-.qmeta{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04);}
+.qmeta{display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.08);}
 .qdeadline{font-size:10px;font-weight:500;}
 .dl-ok{color:var(--text3);}
 .dl-warn{color:var(--high);}
@@ -194,8 +197,8 @@ button{font-family:'Inter',sans-serif;cursor:pointer;touch-action:manipulation;}
 .qmini-btn:hover{color:var(--text);border-color:var(--border2);}
 .qmini-btn.delete:hover{color:var(--urgent);border-color:var(--urgent-border);}
 .qmini-btn.undo:hover{color:var(--gold);border-color:#f0c84035;}
-.qmini-btn.complete{color:#9de5b6;border-color:#2f6d45;background:transparent;}
-.qmini-btn.complete:hover{color:#c1f6d3;border-color:#3e9a62;}
+.qmini-btn.complete{color:#8ef0af;border-color:#2f6d45;background:#122118;}
+.qmini-btn.complete:hover{color:#c1f6d3;border-color:#3e9a62;background:#173021;}
 
 /* EDIT PANEL */
 .edit-panel{background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:14px;margin-top:10px;}
@@ -362,19 +365,69 @@ button{font-family:'Inter',sans-serif;cursor:pointer;touch-action:manipulation;}
 .rw-toast-body{font-size:11px;color:var(--text2);line-height:1.5;margin-top:5px}
 .rw-result-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--gold)}
 .rw-result-body{font-size:12px;color:var(--text2);line-height:1.6;margin-top:8px}
+.ra-page{padding:0 20px 110px;}
+.ra-hero{padding:40px 0 16px;}
+.ra-topline{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:8px;}
+.ra-title{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;line-height:1.02;letter-spacing:-0.5px;}
+.ra-sub{font-size:13px;color:var(--text2);line-height:1.7;margin-top:10px;}
+.ra-stack{display:flex;flex-direction:column;gap:12px;}
+.ra-panel{background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:16px;}
+.ra-grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.ra-label{display:block;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.ra-input,.ra-select,.ra-textarea{width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:11px 12px;color:var(--text);font-family:'Inter',sans-serif;font-size:13px;outline:none;}
+.ra-textarea{min-height:88px;resize:vertical;line-height:1.6;}
+.ra-row{display:flex;gap:8px;flex-wrap:wrap;}
+.ra-btn,.ra-btn-ghost{min-height:42px;padding:11px 14px;border-radius:12px;font-family:'Syne',sans-serif;font-size:10px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;transition:opacity .18s,border-color .18s,color .18s,background .18s;}
+.ra-btn{background:linear-gradient(135deg,var(--gold),#ffb82e);color:#111;border:1px solid #73581d;}
+.ra-btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2);}
+.ra-btn:disabled,.ra-btn-ghost:disabled{opacity:.35;cursor:not-allowed;}
+.ra-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.ra-metric{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.ra-metric-value{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;line-height:1;margin:6px 0;color:var(--text);}
+.ra-metric-note{font-size:11px;color:var(--text3);line-height:1.5;}
+.ra-memory-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+.ra-memory-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.ra-memory-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;}
+.ra-memory-name{font-family:'Syne',sans-serif;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;}
+.ra-memory-body{font-size:12px;color:var(--text2);line-height:1.55;white-space:pre-wrap;}
+.ra-chat{display:flex;flex-direction:column;gap:10px;}
+.ra-messages{display:flex;flex-direction:column;gap:10px;max-height:320px;overflow:auto;padding-right:2px;}
+.ra-msg{border-radius:14px;padding:12px 13px;max-width:92%;}
+.ra-msg.user{align-self:flex-end;background:#1a2332;border:1px solid #314766;}
+.ra-msg.ai{align-self:flex-start;background:var(--bg2);border:1px solid var(--border);}
+.ra-msg-role{font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.ra-msg-body{font-size:12px;color:var(--text2);line-height:1.65;white-space:pre-wrap;}
+.ra-chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+.ra-chip{display:inline-flex;align-items:center;padding:5px 8px;border-radius:999px;border:1px solid var(--border);background:var(--bg2);font-family:'Syne',sans-serif;font-size:8px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text2);}
+.ra-chip.fit{color:var(--str);border-color:#5a2f24;background:#19110d;}
+.ra-chip.work{color:var(--cre);border-color:#5d4017;background:#1e160b;}
+.ra-chip.learn{color:var(--int);border-color:#21486e;background:#0e1824;}
+.ra-chip.good{color:var(--green);border-color:#214b35;background:#0e1b15;}
+.ra-suggestion-list{display:flex;flex-direction:column;gap:10px;}
+.ra-suggestion-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:14px;}
+.ra-suggestion-title{font-size:13px;font-weight:700;color:var(--text);}
+.ra-suggestion-desc{font-size:12px;color:var(--text2);line-height:1.6;margin-top:6px;}
+.ra-empty{padding:16px 10px;text-align:center;color:var(--text3);font-size:12px;line-height:1.6;}
 @media (max-width:360px){
   .rw-wheel-shell{width:280px;height:280px}
   .rw-wheel-center{width:84px;height:84px}
   .rw-wheel-center-title{font-size:10px}
   .rw-wheel-label{width:62px;margin-left:-31px;font-size:7px}
   .rw-tabs{grid-template-columns:repeat(2,1fr)}
+  .ra-metrics,.ra-grid2,.ra-memory-grid{grid-template-columns:1fr;}
 }
 @media (max-width:420px){
   .quick-actions{grid-template-columns:1fr;}
+  .home-duo{grid-template-columns:1fr 1fr;}
   .profile-header{padding-top:32px;}
   .sh{align-items:flex-start;flex-direction:column;}
   .sh > div[style*="display: flex"]{width:100%;display:grid !important;grid-template-columns:1fr 1fr;gap:8px !important;}
   .qcard-top{gap:12px;}
+  .ra-title{font-size:26px;}
+  .ra-msg{max-width:100%;}
+}
+@media (max-width:360px){
+  .home-duo{grid-template-columns:1fr;}
 }
 `;
 
@@ -394,6 +447,11 @@ const APP_TODAY = "2026-04-24";
 const LEVEL_1_DEFAULT_DEADLINE = "2026-04-29T23:59:59";
 const MISSED_DEADLINE_COIN_PENALTY = 30;
 const COINS_BY_TYPE = { side: 5, main: 20, boss: 50 };
+const ROSAYE_DEFAULT_CONFIG = {
+  provider: "groq",
+  apiKey: "server-proxy",
+  model: "llama-3.3-70b-versatile",
+};
 const RW_SHOP_REFRESH_COST = 25;
 const RW_WHEEL_REFRESH_COST = 40;
 const RW_FULL_REFRESH_COST = 60;
@@ -464,6 +522,276 @@ const RW_DEFAULT_LIBRARY = [
 ];
 function rwBlankReward() {
   return { name: "", cost: 25, category: "entertainment", emoji: "RW", rewardType: "token", enabled: true, shopEligible: true, wheelEligible: true, tiers: ["basic"] };
+}
+function rosayeDefaultMemory() {
+  return {
+    fitness: { current: "", progress: "", next: "", updatedAt: "" },
+    work: { current: "", project: "", progress: "", next: "", updatedAt: "" },
+    learning: { current: "", progress: "", next: "", updatedAt: "" },
+    general: { goal: "", note: "", updatedAt: "" },
+  };
+}
+function rosayeDefaultSuggestions() {
+  return [
+    { id: "ra_seed_1", stat: "strength", title: "Track today's run distance", desc: "Log the exact distance and how it felt so Rosaye can scale the next fitness quest." },
+    { id: "ra_seed_2", stat: "creativity", title: "Continue current edit block", desc: "Do one focused editing sprint on your active project and note what still needs work." },
+  ];
+}
+function rosayeProviderModel(provider) {
+  if (provider === "gemini") return "gemini-1.5-flash";
+  if (provider === "openrouter") return "google/gemini-2.0-flash-lite";
+  return "llama-3.3-70b-versatile";
+}
+function rosayeMergeMemory(current, updates) {
+  const base = rosayeDefaultMemory();
+  const source = current || base;
+  const next = { ...base, ...source };
+  Object.keys(base).forEach(key => {
+    next[key] = { ...base[key], ...(source[key] || {}), ...((updates && updates[key]) || {}) };
+  });
+  return next;
+}
+function rosayeInferMemory(text, current) {
+  const msg = (text || "").trim();
+  const lower = msg.toLowerCase();
+  const now = new Date().toLocaleString();
+  const updates = {};
+  const projectMatch = msg.match(/project name is\s+([a-z0-9 _-]+)/i);
+  if (projectMatch) {
+    updates.work = { project: projectMatch[1].trim(), current: `${projectMatch[1].trim()} editing`, updatedAt: now };
+  }
+  const workMatch = msg.match(/working on\s+([a-z0-9 _-]+)/i);
+  if (workMatch) {
+    updates.work = { ...(updates.work || {}), current: workMatch[1].trim(), updatedAt: now };
+  }
+  const runMatch = msg.match(/(\d+(?:\.\d+)?)\s*km/i);
+  if (runMatch && (lower.includes("run") || lower.includes("running"))) {
+    const km = Number(runMatch[1]);
+    updates.fitness = {
+      current: `${km} km running`,
+      progress: `Completed ${km} km`,
+      next: `Run ${(km + 0.5).toFixed(1).replace(".0", "")} km tomorrow and add 10 min stretching`,
+      updatedAt: now,
+    };
+  }
+  if (lower.includes("edit")) {
+    const knownProject = updates.work?.project || current?.work?.project || "";
+    updates.work = {
+      ...(updates.work || {}),
+      progress: knownProject ? `Editing progress on ${knownProject}` : "Editing progress logged",
+      next: knownProject ? `Continue ${knownProject} edit and finish one concrete sequence` : "Continue editing and finish one concrete sequence",
+      updatedAt: now,
+    };
+  }
+  if (lower.includes("assignment") || lower.includes("study") || lower.includes("exam")) {
+    updates.learning = {
+      current: msg,
+      progress: "Learning session logged",
+      next: "Turn the next study block into one focused submission or revision sprint",
+      updatedAt: now,
+    };
+  }
+  if (!Object.keys(updates).length) {
+    updates.general = { note: msg, updatedAt: now };
+  }
+  return updates;
+}
+function rosayeHeuristicResponse(message, memory) {
+  const text = (message || "").trim();
+  const lower = text.toLowerCase();
+  if (!text) {
+    return {
+      reply: "Give me one real update and I will turn it into progress, memory, and the next logical quest.",
+      suggestions: rosayeDefaultSuggestions(),
+    };
+  }
+  if ((lower.includes("run") || lower.includes("running")) && memory.fitness?.next) {
+    const target = memory.fitness.next;
+    return {
+      reply: `Logged. You're not repeating the same effort tomorrow. ${target}.`,
+      suggestions: [
+        { id: `ra_${Date.now()}_1`, stat: "strength", title: target.split(" and ")[0], desc: "Push the distance slightly while keeping the form and pace controlled." },
+        { id: `ra_${Date.now()}_2`, stat: "strength", title: "Add 10 min post-run stretching", desc: "Open hips, calves, and hamstrings so the next running session feels lighter." },
+      ],
+    };
+  }
+  const activeProject = memory.work?.project || "";
+  if (lower.includes("edit") || lower.includes("project")) {
+    return {
+      reply: activeProject
+        ? `Memory updated. I’ll use ${activeProject} as the active project from now on and keep suggestions tied to its next deliverable.`
+        : "Memory updated. I’ll keep your current editing project active and suggest the next concrete deliverable instead of generic work.",
+      suggestions: [
+        { id: `ra_${Date.now()}_3`, stat: "creativity", title: activeProject ? `Continue ${activeProject} edit` : "Continue the current edit", desc: "Finish one clearly defined sequence instead of jumping across the whole timeline." },
+        { id: `ra_${Date.now()}_4`, stat: "creativity", title: activeProject ? `Review ${activeProject} rough cut` : "Review rough cut with notes", desc: "Watch once without editing, note weak transitions, then fix only the highest-impact issue." },
+      ],
+    };
+  }
+  if (lower.includes("study") || lower.includes("assignment") || lower.includes("exam")) {
+    return {
+      reply: "Good. I’m treating this as learning progress, not vague effort. The next quest should create visible output, not just more sitting.",
+      suggestions: [
+        { id: `ra_${Date.now()}_5`, stat: "intelligence", title: "Finish one hard submission block", desc: "Work only on the assignment or exam topic that is currently most likely to slip." },
+        { id: `ra_${Date.now()}_6`, stat: "intelligence", title: "Write a 5-point revision sheet", desc: "Compress today’s learning into five bullets so Rosaye can scale tomorrow intelligently." },
+      ],
+    };
+  }
+  return {
+    reply: "Logged. I’ve updated memory and turned this into the next actionable step instead of leaving it as a vague note.",
+    suggestions: [
+      { id: `ra_${Date.now()}_7`, stat: "persona", title: "Turn this update into one visible action", desc: "Complete one next step today so the progress chain stays real." },
+    ],
+  };
+}
+function rosayeJsonFromText(raw) {
+  const text = (raw || "").replace(/```json|```/g, "").trim();
+  const first = text.indexOf("{");
+  const last = text.lastIndexOf("}");
+  if (first >= 0 && last > first) return text.slice(first, last + 1);
+  return text;
+}
+function rosayeBuildApiRequest(config, message, memory, recentMessages) {
+  const system = "You are Rosaye, an adaptive quest brain inside Life RPG. Update memory carefully, preserve existing context, replace stale entities when the user clarifies them, and suggest only the next logical quests. Return ONLY valid JSON with keys: reply, memory_updates, suggestions. suggestions must be an array of up to 3 objects with stat, title, desc.";
+  const userPayload = JSON.stringify({
+    user_update: message,
+    memory,
+    recent_messages: recentMessages.slice(-6),
+  });
+  return {
+    url: "/api/rosaye",
+    options: {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: config.model || rosayeProviderModel("groq"),
+        temperature: 0.5,
+        messages: [{ role: "system", content: system }, { role: "user", content: userPayload }],
+      }),
+    },
+    parse: async res => {
+      const data = await res.json();
+      return data.choices?.[0]?.message?.content || "";
+    },
+  };
+}
+function rosayeQuestFallback(stat, mode, payload) {
+  const label = STAT_CFG[stat]?.label || "Quest";
+  if (mode === "next") {
+    if (stat === "strength") return { title: "Scale the next session slightly", desc: "Add one small overload step or recovery block so the last effort turns into progression.", type: "main", priority: "high", xp: 35 };
+    if (stat === "creativity") return { title: "Finish the next visible creative block", desc: "Push the project forward by finishing one sequence, deliverable, or review pass instead of reopening everything.", type: "main", priority: "high", xp: 40 };
+    if (stat === "intelligence") return { title: "Turn the study block into output", desc: "Convert the latest learning session into one completed submission, summary, or revision sheet.", type: "main", priority: "urgent", xp: 35 };
+    return { title: "Repeat the confidence action with more difficulty", desc: "Take the same social skill one step further so the gain compounds instead of resetting tomorrow.", type: "main", priority: "normal", xp: 30 };
+  }
+  const base = {
+    strength: [
+      { title: "Track today's full workout", desc: "Log sets, reps, weight, and one improvement target for the next session.", type: "main", priority: "normal", xp: 30 },
+      { title: "Add 10 minutes of mobility", desc: "Stretch hips, shoulders, and calves so training quality stays high tomorrow.", type: "side", priority: "normal", xp: 20 },
+      { title: "Push one main lift", desc: "Try one controlled overload on the key movement instead of repeating last time blindly.", type: "main", priority: "high", xp: 40 },
+    ],
+    creativity: [
+      { title: "Finish one edit block", desc: "Complete one real section of the timeline instead of touching ten areas lightly.", type: "main", priority: "high", xp: 40 },
+      { title: "Review the cut with notes", desc: "Watch once without editing and write the three biggest fixes before touching the timeline again.", type: "side", priority: "normal", xp: 20 },
+      { title: "Prepare the next delivery step", desc: "Export, organize, or package the creative work so it is closer to publishable or client-ready.", type: "main", priority: "normal", xp: 35 },
+    ],
+    intelligence: [
+      { title: "Finish one hard academic block", desc: "Choose the assignment or topic most likely to slip and finish one visible chunk of it.", type: "main", priority: "urgent", xp: 35 },
+      { title: "Write a 5-point summary", desc: "Compress today's learning into five bullets so tomorrow starts faster and sharper.", type: "side", priority: "normal", xp: 20 },
+      { title: "Do one exam-style revision sprint", desc: "Practice recall under time pressure instead of only re-reading notes.", type: "main", priority: "high", xp: 35 },
+    ],
+    persona: [
+      { title: "Do today's English interaction", desc: "Initiate one real conversation or voice session and track how long you held it.", type: "main", priority: "high", xp: 35 },
+      { title: "Shadow for 10 focused minutes", desc: "Copy rhythm, pause control, and confidence from a strong speaker.", type: "side", priority: "normal", xp: 20 },
+      { title: "Push one social action further", desc: "Repeat the same confidence task with slightly more exposure than last time.", type: "main", priority: "normal", xp: 30 },
+    ],
+  };
+  return base[stat] || [
+    { title: `${label} next step`, desc: "Take the latest progress and turn it into one visible next action.", type: "main", priority: "normal", xp: 30 },
+  ];
+}
+function rosayeNormalizedQuestShape(stat, quest) {
+  const type = ["side", "main", "boss"].includes(quest?.type) ? quest.type : "main";
+  const priority = ["urgent", "high", "normal", "low"].includes(quest?.priority) ? quest.priority : "normal";
+  const xpByType = { side: 20, main: 35, boss: 60 };
+  return {
+    stat,
+    title: quest?.title || "Next quest",
+    desc: quest?.desc || "Turn the current context into one concrete next step.",
+    type,
+    priority,
+    xp: xpByType[type],
+  };
+}
+function rosayeGuessStatFromText(text) {
+  const lower = (text || "").toLowerCase();
+  if (/(run|running|workout|gym|stretch|mobility|pushup|bench|lift)/.test(lower)) return "strength";
+  if (/(edit|video|shot|storyboard|draw|design|creative|film|motion|template|virtuolab|sukoon)/.test(lower)) return "creativity";
+  if (/(study|assignment|exam|learn|revise|revision|chapter|code|oop|os|coa|ada)/.test(lower)) return "intelligence";
+  if (/(english|discord|conversation|speak|shadow|mirror|confidence|persona|social)/.test(lower)) return "persona";
+  return "creativity";
+}
+function rosayeParseDeployQuests(message) {
+  const text = (message || "").trim();
+  if (!/^deploy\b/i.test(text)) return [];
+  const body = text.replace(/^deploy\b[:\- ]*/i, "").trim();
+  if (!body) return [];
+  const split = body
+    .split(/\n+/)
+    .flatMap(line => line.split(/(?=\d+\.)/g))
+    .map(part => part.replace(/^\d+\.\s*/, "").trim())
+    .filter(Boolean);
+  const items = split.length ? split : [body];
+  return items.map((item, index) => {
+    const stat = rosayeGuessStatFromText(item);
+    const lower = item.toLowerCase();
+    const isDaily = /\bdaily\b|\beach day\b|\bevery day\b/.test(lower);
+    const type = isDaily ? "side" : "main";
+    return {
+      id: `ra_deploy_${Date.now()}_${index}`,
+      ...rosayeNormalizedQuestShape(stat, {
+        title: item.replace(/\bdaily\b/ig, "").replace(/\beach day\b/ig, "").replace(/\bevery day\b/ig, "").trim().replace(/\s+/g, " "),
+        desc: isDaily ? "Directly deployed by Rosaye as a repeating quest from your instruction." : "Directly deployed by Rosaye from your instruction.",
+        type,
+        priority: "normal",
+      }),
+      isDaily,
+    };
+  });
+}
+async function rosayeQuestAssist(config, memory, recentMessages, prompt, mode, stat, payload = {}) {
+  if (config.apiKey.trim()) {
+    try {
+      const system = mode === "next"
+        ? "You are Rosaye, the adaptive quest brain for Life RPG. Generate the ONE most logical next quest after the user's update. Return ONLY valid JSON object with keys title, desc, type, priority, xp."
+        : "You are Rosaye, the adaptive quest brain for Life RPG. Generate exactly 3 specific quests. Return ONLY valid JSON array. Each object must have title, desc, type, priority, xp.";
+      let request;
+      const userPayload = JSON.stringify({ prompt, memory, recent_messages: recentMessages.slice(-6), payload });
+      request = {
+        url: "/api/rosaye",
+        options: {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: config.model || rosayeProviderModel("groq"),
+            temperature: 0.45,
+            messages: [{ role: "system", content: system }, { role: "user", content: userPayload }],
+          }),
+        },
+        parse: async res => {
+          const data = await res.json();
+          return data.choices?.[0]?.message?.content || "";
+        },
+      };
+      const res = await fetch(request.url, request.options);
+      const raw = await request.parse(res);
+      const clean = rosayeJsonFromText(raw);
+      return JSON.parse(clean);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+  return rosayeQuestFallback(stat, mode, payload);
 }
 
 const DAY_WORKOUTS = { 0: "Rest Day", 1: "Chest & Bicep (Push)", 2: "Legs & Shoulders", 3: "Back & Tricep (Pull)", 4: "Chest & Bicep (Push)", 5: "Legs & Shoulders", 6: "Back & Tricep (Pull)" };
@@ -698,6 +1026,10 @@ function sanitizeState(raw) {
     quests,
     statXP,
     coins: Number(raw.coins) || 0,
+    rosayeConfig: { ...ROSAYE_DEFAULT_CONFIG, ...(raw.rosayeConfig || {}) },
+    rosayeMemory: rosayeMergeMemory(rosayeDefaultMemory(), raw.rosayeMemory || {}),
+    rosayeMessages: Array.isArray(raw.rosayeMessages) ? raw.rosayeMessages : [],
+    rosayeSuggestions: Array.isArray(raw.rosayeSuggestions) && raw.rosayeSuggestions.length ? raw.rosayeSuggestions : rosayeDefaultSuggestions(),
     rewardInventory: raw.rewardInventory && typeof raw.rewardInventory === "object" ? raw.rewardInventory : {},
     rewardLibrary: Array.isArray(raw.rewardLibrary) && raw.rewardLibrary.length ? raw.rewardLibrary : RW_DEFAULT_LIBRARY,
     rewardLocked: !!raw.rewardLocked,
@@ -761,6 +1093,13 @@ export default function LifeRPG() {
   const [quests, setQuests] = useState(() => saved.current?.quests || []);
   const [statXP, setStatXP] = useState(() => saved.current?.statXP || { strength: 0, creativity: 0, intelligence: 0, persona: 0 });
   const [coins, setCoins] = useState(() => saved.current?.coins || 0);
+  const [rosayeConfig, setRosayeConfig] = useState(() => saved.current?.rosayeConfig || ROSAYE_DEFAULT_CONFIG);
+  const [rosayeMemory, setRosayeMemory] = useState(() => saved.current?.rosayeMemory || rosayeDefaultMemory());
+  const [rosayeMessages, setRosayeMessages] = useState(() => saved.current?.rosayeMessages || []);
+  const [rosayeSuggestions, setRosayeSuggestions] = useState(() => saved.current?.rosayeSuggestions || rosayeDefaultSuggestions());
+  const [rosayeInput, setRosayeInput] = useState("");
+  const [rosayeLoading, setRosayeLoading] = useState(false);
+  const [rosayeCyclingId, setRosayeCyclingId] = useState(null);
   const [rewardInventory, setRewardInventory] = useState(() => saved.current?.rewardInventory || {});
   const [rewardLibrary, setRewardLibrary] = useState(() => rewardSeedLibrary);
   const [rewardLocked, setRewardLocked] = useState(() => saved.current?.rewardLocked || false);
@@ -804,6 +1143,10 @@ export default function LifeRPG() {
       quests,
       statXP,
       coins,
+      rosayeConfig,
+      rosayeMemory,
+      rosayeMessages,
+      rosayeSuggestions,
       rewardInventory,
       rewardLibrary,
       rewardLocked,
@@ -814,7 +1157,7 @@ export default function LifeRPG() {
       streak,
       levelDeadline,
     });
-  }, [quests, statXP, coins, rewardInventory, rewardLibrary, rewardLocked, rewardActiveShopIds, rewardWheelPools, rewardHistory, rewardResult, questBoostReady, streak, onboarding, levelDeadline]);
+  }, [quests, statXP, coins, rosayeConfig, rosayeMemory, rosayeMessages, rosayeSuggestions, rewardInventory, rewardLibrary, rewardLocked, rewardActiveShopIds, rewardWheelPools, rewardHistory, rewardResult, questBoostReady, streak, onboarding, levelDeadline]);
 
   useEffect(() => {
     const timer = setInterval(() => setNowMs(Date.now()), 1000);
@@ -1099,6 +1442,124 @@ export default function LifeRPG() {
   }
 
   // ── ONBOARDING ────────────────────────────────────────────────────────────
+  async function rosayeSubmit() {
+    const message = rosayeInput.trim();
+    if (!message || rosayeLoading) return;
+    const deployQuests = rosayeParseDeployQuests(message);
+    const userMessage = { id: `user_${Date.now()}`, role: "user", text: message, at: new Date().toLocaleTimeString() };
+    const inferredUpdates = rosayeInferMemory(message, rosayeMemory);
+    const mergedMemory = rosayeMergeMemory(rosayeMemory, inferredUpdates);
+    setRosayeMessages(current => [...current, userMessage]);
+    setRosayeMemory(mergedMemory);
+    setRosayeInput("");
+    if (deployQuests.length) {
+      setQuests(current => [
+        ...current,
+        ...deployQuests.map(q => attachDeadlineWindow({
+          ...q,
+          deadline: null,
+          done: false,
+          isFinalBoss: false,
+          coinReward: 0,
+          completedAt: null,
+        })),
+      ]);
+      setRosayeMessages(current => [...current, {
+        id: `ai_${Date.now()}`,
+        role: "ai",
+        text: `Deployed ${deployQuests.length} quest${deployQuests.length > 1 ? "s" : ""} directly into your board.`,
+        at: new Date().toLocaleTimeString(),
+      }]);
+      setToast({ e: "🧠", m: `Deployed ${deployQuests.length} quest${deployQuests.length > 1 ? "s" : ""}.`, xp: 0 });
+      setTimeout(() => setToast(null), 2200);
+      return;
+    }
+    setRosayeLoading(true);
+
+    let replyPayload = null;
+    if (rosayeConfig.apiKey.trim()) {
+      try {
+        const request = rosayeBuildApiRequest(rosayeConfig, message, mergedMemory, rosayeMessages);
+        const res = await fetch(request.url, request.options);
+        const raw = await request.parse(res);
+        const parsed = JSON.parse(rosayeJsonFromText(raw));
+        replyPayload = {
+          reply: parsed.reply,
+          memory_updates: parsed.memory_updates || {},
+          suggestions: Array.isArray(parsed.suggestions) ? parsed.suggestions : [],
+        };
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    if (!replyPayload) {
+      const fallback = rosayeHeuristicResponse(message, mergedMemory);
+      replyPayload = {
+        reply: fallback.reply,
+        memory_updates: inferredUpdates,
+        suggestions: fallback.suggestions,
+      };
+    }
+
+    const finalMemory = rosayeMergeMemory(mergedMemory, replyPayload.memory_updates || {});
+    const aiMessage = {
+      id: `ai_${Date.now()}`,
+      role: "ai",
+      text: replyPayload.reply || "Logged. Progress stored and next steps prepared.",
+      at: new Date().toLocaleTimeString(),
+    };
+    setRosayeMemory(finalMemory);
+    setRosayeSuggestions(
+      (replyPayload.suggestions || []).map((item, index) => ({
+        id: item.id || `ra_s_${Date.now()}_${index}`,
+        ...rosayeNormalizedQuestShape(STATS.includes(item.stat) ? item.stat : "creativity", item),
+      }))
+    );
+    setRosayeMessages(current => [...current, aiMessage]);
+    setRosayeLoading(false);
+  }
+
+  async function rosayeAddSuggestion(suggestion) {
+    setQuests(current => [...current, attachDeadlineWindow({
+      id: `ra_q_${Date.now()}_${Math.random()}`,
+      ...rosayeNormalizedQuestShape(suggestion.stat, suggestion),
+      deadline: null,
+      done: false,
+      isDaily: false,
+      isFinalBoss: false,
+      coinReward: 0,
+      completedAt: null,
+    })]);
+    await rosayeCycleSuggestion(suggestion, true);
+    setToast({ e: "🧠", m: "Rosaye quest added.", xp: 0 });
+    setTimeout(() => setToast(null), 2000);
+  }
+
+  async function rosayeCycleSuggestion(suggestion, silent = false) {
+    if (rosayeCyclingId && !silent) return;
+    setRosayeCyclingId(suggestion.id);
+    try {
+      const prompt = `Current stat: ${STAT_CFG[suggestion.stat]?.label}\nCurrent suggestion: ${suggestion.title}\nDescription: ${suggestion.desc}\nGenerate a different next quest for the same context. Do not repeat the same idea.`;
+      const parsed = await rosayeQuestAssist(
+        rosayeConfig,
+        rosayeMemory,
+        rosayeMessages,
+        prompt,
+        "next",
+        suggestion.stat,
+        { avoid: [suggestion.title], currentSuggestion: suggestion }
+      );
+      const replacement = {
+        id: `ra_s_${Date.now()}_${Math.random()}`,
+        ...rosayeNormalizedQuestShape(suggestion.stat, parsed),
+      };
+      setRosayeSuggestions(current => current.map(item => item.id === suggestion.id ? replacement : item));
+    } catch (e) {
+      console.error(e);
+    }
+    setRosayeCyclingId(null);
+  }
+
   function toggleSelect(id) {
     setSelectedIds(prev => {
       const n = new Set(prev);
@@ -1184,18 +1645,9 @@ export default function LifeRPG() {
     setAiLoading(true);
     setAiSuggestion(null);
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 600,
-          system: "You are a Life RPG quest advisor. When a user edits a quest it signals progression. Generate the ONE most logical next quest. Be specific. Return ONLY valid JSON, no markdown.",
-          messages: [{ role: "user", content: `Stat: ${STAT_CFG[q.stat].label}\nOriginal: "${q.title}"\nUpdated to: "${updated.title}" — ${updated.desc}\nGenerate next logical quest.\nReturn: {"title":"...","desc":"...","type":"side|main|boss","priority":"urgent|high|normal|low","xp":30}` }]
-        })
-      });
-      const data = await res.json();
-      const raw = data.content?.[0]?.text || "{}";
-      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setAiSuggestion({ ...parsed, stat: q.stat });
+      const prompt = `Stat: ${STAT_CFG[q.stat].label}\nOriginal quest: ${q.title}\nUpdated quest: ${updated.title}\nUpdated description: ${updated.desc || "none"}\nGenerate the next logical quest after this progression.`;
+      const parsed = await rosayeQuestAssist(rosayeConfig, rosayeMemory, rosayeMessages, prompt, "next", q.stat, { original: q, updated });
+      setAiSuggestion(rosayeNormalizedQuestShape(q.stat, parsed));
     } catch (e) { console.error(e); }
     setAiLoading(false);
   }
@@ -1216,18 +1668,10 @@ export default function LifeRPG() {
       persona: "Confidence, communication, English fluency. Discord practice, 70/30 listening, Steve Jobs shadowing.",
     };
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-20250514", max_tokens: 800,
-          system: "You are a Life RPG quest advisor. Generate 3 specific actionable quests. Direct, no fluff. Return ONLY valid JSON array.",
-          messages: [{ role: "user", content: `Stat: ${STAT_CFG[stat].label}\nContext: ${ctx[stat]}\nDon't duplicate: ${existing}\nGenerate 3 quests. Each: title (action verb start), desc (1 specific sentence), type, priority, xp (15-120).\nReturn: [{"title":"...","desc":"...","type":"main","priority":"normal","xp":40}]` }]
-        })
-      });
-      const data = await res.json();
-      const raw = data.content?.[0]?.text || "[]";
-      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setQuests(qs => [...qs, ...parsed.map(q => attachDeadlineWindow({ ...q, id: `ai_${Date.now()}_${Math.random()}`, stat, done: false, xp: parseInt(q.xp) || 30, deadline: null, isDaily: false, isFinalBoss: false }))]);
+      const prompt = `Stat: ${STAT_CFG[stat].label}\nContext: ${ctx[stat]}\nExisting active quests: ${existing}\nGenerate 3 specific next quests that progress this stat without duplicating current quests.`;
+      const parsed = await rosayeQuestAssist(rosayeConfig, rosayeMemory, rosayeMessages, prompt, "list", stat, { context: ctx[stat], existing });
+      const list = Array.isArray(parsed) ? parsed : rosayeQuestFallback(stat, "list", { context: ctx[stat], existing });
+      setQuests(qs => [...qs, ...list.map(q => attachDeadlineWindow({ ...rosayeNormalizedQuestShape(stat, q), id: `ai_${Date.now()}_${Math.random()}`, done: false, deadline: null, isDaily: false, isFinalBoss: false }))]);
     } catch (e) { console.error(e); }
     setAiLoading(false);
   }
@@ -1532,7 +1976,7 @@ export default function LifeRPG() {
               <div className="profile-info">
                 <div className="profile-name">Nikul</div>
                 <div className="profile-role">Creative Director</div>
-                <div className="profile-streak"><span>🔥</span><span className="streak-text">{streak} day streak</span></div>
+                <div className="profile-streak"><span>????</span><span className="streak-text">{streak} day streak</span></div>
               </div>
             </div>
 
@@ -1544,42 +1988,14 @@ export default function LifeRPG() {
               <div className="cxp-track"><div className="cxp-fill" style={{ width: `${totalProgress}%` }} /></div>
               <div className="cxp-bottom">
                 <div className="cxp-nums">{totalXP} / {levelTarget.totalTargetXP} XP</div>
-                <div className="cxp-quests">Target quests: {levelTarget.questCountTarget} · done {totalDone}/{quests.length}</div>
+                <div className="cxp-quests">Target quests: {levelTarget.questCountTarget} ?? done {totalDone}/{quests.length}</div>
               </div>
-              <div className="cxp-coins">🪙 {coins} coins</div>
+              <div className="cxp-coins">???? {coins} coins</div>
               <div className="cxp-quests" style={{ marginTop: 6 }}>
                 {finalBossQuest
                   ? (isFinalBossDone ? "Final Boss complete. Level 2 unlocked." : "Complete Final Boss quest to unlock Level 2.")
                   : "Add a Final Boss quest to unlock Level 2."}
               </div>
-            </div>
-
-            <div className="quick-actions">
-              <button className="quick-action-btn" onClick={() => openQuestBoardAdd("strength")}>+ Add Quest</button>
-              <button className="quick-action-btn" onClick={addFinalBossQuest}>+ Final Boss</button>
-              <button className="quick-action-btn" onClick={() => navTo("quests")}>Manage Quest List</button>
-            </div>
-
-            <div className="reward-home-card">
-              <div className="reward-home-top">
-                <div>
-                  <div className="reward-home-label">Reward Economy</div>
-                  <div className="reward-home-title">Wheel + Shop</div>
-                  <div className="reward-home-copy">Coins earned from real quests feed the same reward system here. Spin, buy, save, or lock the economy.</div>
-                </div>
-                <div className="reward-pill gold">🪙 {coins}</div>
-              </div>
-              <div className="reward-home-meta">
-                <div className="reward-pill">Inventory {rewardInventoryTotal}</div>
-                <div className="reward-pill">{rewardLocked ? "Locked" : "Editable"}</div>
-                {questBoostReady && <div className="reward-pill gold">2x Next Quest Ready</div>}
-              </div>
-              <button className="reward-open-btn" onClick={() => navTo("rewards")}>Open Rewards</button>
-            </div>
-
-            <div className="oracle-card">
-              <div className="oracle-dot"><div className="oracle-pip" /><div className="oracle-lbl">Oracle</div></div>
-              <div className="oracle-text">"{oracle}"</div>
             </div>
 
             <div className="sh"><div className="sh-title">Stats</div></div>
@@ -1588,7 +2004,22 @@ export default function LifeRPG() {
                 const cfg = STAT_CFG[key];
                 const info = getLvInfo(statXP[key]);
                 return (
-                  <div className="stat-mini" key={key} onClick={() => navTo("stat", key)}>
+                  <div className="stat-mini" key={key} onClick={() => navTo("stat", key)} style={{
+                    background: key === "strength"
+                      ? "linear-gradient(180deg,rgba(58,20,10,.95),rgba(33,14,9,.98))"
+                      : key === "creativity"
+                        ? "linear-gradient(180deg,rgba(58,35,10,.95),rgba(35,21,8,.98))"
+                        : key === "intelligence"
+                          ? "linear-gradient(180deg,rgba(10,24,54,.95),rgba(8,17,35,.98))"
+                          : "linear-gradient(180deg,rgba(36,15,58,.95),rgba(22,11,35,.98))",
+                    borderColor: key === "strength"
+                      ? "rgba(230,80,50,.28)"
+                      : key === "creativity"
+                        ? "rgba(240,160,48,.28)"
+                        : key === "intelligence"
+                          ? "rgba(72,136,240,.28)"
+                          : "rgba(152,96,240,.28)"
+                  }}>
                     <div className="stat-mini-icon">{cfg.icon}</div>
                     <div className="stat-mini-lv" style={{ color: cfg.color }}>Lv {info.level}</div>
                     <div className="stat-mini-bar"><div className="stat-mini-fill" style={{ width: `${info.progress}%`, background: cfg.color }} /></div>
@@ -1597,12 +2028,46 @@ export default function LifeRPG() {
               })}
             </div>
 
+            <div className="home-duo">
+              <div className="reward-home-card">
+                <div className="reward-home-top">
+                  <div>
+                    <div className="reward-home-label">Reward Wheel</div>
+                    <div className="reward-home-title">Spin + Shop</div>
+                    <div className="reward-home-copy">Use quest coins for rewards, wheel drops, and inventory.</div>
+                  </div>
+                  <div className="reward-pill gold">?? {coins}</div>
+                </div>
+                <div className="reward-home-meta">
+                  <div className="reward-pill">Inv {rewardInventoryTotal}</div>
+                  <div className="reward-pill">{rewardLocked ? "Locked" : "Editable"}</div>
+                </div>
+                <button className="reward-open-btn" onClick={() => navTo("rewards")}>Open Wheel</button>
+              </div>
+
+              <div className="reward-home-card">
+                <div className="reward-home-top">
+                  <div>
+                    <div className="reward-home-label">Rosaye AI</div>
+                    <div className="reward-home-title">Quest Brain</div>
+                    <div className="reward-home-copy">Update context, deploy tasks, and get smarter next quests.</div>
+                  </div>
+                  <div className="reward-pill">?? {rosayeSuggestions.length}</div>
+                </div>
+                <div className="reward-home-meta">
+                  <div className="reward-pill">{rosayeConfig.provider}</div>
+                  <div className="reward-pill">Memory {Object.values(rosayeMemory).filter(v => Object.values(v || {}).some(Boolean)).length}</div>
+                </div>
+                <button className="reward-open-btn" onClick={() => navTo("rosaye")}>Open Rosaye</button>
+              </div>
+            </div>
+
             <div className="sh">
               <div className="sh-title">Today's Priority</div>
-              <button className="sh-action" onClick={() => navTo("quests")}>All →</button>
+              <button className="sh-action" onClick={() => navTo("quests")}>All ???</button>
             </div>
             <div className="ql">
-              {todayQ.length === 0 && <div className="empty">All quests complete. Absolute monster. 🏆</div>}
+              {todayQ.length === 0 && <div className="empty">All quests complete. Absolute monster. ????</div>}
               {todayQ.map(q => (
                 <QCard key={q.id} q={q} onComplete={requestCompleteQuest} onEdit={openEdit} onDelete={removeQuest}
                   editingId={editingId} editForm={editForm} setEditForm={setEditForm}
@@ -1611,6 +2076,139 @@ export default function LifeRPG() {
                   onCancelEdit={() => { setEditingId(null); setAiSuggestion(null); }}
                 />
               ))}
+            </div>
+
+            <div className="quick-actions">
+              <button className="quick-action-btn" onClick={() => openQuestBoardAdd("strength")}>+ Add Quest</button>
+              <button className="quick-action-btn" onClick={addFinalBossQuest}>+ Final Boss</button>
+              <button className="quick-action-btn" onClick={() => navTo("quests")}>Manage Quest List</button>
+            </div>
+
+            <div className="oracle-card">
+              <div className="oracle-dot"><div className="oracle-pip" /><div className="oracle-lbl">Oracle</div></div>
+              <div className="oracle-text">"{oracle}"</div>
+            </div>
+          </div>
+        )}
+
+        {page === "rosaye" && (
+          <div className="page">
+            <div className="ra-page">
+              <div className="ra-hero">
+                <div className="ra-topline">Rosaye AI</div>
+                <div className="ra-title">Memory. Progress. Next Quest.</div>
+                <div className="ra-sub">Rosaye is not here to chat for fun. It stores your context, updates entities like project names, and turns real progress into smarter next-step quests.</div>
+              </div>
+
+              <div className="ra-stack">
+                <div className="ra-metrics">
+                  <div className="ra-metric">
+                    <div className="ra-topline">Provider</div>
+                    <div className="ra-metric-value" style={{ fontSize: 18 }}>{rosayeConfig.apiKey.trim() ? rosayeConfig.provider : "Local"}</div>
+                    <div className="ra-metric-note">{rosayeConfig.apiKey.trim() ? "API mode is active." : "Heuristic memory mode is active until you add a free API key."}</div>
+                  </div>
+                  <div className="ra-metric">
+                    <div className="ra-topline">Messages</div>
+                    <div className="ra-metric-value">{rosayeMessages.length}</div>
+                    <div className="ra-metric-note">Conversation log stored locally with the rest of the app state.</div>
+                  </div>
+                  <div className="ra-metric">
+                    <div className="ra-topline">Suggestions</div>
+                    <div className="ra-metric-value">{rosayeSuggestions.length}</div>
+                    <div className="ra-metric-note">Turn any suggestion below directly into a real quest.</div>
+                  </div>
+                </div>
+
+                <div className="ra-panel">
+                  <div className="ra-topline">Free AI Setup</div>
+                  <div className="ra-grid2">
+                    <div>
+                      <label className="ra-label">Provider</label>
+                      <select className="ra-select" value={rosayeConfig.provider} onChange={e => setRosayeConfig(current => ({ ...current, provider: e.target.value, model: rosayeProviderModel(e.target.value) }))}>
+                        <option value="groq">Groq</option>
+                        <option value="gemini">Gemini</option>
+                        <option value="openrouter">OpenRouter</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="ra-label">Model</label>
+                      <input className="ra-input" value={rosayeConfig.model} onChange={e => setRosayeConfig(current => ({ ...current, model: e.target.value }))} />
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 10 }}>
+                    <label className="ra-label">API Key</label>
+                    <input className="ra-input" value={rosayeConfig.apiKey} onChange={e => setRosayeConfig(current => ({ ...current, apiKey: e.target.value }))} placeholder="Optional for now. Without a key Rosaye still works in local memory mode." />
+                  </div>
+                </div>
+
+                <div className="ra-panel ra-chat">
+                  <div className="ra-topline">Progress Input</div>
+                  <div className="ra-messages">
+                    {rosayeMessages.length === 0 && <div className="ra-empty">Try: "I completed 1 km running", "I am working on edit", or "Project name is Virtuolab".</div>}
+                    {rosayeMessages.map(item => (
+                      <div key={item.id} className={`ra-msg ${item.role === "user" ? "user" : "ai"}`}>
+                        <div className="ra-msg-role">{item.role === "user" ? "You" : "Rosaye"}</div>
+                        <div className="ra-msg-body">{item.text}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div>
+                    <label className="ra-label">Tell Rosaye what happened</label>
+                    <textarea className="ra-textarea" value={rosayeInput} onChange={e => setRosayeInput(e.target.value)} placeholder='Example: "I completed 1 km running" or "Project name is Virtuolab".' />
+                  </div>
+                  <div className="ra-row">
+                    <button className="ra-btn" onClick={rosayeSubmit} disabled={rosayeLoading || !rosayeInput.trim()}>{rosayeLoading ? "Rosaye Thinking" : "Update Rosaye"}</button>
+                    <button className="ra-btn-ghost" onClick={() => setRosayeMessages([])}>Clear Chat</button>
+                  </div>
+                </div>
+
+                <div className="ra-panel">
+                  <div className="ra-topline">Memory</div>
+                  <div className="ra-memory-grid">
+                    <div className="ra-memory-card">
+                      <div className="ra-memory-head"><div className="ra-memory-name" style={{ color: "var(--str)" }}>Fitness</div><span className="ra-chip fit">Strength</span></div>
+                      <div className="ra-memory-body">{[rosayeMemory.fitness.current, rosayeMemory.fitness.progress, rosayeMemory.fitness.next].filter(Boolean).join("\n") || "No fitness memory yet."}</div>
+                    </div>
+                    <div className="ra-memory-card">
+                      <div className="ra-memory-head"><div className="ra-memory-name" style={{ color: "var(--cre)" }}>Work</div><span className="ra-chip work">Creativity</span></div>
+                      <div className="ra-memory-body">{[rosayeMemory.work.project && `Project: ${rosayeMemory.work.project}`, rosayeMemory.work.current, rosayeMemory.work.progress, rosayeMemory.work.next].filter(Boolean).join("\n") || "No work memory yet."}</div>
+                    </div>
+                    <div className="ra-memory-card">
+                      <div className="ra-memory-head"><div className="ra-memory-name" style={{ color: "var(--int)" }}>Learning</div><span className="ra-chip learn">Intelligence</span></div>
+                      <div className="ra-memory-body">{[rosayeMemory.learning.current, rosayeMemory.learning.progress, rosayeMemory.learning.next].filter(Boolean).join("\n") || "No learning memory yet."}</div>
+                    </div>
+                    <div className="ra-memory-card">
+                      <div className="ra-memory-head"><div className="ra-memory-name">General</div><span className="ra-chip good">Updated</span></div>
+                      <div className="ra-memory-body">{[rosayeMemory.general.goal, rosayeMemory.general.note].filter(Boolean).join("\n") || "No general notes yet."}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="ra-panel">
+                  <div className="ra-topline">Suggested Next Quests</div>
+                  <div className="ra-suggestion-list">
+                    {rosayeSuggestions.length === 0 && <div className="ra-empty">No suggestions yet. Feed Rosaye one real update first.</div>}
+                    {rosayeSuggestions.map(suggestion => (
+                      <div className="ra-suggestion-card" key={suggestion.id}>
+                        <div className="ra-row" style={{ justifyContent: "space-between", alignItems: "center" }}>
+                          <div className="ra-suggestion-title">{suggestion.title}</div>
+                          <span className={`ra-chip ${suggestion.stat === "strength" ? "fit" : suggestion.stat === "creativity" ? "work" : suggestion.stat === "intelligence" ? "learn" : "good"}`}>{STAT_CFG[suggestion.stat]?.label || suggestion.stat}</span>
+                        </div>
+                        <div className="ra-suggestion-desc">{suggestion.desc}</div>
+                        <div className="ra-chip-row" style={{ marginTop: 10 }}>
+                          <span className="ra-chip good">{suggestion.xp} XP</span>
+                          <span className="ra-chip">{suggestion.type}</span>
+                          <span className="ra-chip">{suggestion.priority}</span>
+                        </div>
+                        <div className="ra-row" style={{ marginTop: 12 }}>
+                          <button className="ra-btn" onClick={() => rosayeAddSuggestion(suggestion)}>Add To Quests</button>
+                          <button className="ra-btn-ghost" onClick={() => rosayeCycleSuggestion(suggestion)} disabled={rosayeCyclingId === suggestion.id}>{rosayeCyclingId === suggestion.id ? "Finding Next" : "Next Quest"}</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
@@ -2194,7 +2792,7 @@ function QCard({ q, onComplete, onEdit, onDelete, onUndo, editingId, editForm, s
   const typeColor = { boss: { background: "#f0c84015", color: "var(--gold)", border: "1px solid #f0c84030" }, main: { background: `${cfg?.color}12`, color: cfg?.color, border: `1px solid ${cfg?.color}25` }, side: {} };
 
   return (
-    <div className={`qcard ${q.priority} ${q.done ? "done" : ""}`}>
+    <div className={`qcard ${q.type} ${q.done ? "done" : ""}`}>
       <div className="qcard-top">
         <div className={`qcheck ${q.done ? "checked" : ""}`} onClick={() => !q.done && onComplete(q)}>{q.done ? "✓" : ""}</div>
         <div className="qbody">
